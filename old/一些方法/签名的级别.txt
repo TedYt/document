@@ -1,0 +1,19 @@
+为了代码和数据共享, android提供了一个基于签名的Permission标签. 通过允许的设置, 可以实现对不同的App之间的访问和共享
+
+定义permission时,有这样一个属性protectionLevel, 定义标签的等级, 这个属性的值有:
+
+normal: 所有的App不能访问和共享此App
+
+dangerous: 所有的App都能访问和共享此App. 这类的permission, 直接用uses-permission 引用就可以访问代码和数据了.
+	比如蓝牙,wifi,的permission都是这类.
+
+signature: 具有相同签名的App可以访问和共享此App. 这类的permission直接引用是不能使用的, 比如调节屏幕亮度的android.permission.DEVICE_POWER
+	调用方法setBacklightBrightness, 程序会崩溃.
+	
+	解决方法: 
+		在Android.mk文件中增加LOCAL_CERTIFICATE 赋值为permission对应的签名, 例如上面的android.permission.DEVICE_POWER 对应的签名为platform
+
+signatureOrSystem: 系统image中的App 或者 具有相同签名的App可以访问和共享此App
+
+
+可以参见permission的定义:  frameworks/base/core/res/AndroidManifest.xml

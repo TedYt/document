@@ -1,0 +1,20 @@
+最近用monkey来包apk的性能测试，发现一旦monkey跑起来以后，即使将数据线和PC断开，monkey脚本还是会继续运行下去。结果找到了一个办法去停止它：
+
+1. adb shell
+
+2. top | grep monkey
+
+显示如下：
+
+top | grep monkey
+ 5447  0   1% S    10 262960K  10328K     root     com.android.commands.monkey
+ 5447  0   0% S    10 262960K  10324K     root     com.android.commands.monkey
+
+找到id为5447，然后再kill掉就OK了
+
+3. adb shell
+
+4. kill -9 5447
+
+
+

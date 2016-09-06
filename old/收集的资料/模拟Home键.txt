@@ -1,0 +1,20 @@
+今天在做一个应用的时候要用到类似于QQ按返回键并不销毁Activity的方法（即不调用Activity.finish()，系统不调用onDestroy），而是类似于按Home键，让Activity类似于“暂停”（即只调用onPause,onDestroy）。
+　　最开始想到的便是Override onKeyDown 这个方法，但经过调试，发现这个在按下Home键时，系统是不会发送消息到这里处理的，也就是说模拟KEYCODE_HOME 是没有效果的，之后又在网上查到 dispatchKeyEvent 这个函数，以下是函数说明：
+Called to process key events. You can override this to intercept all key events before they are dispatched to the window. Be sure to call this implementation for key events that should be handled normally.
+　　但令人沮丧的是，Home 按钮所产生的消息依然不经过这里，似乎Home按钮所产生的消息是由系统处理的。于是想到从其他方面入手，最后找到了以下的方法：
+@Override
+public boolean onKeyDown(int keyCode, KeyEvent event) {
+    // TODO Auto-generated method stub
+    if(keyCode == KeyEvent.KEYCODE_BACK){
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);// 注意
+        intent.addCategory(Intent.CATEGORY_HOME);
+        this.startActivity(intent);
+        return true;
+    }
+    return super.onKeyDown(keyCode, event);
+}
+　　特别注意 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK); 这句，一定要加上，因为Activity 的 launchMode 默认是以 standard 执行的，如果不添加这个标记则 会创建新的Activity 并放在与当前Activity相同的Task中。以下是 FLAG_ACTIVITY_NEW_TASK 的说明
+FLAG_ACTIVITY_NEW_TASK标记
+当传递给startActivity()的Intent对象包含FLAG_ACTIVITY_NEW_TASK标记时，系统会为需要启动的activity寻找与当前activity不同的task。如果要启动的activity的affinity属性与当前所有的task的affinity属性都不相同，系统会新建一个带那个affinity属性的task，并将要启动的activity压到新建的task栈中；否则将activity压入那个affinity属性相同的栈中。
+

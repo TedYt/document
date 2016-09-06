@@ -1,0 +1,44 @@
+
+android:layout_alignParentRight="true"
+使当前控件的右端和父控件的右端对齐。这里属性值只能为true或false，默认false。
+
+android:layout_marginLeft="10dip"
+使当前控件左边空出相应的空间。
+
+         android:layout_toLeftOf="@id/ok"
+使当前控件置于id为ok的控件的左边。
+
+         android:layout_alignTop="@id/ok"
+使当前控件与id控件的上端对齐。
+
+
+padding表示填充，margin表示边距
+可通过android:padding属性进行设置，4个方向的边距属性为android:paddingLeft, android:paddingRight, android:paddingTop, and android:paddingBottom.
+
+
+结论：
+*android:layout_marginBottom
+*android:layout_marginLeft
+*android:layout_marginRight
+*android:layout_marginTop
+上面几个属性的值是根据下面的相对位置的对象的值来做计算的，如果没有相对的对象就以总体布局来计算
+*android:layout_below
+*android:layout_above
+*android:layout_toLeftOf
+*android:layout_toRightOf
+*android:layout_alignTop
+
+
+*android:layout_centerHrizontal          //是否支持横屏或竖屏
+*android:layout_centerVertical             //这个根据单词的意思：中心垂直
+*android:layout_centerInparent         // 
+android:layout_centerInParent="true"//居中在父对象
+android:layout_centerInParent="false" ... 浏览器不支持多窗口显示，意思就是说所有页面在单一窗口打开，这样避免了页面布局控制显示问题
+下面的相对于父的相对位置
+*android:layout_alignParentBottom
+*android:layout_alignParentLeft
+*android:layout_alignParentRight
+*android:layout_alignParentTop
+*android:layout_alignWithParentIfMissing
+
+

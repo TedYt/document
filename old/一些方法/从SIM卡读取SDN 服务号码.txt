@@ -1,0 +1,36 @@
+public class MyThread extends Thread{
+	public void run(){
+		
+	    SdnNumberList = new ArrayList<HashMap>();
+		Intent intent = new Intent();
+        intent.setData(Uri.parse("content://icc/sdn"));
+        Uri uri = intent.getData();
+        mCursor = mContext.getContentResolver().query(uri, null, null, null, null);
+        if (mCursor == null)
+        {
+            return;
+        }else{
+        	 while (mCursor.moveToNext())
+             {
+
+                 int nameFieldColumnIndex = mCursor.getColumnIndex("name");
+                 int numberFieldColumnIndex = mCursor
+                         .getColumnIndex("number");
+                 String sdnName = mCursor
+                         .getString(nameFieldColumnIndex);
+                 String sdnNumber = mCursor
+                         .getString(numberFieldColumnIndex);                  
+                 addItem(sdnName, sdnNumber);
+             }
+        }
+	}
+
+	private void addItem( String fdnName,
+			String fdnNumber) {
+		// TODO Auto-generated method stub
+		HashMap map = new HashMap();
+        map.put(SDN_NAME, fdnName);
+        map.put(SDN_NUMBER, fdnNumber);
+        SdnNumberList.add(map);
+	}
+}

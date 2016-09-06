@@ -1,0 +1,19 @@
+
+
+
+1  byte[] 转换为InputStream
+	InputStream sbs = new ByteArrayInputStream(byte[] buf);
+
+2  InputStream 转换为InputStreambyte[]
+
+	ByteArrayOutputStream swapStream = new ByteArrayOutputStream();
+	byte[] buff = new byte[100];
+	int rc = 0;
+	
+	while((rc = inStream.read(buff, 0, 100)) >0){
+		swapStream.write(buff, 0, rc);
+	}
+
+	byte[] in_b = swapStream.toByteArray();
+
+

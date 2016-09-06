@@ -1,0 +1,10 @@
+Activity 在onCreate之前调用attch方法，在attach方法中创建window对象（其实是window类的实现类PhoneWindow的对象）。此时并没有创建Decor对象。
+用户调用Activity的setContentView方法，本质是调用window中的setContentView方法，在这里会检查并创建DecorView对象，然后将自己的View添加到mContentParent（ViewGroup）中。
+
+所以三者的关系就是：Activity 包含  window 包含  view
+
+
+
+ActivityThread端的activity信息全部被存储在ActivityThread的成员变量mActivities中，在mActivities中，记录了应用程序创建的所有activity实例记录，对应的是ActivityRecord。
+
+

@@ -1,0 +1,20 @@
+pm list packages    
+		-f: see their associated file
+		-s: filter to only show system packages
+		-3 ilter to only show third party packages
+	pm list packages [-f] [-d] [-e] [-s] [-e] [-u] [FILTER]");
+ 	pm list permission-groups
+	pm list permissions [-g] [-f] [-d] [-u] [GROUP]");
+	pm list instrumentation [-f] [TARGET-PACKAGE]");
+ 	pm list features
+	pm list libraries
+	pm path PACKAGE
+	pm install [-l] [-r] [-t] [-i INSTALLER_PACKAGE_NAME] [-s] [-f] PATH
+	pm uninstall [-k] PACKAGE
+ 	pm clear PACKAGE
+	pm enable PACKAGE_OR_COMPONENT
+	pm disable PACKAGE_OR_COMPONENT
+	pm disable-user PACKAGE_OR_COMPONENT
+	pm set-install-location [0/auto] [1/internal] [2/external]
+	pm get-install-location
+

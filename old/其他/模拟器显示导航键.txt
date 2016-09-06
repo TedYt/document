@@ -1,0 +1,4 @@
+frameworks/base/core/res/res/values/config.xml,将
+<bool name="config_showNavigationBar">false</bool>
+修改为：
+<bool name="config_showNavigationBar">true</bool>

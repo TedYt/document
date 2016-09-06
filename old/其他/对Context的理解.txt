@@ -1,0 +1,12 @@
+
+Context的官方解释
+Interface to global information about an application environment. This is an abstract class whose 
+implementation is provided by the Android system. It allows access to application-specific resources 
+and classes, as well as up-calls for application-level operations such as launching activities, 
+broadcasting and receiving intents, etc. 
+
+从这个解释来看，Context的主要作用是访问资源和类，启动activity，broadcasting和reveiving intents等
+除此之外context还可以打开本包下文件夹和数据库，获取classloader。
+
+从本意上理解，context就是上下文，就是与app或者activity相关的一些信息，这些信息有那些呢？最主要的就是资源和类，还有广播，
+数据库等等，这个信息刚好与其功能描述想对应。

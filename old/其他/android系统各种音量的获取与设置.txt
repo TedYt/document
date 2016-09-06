@@ -1,0 +1,76 @@
+获取系统音量
+
+通过程序获取android系统手机的铃声和音量。同样，设置铃声和音量的方法也很简单！
+
+设置音量的方法也很简单，AudioManager提供了方法：
+publicvoidsetStreamVolume(intstreamType,intindex,intflags)其中streamType有内置的常量，去文档里面就可以看到。
+
+JAVA代码：
+AudioManager mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+
+//通话音量
+
+int max = mAudioManager.getStreamMaxVolume( AudioManager.STREAM_VOICE_CALL );
+int current = mAudioManager.getStreamVolume( AudioManager.STREAM_VOICE_CALL );
+Log.d(“VIOCE_CALL”, “max : ” + max + ” current : ” + current);
+
+//系统音量
+
+max = mAudioManager.getStreamMaxVolume( AudioManager.STREAM_SYSTEM );
+current = mAudioManager.getStreamVolume( AudioManager.STREAM_SYSTEM );
+Log.d(“SYSTEM”, “max : ” + max + ” current : ” + current);
+
+//铃声音量
+
+max = mAudioManager.getStreamMaxVolume( AudioManager.STREAM_RING );
+current = mAudioManager.getStreamVolume( AudioManager.STREAM_RING );
+Log.d(“RING”, “max : ” + max + ” current : ” + current);
+
+//音乐音量
+
+max = mAudioManager.getStreamMaxVolume( AudioManager.STREAM_MUSIC );
+current = mAudioManager.getStreamVolume( AudioManager.STREAM_MUSIC );
+Log.d(“MUSIC”, “max : ” + max + ” current : ” + current);
+
+//提示声音音量
+
+max = mAudioManager.getStreamMaxVolume( AudioManager.STREAM_ALARM );
+current = mAudioManager.getStreamVolume( AudioManager.STREAM_ALARM );
+Log.d(“ALARM”, “max : ” + max + ” current : ” + current);
+ps：
+　　游戏过程中只允许调整多媒体音量，而不允许调整通话音量。
+　　setVolumeControlStream(AudioManager.STREAM_MUSIC);
+　　长时间不动，不允许黑屏，View.setKeepScreenOn(true);
+　　估计manifest文件中需要注册权限吧
+
+ 
+
+调节媒体音量
+
+AudioManager audio = (AudioManager) getSystemService(Service.AUDIO_SERVICE);
+重写 Activity 的 onKeyDown 方法
+
+?
+@Override
+public boolean onKeyDown(int keyCode, KeyEvent event) {
+    switch (keyCode) {
+    case KeyEvent.KEYCODE_VOLUME_UP:
+        audio.adjustStreamVolume(
+            AudioManager.STREAM_MUSIC,
+            AudioManager.ADJUST_RAISE,
+            AudioManager.FLAG_PLAY_SOUND | AudioManager.FLAG_SHOW_UI);
+        return true;
+    case KeyEvent.KEYCODE_VOLUME_DOWN:
+        audio.adjustStreamVolume(
+            AudioManager.STREAM_MUSIC,
+            AudioManager.ADJUST_LOWER,
+            AudioManager.FLAG_PLAY_SOUND | AudioManager.FLAG_SHOW_UI);
+        return true;
+    default:
+        break;
+    }
+    return super.onKeyDown(keyCode, event);
+}
+
+
+

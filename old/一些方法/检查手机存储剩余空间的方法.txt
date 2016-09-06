@@ -1,0 +1,34 @@
+	
+	
+		StorageManager storageManager = (StorageManager)c.getSystemService(Context.STORAGE_SERVICE);
+		StorageVolume[] Volumes = storageManager.getVolumeList();
+		String[] mPathList = storageManager.getVolumePaths();
+		StorageVolume volume = null;
+		StatFs stat;
+		long availSize;
+		
+		for (int i = 0; i < Volumes.length; i ++){
+			if (Volumes[i].getPath().equals("/mnt/sdcard") &&
+			     !storageManager.getVolumeState(mPathList[i]).equals("not_present")){
+				volume = Volumes[i];
+				break;
+			}
+		}
+		
+		try{
+			if (volume != null){
+				stat =  new StatFs(volume.getPath());
+			}else{
+				stat =  new StatFs(Environment.getDataDirectory().getPath());
+			}
+			
+			long blockSize = stat.getBlockSize();
+            		long availableBlocks = stat.getAvailableBlocks();
+
+            		availSize = availableBlocks * blockSize;
+		}catch(IllegalArgumentException e){
+			Log.e(TAG, "IllegalArgumentException:" + e.getMessage());
+			availSize = -1;
+		}
+		
+		long availMB = availSize / 1024 / 1024; //可用空间

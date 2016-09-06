@@ -1,0 +1,32 @@
+1. 设置 frameworks/base/packages/SettingsProvider/res/values/customize.xml 中的 def_input_method
+   <string name="def_input_method" translatable="com.touchtype.swiftkey/com.touchtype.KeyboardService"></string>
+   
+   或者
+   
+   直接在代码中写入：
+   
+   frameworks/base/packages/SettingsProvider/src/com/android/providers/settings/DatabaseHelper.java
+   
+   loadStringSetting(stmt, Settings.Secure.DEFAULT_INPUT_METHOD,R.string.def_input_method);
+   改成
+   loadStringSetting(stmt, Settings.Secure.DEFAULT_INPUT_METHOD,"com.touchtype.swiftkey/com.touchtype.KeyboardService");
+2. 植入语言包
+    PRODUCT_COPY_FILES += \
+       $(LOCAL_PATH)/apk/swiftkey/en_US.zip:system/com.touchtype/en_US.zip \
+       $(LOCAL_PATH)/apk/swiftkey/es_LA.zip:system/com.touchtype/es_LA.zip \
+       $(LOCAL_PATH)/apk/swiftkey/es_US.zip:system/com.touchtype/es_US.zip \
+       $(LOCAL_PATH)/apk/swiftkey/pt_BR.zip:system/com.touchtype/pt_BR.zip
+
+3. 植入apk 类似与下面
+ include $(CLEAR_VARS)
+ LOCAL_MODULE := SwiftKey
+ LOCAL_PREBUILT_JNI_LIBS:= \
+      @lib/armeabi/libswiftkeysdk-java-internal.so
+ LOCAL_MODULE_TAGS := optional
+ LOCAL_SRC_FILES := $(LOCAL_MODULE).apk
+ LOCAL_MODULE_CLASS := APPS
+ LOCAL_PRIVILEGED_MODULE := true
+ LOCAL_CERTIFICATE := PRESIGNED
+ include $(BUILD_PREBUILT)
+   
+

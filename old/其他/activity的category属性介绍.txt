@@ -1,0 +1,14 @@
+
+category 与intent的关系:
+		
+	intent发个哪个activity,需要进行3方面的匹配: action, catergory, data
+	
+	理论上,如果intent不指定category, 那么无论intent-filter内容是什么都应该是匹配的.但是, 如果是implicit intent, android 会默认加上一个CATEGORY_DEFAULT,
+	
+	这样的话 如果intent-filter中没有android.intent.category.DEFAULT,这个category的话,匹配就会失败. 所以, 如果你要activity支持接受implicit intent的话
+	
+	就一定要加上android.intent.category.DEFAULT这个category.
+
+android.intent.category.LAUNCHER 的 category
+
+	这个category决定了activity可以出现在程序列表中

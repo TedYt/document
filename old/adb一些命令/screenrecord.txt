@@ -1,0 +1,41 @@
+
+adb shell screenrecord [filename]
+
+必备条件：platform tools（即adb）升级到V19。
+         一台android 4.4系统的设备。
+ 
+一、通过下面的步骤，即可通过adb命令实现录屏
+1.      adb shell
+2.      screenrecord [options][filename]
+Options:
+--sizeWIDTHxHEIGHT
+         设置视频的尺寸，例如“1280x720”。默认是设备的主屏幕分辨率大小（如果支持），如果不支持，默认使用“1280x720”。如果对视频分辨率没要求，这个参数可不写。
+--bit-rateRATE
+    设置视频的比特率。参数范围为[100000,100000000]，默认是4Mbps，即4000000。
+--time-limitTIME
+    设置视频最长录制时间，以秒为单位。默认最长为180秒。
+--rotate
+    视频旋转90度。
+--verbose
+    在标准输出中显示更多详细信息。
+--help
+    显示帮助信息。
+filename 必写项。视频保存的位置。
+ 
+eg.  adb shell screenrecord --bit-rate 100000000/sdcard/test.mp4
+在录屏过程中可以通过Ctrl-C命令退出。
+ 
+PS：如果需要记录在屏幕上点击的位置信息，建议在”开发者选项”里勾选”显示触摸位置”。
+    如果无法用该设备打开录制的视屏，建议下载其他第三方视屏播放软件。
+ 
+二、在开始录屏时，会有如下警告信息：
+C:\Users\tstcit>adb shell screenrecord--bit-rate 99999999 /sdcard/test.mp4
+WARNING: linker: libsavscmn.so has text relocations.This is wasting memory and is a security risk. Please fix.
+大致意思是说录屏是很耗内存的，并且存在安全风险。但是根据测试结果，发现并不是很耗内存（有待验证）。
+a.      对于安全风险，如果应用程序不想被录制，可以在代码中添加
+    SurfaceView.setSecure(true);
+b.      如图-1、图-2为录屏前后设备Memory使用情况。
+如图-2所见，录屏所占用的内存非常小，不到1%。至于Memory Free部分减少，是因为运行了其他应用程序。
+ 
+
+

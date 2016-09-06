@@ -1,0 +1,22 @@
+用途:
+	可以动态修改string.xml文件中的值
+
+方法:
+	使用占位符定义 字符串:
+		<string name="data">整型:%1$d, 浮点型:%2$.2f, 字符串: %3$s</string>
+	
+	在程序中对其操作:
+		String data = getResources().getString(R.string.data);
+		data = String.format(data, 100, 10.3, "2012-01-01");
+	或者:
+		String data = getResources().getString(R.string.data, 100, 10.3, "2012-01-01");
+解释:
+	string.xml中%后面的 1 2 3 表示第一个,第2个, 第3个, 分别接收 第1个, 第2个, 第3个参数.
+	
+	目前只知道 使用format来格式化数据.
+
+
+如果要打印百分号的话(%),使用这个方式: %%.
+
+第一个百分号,相当于一个转意符
+

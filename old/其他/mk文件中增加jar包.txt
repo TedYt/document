@@ -1,0 +1,55 @@
+开发某个应用过程中需要引用一个第三方的jar包 libblur.jar，方法如下：
+
+编辑应用的Android.mk文件，新增红色部分代码
+
+LOCAL_PATH:= $(call my-dir)
+include $(CLEAR_VARS)
+
+
+LOCAL_MODULE_TAGS := optional
+
+LOCAL_SRC_FILES := $(call all-java-files-under, src)
+
+LOCAL_STATIC_JAVA_LIBRARIES := \
+    com.android.phone.common \
+    com.android.vcard \
+    android-common \
+    guava \
+    android-support-v13 \
+    android-support-v4 \
+    android-ex-variablespeed \
+    libblur \ ##########
+
+LOCAL_REQUIRED_MODULES := libvariablespeed
+
+LOCAL_PACKAGE_NAME := Contacts
+LOCAL_CERTIFICATE := shared
+LOCAL_JAVA_LIBRARIES := mms-common telephony-common
+LOCAL_PROGUARD_FLAG_FILES := proguard.flags
+
+
+
+include $(BUILD_PACKAGE)
+
+# Use the folloing include to make our test apk.
+include $(call all-makefiles-under,$(LOCAL_PATH))
+
+
+####################################
+include $(CLEAR_VARS)
+#冒号前面为jar别名，后面为jar文件的实际路径
+LOCAL_PREBUILT_STATIC_JAVA_LIBRARIES := libblur:lib/libblur.jar  
+include $(BUILD_MULTI_PREBUILT)
+#######################################
+
+
+
+
+在与Android.mk文件同目录下新建一个lib目录，然后将libblur.jar拷贝到该目录下，这就对应了lib/libblur.jar
+
+然后代码中就可以引入包名使用jar包里面的类了。
+
+import com.android.ui.lib.TransitionEffect;// libblur包中的类
+
+
+

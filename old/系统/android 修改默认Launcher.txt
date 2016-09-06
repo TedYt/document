@@ -1,0 +1,65 @@
+
+系统启动后, 会查找并运行Launcher,
+
+有源码的情况下,可以通过修改Intent-filter中的android:priorty="N" N >=1; 一般我会设置 N=100;
+
+没有源码的情况下, 要将第三方Launcher默认启动, 则需要在些过程做点修改.
+
+ 
+
+ frameworks/base/services/java/com/android/server/am/ActivityManagerService.java
+
+Java代码  
+  boolean startHomeActivityLocked(int userId) {   
+     1.       if (mHeadless) {   
+     2.           // Added because none of the other calls to ensureBootCompleted seem to fire   
+     3.           // when running headless.   
+     4.           ensureBootCompleted();   
+     5.           return false;   
+     6.       }   
+     7.   
+     8.       if (mFactoryTest == SystemServer.FACTORY_TEST_LOW_LEVEL   
+     9.               && mTopAction == null) {   
+    10.           // We are running in factory test mode, but unable to find   
+    11.           // the factory test app, so just sit around displaying the   
+    12.           // error message and don't try to start anything.   
+    13.           return false;   
+    14.       }   
+    15.       Intent intent = new Intent(   
+    16.           mTopAction,   
+    17.           mTopData != null ? Uri.parse(mTopData) : null);   
+    18.       intent.setComponent(mTopComponent);   
+    19.       if (mFactoryTest != SystemServer.FACTORY_TEST_LOW_LEVEL) {   
+    20.           intent.addCategory(Intent.CATEGORY_HOME);   
+    21.       }   
+    22.  /** AnsonCode 2013.8.5 add Code**/  
+    23. try{   
+    24.     final String specialPkg = "com.android.launcherX";   
+    25.     mContext.getPackageManager().getApplicationEnabledSetting(specialPkg);   
+    26.     intent.setPackage(specialPkg);   
+    27. }catch(Exception e){   
+    28.     e.printStackTrace();   
+    29. }   
+    30.  /** AnsonCode End **/  
+    31.       ActivityInfo aInfo =   
+    32.           resolveActivityInfo(intent, STOCK_PM_FLAGS, userId);   
+    33.       if (aInfo != null) {   
+    34.           intent.setComponent(new ComponentName(   
+    35.                   aInfo.applicationInfo.packageName, aInfo.name));   
+    36.           // Don't do this if the home app is currently being   
+    37.           // instrumented.   
+    38.           aInfo = new ActivityInfo(aInfo);   
+    39.           aInfo.applicationInfo = getAppInfoForUser(aInfo.applicationInfo, userId);   
+    40.           ProcessRecord app = getProcessRecordLocked(aInfo.processName,   
+    41.                   aInfo.applicationInfo.uid);   
+    42.           if (app == null || app.instrumentationClass == null) {   
+    43.               intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NEW_TASK);   
+    44.               mMainStack.startActivityLocked(null, intent, null, aInfo,   
+    45.                       null, null, 0, 0, 0, 0, null, false, null);   
+    46.           }   
+    47.       }   
+    48.   
+    49.       return true;   
+    50.   }  
+    51. 
+

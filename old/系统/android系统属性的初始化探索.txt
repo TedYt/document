@@ -1,0 +1,182 @@
+系统属性中有一类是永久保存在文件中的： 
+bionic/libc/include/sys/_system_properties.h 
+#define PROP_SERVICE_NAME "property_service" 
+#define PROP_PATH_RAMDISK_DEFAULT  "/default.prop" 
+#define PROP_PATH_SYSTEM_BUILD     "/system/build.prop" 
+#define PROP_PATH_SYSTEM_DEFAULT   "/system/default.prop" 
+#define PROP_PATH_LOCAL_OVERRIDE   "/data/local.prop 
+
+
+
+那么我们在编译的时候，这些文件中的值是在何处进行初始化的呢？代码中又是在何时生成的这些永久文件的呢？本文以/default.prop进行探索。
+
+在编译生成文件中有如下，这里第二行我们可以看到确实在根目录(/)下生成有default.prop文件。
+
+./out/target/product/sangfei82_we_jb5/recovery/root/default.prop:2:# ADDITIONAL_DEFAULT_PROPERTIES 
+./out/target/product/sangfei82_we_jb5/root/default.prop:2:# ADDITIONAL_DEFAULT_PROPERTIES 
+
+
+我们打开default.prop查看其中的内容：
+
+root@android:/ # cat default.prop                                              
+# 
+# ADDITIONAL_DEFAULT_PROPERTIES 
+# 
+ro.secure=1 
+ro.allow.mock.location=0 
+persist.mtk.aee.aed=on 
+ro.debuggable=0 
+persist.sys.usb.config=mass_storage 
+persist.service.acm.enable=0 
+ro.mount.fs=EXT4 
+
+
+
+这之中我们需要关注的是ADDITIONAL_DEFAULT_PROPERTIES这个变量，这是makefile文件中定义的目标变量，在makefile文件中ro.secure这些变量都被定义在ADDITIONAL_DEFAULT_PROPERTIES这个目标变量上。我们在/build中搜索ADDITIONAL_DEFAULT_PROPERTIES： 
+grep -nr "ADDITIONAL_DEFAULT_PROPERTIES" . 
+
+./build/core/main.mk:330:  ADDITIONAL_DEFAULT_PROPERTIES += ro.secure=1 
+./build/core/main.mk:359:  ADDITIONAL_DEFAULT_PROPERTIES += ro.allow.mock.location=0 
+./build/core/main.mk:368:  ADDITIONAL_DEFAULT_PROPERTIES += ro.secure=0 
+./build/core/main.mk:370:  ADDITIONAL_DEFAULT_PROPERTIES += ro.allow.mock.location=1 
+./build/core/main.mk:375:ADDITIONAL_DEFAULT_PROPERTIES += persist.mtk.aee.aed=on 
+./build/core/main.mk:379:  ADDITIONAL_DEFAULT_PROPERTIES += ro.debuggable=1 
+./build/core/main.mk:384:  ADDITIONAL_DEFAULT_PROPERTIES += ro.debuggable=0 
+./build/core/main.mk:389:  ADDITIONAL_DEFAULT_PROPERTIES += persist.sys.usb.config=mass_storage 
+./build/core/main.mk:391:  ADDITIONAL_DEFAULT_PROPERTIES += persist.sys.usb.config=mtp 
+./build/core/main.mk:396:ADDITIONAL_DEFAULT_PROPERTIES += persist.service.acm.enable=1 
+./build/core/main.mk:398:ADDITIONAL_DEFAULT_PROPERTIES += persist.service.acm.enable=0 
+./build/core/Makefile:101:ADDITIONAL_DEFAULT_PROPERTIES := \ 
+./build/core/Makefile:102:    $(call collapse-pairs, $(ADDITIONAL_DEFAULT_PROPERTIES)) 
+./build/core/Makefile:103:ADDITIONAL_DEFAULT_PROPERTIES += \ 
+./build/core/Makefile:105:ADDITIONAL_DEFAULT_PROPERTIES := $(call uniq-pairs-by-first-component, \ 
+./build/core/Makefile:106:    $(ADDITIONAL_DEFAULT_PROPERTIES),=) 
+./build/core/Makefile:112:            echo "# ADDITIONAL_DEFAULT_PROPERTIES" >> $@; \ 
+./build/core/Makefile:114:    $(hide) $(foreach line,$(ADDITIONAL_DEFAULT_PROPERTIES), \ 
+
+进入main.mk的这段代码： 
+## user/userdebug ## 
+  
+user_variant := $(filter user userdebug,$(TARGET_BUILD_VARIANT)) 
+enable_target_debugging := true 
+tags_to_install := 
+ifneq (,$(user_variant)) 
+  # Target is secure in user builds. 
+  ADDITIONAL_DEFAULT_PROPERTIES += ro.secure=1 
+  
+  ifeq ($(user_variant),userdebug) 
+    # Pick up some extra useful tools 
+    tags_to_install += debug 
+  
+    # Enable Dalvik lock contention logging for userdebug builds. 
+    ADDITIONAL_BUILD_PROPERTIES += dalvik.vm.lockprof.threshold=500 
+  else 
+    # Disable debugging in plain user builds. 
+    enable_target_debugging := 
+  endif 
+  
+  # enable dex pre-optimization for all TARGET projects in default to 
+  # speed up device first boot-up 
+  WITH_DEXPREOPT := true 
+  
+  # Turn on Dalvik preoptimization for user builds, but only if not 
+  # explicitly disabled and the build is running on Linux (since host 
+  # Dalvik isn't built for non-Linux hosts). 
+  ifneq (true,$(DISABLE_DEXPREOPT)) 
+    ifeq ($(user_variant),user) 
+      ifeq ($(HOST_OS),linux) 
+        WITH_DEXPREOPT := true 
+      endif 
+    endif 
+  endif 
+  
+  # Disallow mock locations by default for user builds 
+  ADDITIONAL_DEFAULT_PROPERTIES += ro.allow.mock.location=0 
+  
+else # !user_variant 
+  # Turn on checkjni for non-user builds. 
+  # Kirby: turn off it temporarily to gain performance { 
+  # ADDITIONAL_BUILD_PROPERTIES += ro.kernel.android.checkjni=1 
+  ADDITIONAL_BUILD_PROPERTIES += ro.kernel.android.checkjni=0 
+  # } Kirby 
+  # Set device insecure for non-user builds. 
+  ADDITIONAL_DEFAULT_PROPERTIES += ro.secure=0 
+  # Allow mock locations by default for non user builds 
+  ADDITIONAL_DEFAULT_PROPERTIES += ro.allow.mock.location=1 
+endif # !user_variant 
+  
+  
+# always enable aed 
+ADDITIONAL_DEFAULT_PROPERTIES += persist.mtk.aee.aed=on 
+  
+ifeq (true,$(strip $(enable_target_debugging))) 
+  # Target is more debuggable and adbd is on by default 
+  ADDITIONAL_DEFAULT_PROPERTIES += ro.debuggable=1 
+  # Include the debugging/testing OTA keys in this build. 
+  INCLUDE_TEST_OTA_KEYS := true 
+else # !enable_target_debugging 
+  # Target is less debuggable and adbd is off by default 
+  ADDITIONAL_DEFAULT_PROPERTIES += ro.debuggable=0 
+endif # !enable_target_debugging 
+  
+# default usb function 
+ifeq ($(strip $(MTK_MASS_STORAGE)),yes) 
+  ADDITIONAL_DEFAULT_PROPERTIES += persist.sys.usb.config=mass_storage 
+else 
+  ADDITIONAL_DEFAULT_PROPERTIES += persist.sys.usb.config=mtp 
+endif 
+  
+# serial port open or not 
+ifeq ($(strip $(MTK_SERIAL_PORT_DEFAULT_ON)),yes) 
+ADDITIONAL_DEFAULT_PROPERTIES += persist.service.acm.enable=1 
+else 
+ADDITIONAL_DEFAULT_PROPERTIES += persist.service.acm.enable=0 
+endif 
+可以得出，在这里我们开始了定义ADDITIONAL_DEFAULT_PROPERTIES(default.prop)里的"有用内容"(因为这里并没有生成default.prop文件，也没有往其中写入任何内容，但定义的这些内容是系统真正会用到的内容)，并赋了初值。 
+
+进入makefile文件： 
+
+# ----------------------------------------------------------------- 
+# default.prop 
+INSTALLED_DEFAULT_PROP_TARGET := $(TARGET_ROOT_OUT)/default.prop 
+ALL_DEFAULT_INSTALLED_MODULES += $(INSTALLED_DEFAULT_PROP_TARGET) 
+ADDITIONAL_DEFAULT_PROPERTIES := \ 
+    $(call collapse-pairs, $(ADDITIONAL_DEFAULT_PROPERTIES)) 
+ADDITIONAL_DEFAULT_PROPERTIES += \ 
+    $(call collapse-pairs, $(PRODUCT_DEFAULT_PROPERTY_OVERRIDES)) 
+ADDITIONAL_DEFAULT_PROPERTIES := $(call uniq-pairs-by-first-component, \ 
+    $(ADDITIONAL_DEFAULT_PROPERTIES),=) 
+  
+$(INSTALLED_DEFAULT_PROP_TARGET): 
+    @echo Target buildinfo: $@ 
+    @mkdir -p $(dir $@) 
+    $(hide) echo "#" > $@; \ 
+            echo "# ADDITIONAL_DEFAULT_PROPERTIES" >> $@; \ 
+            echo "#" >> $@; 
+    $(hide) $(foreach line,$(ADDITIONAL_DEFAULT_PROPERTIES), \ 
+        echo "$(line)" >> $@;) 
+    build/tools/post_process_props.py $@ 
+
+重点关注$(INSTALLED_DEFAULT_PROP_TARGET):之后的这一部分内容，我们可以发现这里的格式和default.prop文件中开头的格式一样。如果熟悉makefile文件的编写语法的话，那么就好理解了，简单的作下说明： 
+:= , += 都表示赋值 
+makefile的执行语法为： 
+目标：条件 
+(Tab键)命令 
+我们只需要关注命令即可： 
+
+
+    @echo Target buildinfo: $@                                       @表示不显示此行内容，$@ 等同于目标，echo是shell命令，显示内容到控制台。如果没有"@"default.prop文件中
+
+                                                                                              会多此行内容： Target buildinfo: default.prop 
+
+
+    @mkdir -p $(dir $@)                                                      shell命令：创建文件，因此default.prop在此处创建的 
+    $(hide) echo "#" > $@; \                                         
+            echo "# ADDITIONAL_DEFAULT_PROPERTIES" >> $@; \                  shell重定向输入到文件，这里就是default.prop开头处的三行内容 
+            echo "#" >> $@; 
+    $(hide) $(foreach line,$(ADDITIONAL_DEFAULT_PROPERTIES), \          makefile的函数循环方法，即输出每一行重定向到文件中 
+        echo "$(line)" >> $@;) 
+    build/tools/post_process_props.py $@                                                            一个python脚本，做了一些其它操作。 
+
+END... 
+

@@ -1,0 +1,52 @@
+[DESCRIPTION]
+ 
+     若是一些海外需求，对于号码匹配位数，需要先10位匹配，若是无法匹配，则换成7位匹配，可以参考本FAQ来修改。
+ 
+具体情况举例：
+Case 1：
+如果您保存的有：A：04165191666， B：5191666，  来电号码是：04165191666  
+因为是7位匹配，所以A和B都可以匹配到，但是最佳匹配还是A，最后显示A；
+来电5191666则匹配到B。
+Case 2:
+仅保存 A：04165191666，
+来电5191666或者04165191666则都匹配A。
+Case 3:
+仅保存 B：5191666，
+来电5191666或者04165191666则都匹配B。
+ 
+ 
+[SOLUTION]
+      可以在7匹配的基础上，将符合条件的号码匹配做进一步筛选即可。
+ 
+首先，需要将MIN_MATCH修改为7位匹配，请修改以下两只文件，保证return MIN_MATCH都是7
+【Bfore KK1】
+(1).修改OldPhoneNumberUtils.cpp (alps\external\sqlite\android)，getMinMatch()返回值
+2、PhoneNumberUtils.java (alps\frameworks\base\telephony\java\android\telephony)中的MIN_MATCH;
+【After KK1】
+(1).修改OldPhoneNumberUtils.cpp(alps\external\sqlite\android)，getMinMatch()返回值
+(2).修改PhoneNumberExt.java (mediatek\frameworks\base\op\java\com\mediatek\op\telephony)中的
+getMinMatch() 返回值
+ 
+另外，请修改DialerSearchUtils.java (alps\packages\providers\contactsprovider\src\com\android\providers\contacts)中的
+ public static Cursor findNumberExactMatchedCursor(Cursor cursor, String normalizedNumber)方法
+这里说明一下：
+
+这个方法是在号码匹配的基础上，再进一步过滤精确号码并返回
+输入参数：
+cursor是所有经过7位匹配后返回数据，后续会从这里面再做精确匹配
+normalizedNumber是call/mms所使用的号码
+输出：
+若是返回已经匹配上，则
+                MatrixCursor exactCursor = matrixCursorFromCursorRow
+tn801380(崔巍-Wei.Cui) 16:35:32
+(cursor, cursor.getPosition());
+                cursor.close();
+                return exactCursor;
+若是没有匹配上，则
+return null;
+ 
+另外两个号码，说明一下：
+normalizedNumber是call/mms所使用的号码
+data1是数据库中找出来的完整号码
+可以在这个函数中做客制化满足要求。
+

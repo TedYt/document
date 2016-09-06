@@ -1,0 +1,10 @@
+String volumeName = "external";
+
+MUSIC:
+uri = Audio.Media.getContentUri(volumeName);
+
+VIDEO:
+uri = Video.Media.getContentUri(volumeName);
+
+PICTURE:
+uri = Images.Media.getContentUri(volumeName);

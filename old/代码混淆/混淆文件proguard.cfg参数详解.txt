@@ -1,0 +1,94 @@
+1 . 在工程文件project.properties中加入下proguard.config=proguard.cfg ， 如下所示：
+proguard.config=proguard.cfg
+
+Eclipse会通过此配置在工程目录生成proguard.cfg文件
+
+ 2 . 生成keystore (如已有可直接利用)
+
+
+
+
+参数意义：-validity主要是证书的有效期，写100000天；空格，退格键 都算密码。
+
+
+
+
+ 3. 在Eclipce的操作
+
+File -> Export -> Export Android Application -> Select project -> Using the existing keystore , and input password -> select the destination APK file 
+ 经过混淆后的源代码，原先的类名和方法名会被类似a,b,c。。。的字符所替换，混淆的原理其实也就是类名和方法名的映射。
+
+proguard 自己考一个就行
+
+
+
+•proguard 原理
+Java代码编译成二进制class 文件，这个class 文件也可以反编译成源代码 ，除了注释外，原来的code 基本都可以看到。为了防止重要code 被泄露，我们往往需要混淆（Obfuscation code ， 也就是把方法，字段，包和类这些java 元素的名称改成无意义的名称，这样代码结构没有变化，还可以运行，但是想弄懂代码的架构却很难。 proguard 就是这样的混淆工具，它可以分析一组class 的结构，根据用户的配置，然后把这些class 文件的可以混淆java 元素名混淆掉。在分析class 的同时，他还有其他两个功能，删除无效代码（Shrinking 收缩），和代码进行优化 （Optimization Options）。
+缺省情况下，proguard 会混淆所有代码，但是下面几种情况是不能改变java 元素的名称，否则就会这样就会导致程序出错。
+
+
+•proguard 配置
+最常用的配置选项：
+-dontwarn 缺省proguard 会检查每一个引用是否正确，但是第三方库里面往往有些不会用到的类，没有正确引用。如果不配置的话，系统就会报错。
+-keep 指定的类和类成员被保留作为 入口 。
+-keepclassmembers 指定的类成员被保留。
+-keepclasseswithmembers 指定的类和类成员被保留，假如指定的类成员存在的话。
+
+•proguard 问题和风险
+代码混淆后虽然有混淆优化的好处，但是它往往也会带来如下的几点问题
+1，混淆错误，用到第三方库的时候，必须告诉 proguard 不要检查，否则proguard 会报错。
+2，运行错误，当code 不能混淆的时候，我们必须要正确配置，否则程序会运行出错，这种情况问题最多。
+3，调试苦难，出错了，错误堆栈是混淆后的代码 ，自己也看不懂。
+
+为了防止混淆出问题，你需要熟悉你所有的code ，系统的架构 ，以及系统和你code的集成的接口，并细心分析。 同时你必须需要一轮全面的测试。 所以混淆也还是有一定风险的。 为了避免风险，你可以只是混淆部分关键的代码，但是这样你的混淆的效果也会有所降低。
+
+常见的不能混淆的androidCode：
+
+1.Android 程序 ，下面这样代码混淆的时候要注意保留。
+2.Android系统组件，系统组件有固定的方法被系统调用。被Android Resource 文件引用到的。名字已经固定，也不能混淆，比如自定义的View 。
+3.Android Parcelable ，需要使用android 序列化的。
+其他Anroid 官方建议 不混淆的，如
+
+1.android.app.backup.BackupAgentHelper
+2.android.preference.Preference
+3.com.android.vending.licensing.ILicensingService
+4.Java序列化方法，系统序列化需要固定的方法。
+5.枚举 ，系统需要处理枚举的固定方法。
+6.本地方法，不能修改本地方法名
+7.annotations 注释
+8.数据库驱动
+9.有些resource 文件
+10.用到反射的地方
+•如何实施
+现在的系统已经配置为混淆时候会保留
+
+1.Android系统组件
+2.自定义View
+3.Android Parcelable
+4.Android R 文件
+5.Android Parcelable
+6.枚举
+各个开发人员必须检查自己的code 是否用到反射 ，和其他不能混淆的地方。告诉我来修改配置文件（已经保留的就不需要了）
+
+目前系统部检查的第三方库为
+-dontwarn android.support.**
+-dontwarn com.tencent.**
+-dontwarn org.dom4j.**
+-dontwarn org.slf4j.**
+-dontwarn org.http.mutipart.**
+-dontwarn org.apache.**
+-dontwarn org.apache.log4j.**
+-dontwarn org.apache.commons.logging.**
+-dontwarn org.apache.commons.codec.binary.**
+-dontwarn weibo4android.**
+
+•proguard 参数
+-include {filename}    从给定的文件中读取配置参数 
+-basedirectory {directoryname}    指定基础目录为以后相对的档案名称 
+-injars {class_path}    指定要处理的应用程序jar,war,ear和目录 
+-outjars {class_path}    指定处理完后要输出的jar,war,ear和目录的名称 
+-libraryjars {classpath}    指定要处理的应用程序jar,war,ear和目录所需要的程序库文件 
+-dontskipnonpubliclibraryclasses    指定不去忽略非公共的库类。 
+-dontskipnonpubliclibraryclassmembers    指定不去忽略包可见的库类的成员。 
+
+

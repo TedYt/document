@@ -1,0 +1,156 @@
+
+环境变量配置文件
+
+在Ubuntu中有如下几个文件可以设置环境变量
+1、/etc/profile:在登录时,操作系统定制用户环境时使用的第一个文件,此文件为系统的每个用户设置环境信息,当用户第一次登录时,该文件被执行。
+2、/etc/environment:在登录时操作系统使用的第二个文件,系统在读取你自己的profile前,设置环境文件的环境变量。
+3、~/.bash_profile:在登录时用到的第三个文件是.profile文件,每个用户都可使用该文件输入专用于自己使用的shell信息,当用户登录时,该 文件仅仅执行一次!默认情况下,他设置一些环境变游戏量,执行用户的.bashrc文件。/etc/bashrc:为每一个运行bash shell的用户执行此文件.当bash shell被打开时,该文件被读取.
+4、~/.bashrc:该文件包含专用于你的bash shell的bash信息,当登录时以及每次打开新的shell时,该该文件被读取。
+
+
+
+
+几个环境变量的优先级
+
+1>2>3
+
+
+设置永久环境变量 
+
+1.环境变量配置中，要先删除.bash_profile中的三行关于.bashrc的定义，然后把环境变量配置在.bashrc中
+2.选择要使用的java环境：update-alternatives –config java
+3.要使得刚修改的环境变量生效：source .bashrc
+4.查看环境变量：env
+
+可以放到/etc/bash/bashrc，这样就是系统级的
+
+
+
+环境变量命令
+
+1、引言
+
+在linux系统下，如果你下载并安装了应用程序，很有可能在键入它的名称时出现“command not found”的提示内容。如果每次都到安装目标文件夹内，找到可执行文件来进行操作就太繁琐了。这涉及到环境变量PATH的设置问题，而PATH的设置也 是在linux下定制环境变量的一个组成部分。本文基于RedHat 9.0，详细讲解了环境变量定制的问题。
+
+2、变量简介
+
+Linux是一个多用户的操作系统。每个用户登录系统后，都会有一个专用的运行环境。通常每个用户默认的环境都是相同的，这个默认环境实际上就是一组环境变量的定义。用户可以对自己的运行环境进行定制，其方法就是修改相应的系统环境变量。
+
+3、定制环境变量
+
+环境变量是和Shell紧密相关的，用户登录系统后就启动了一个Shell。对于Linux来说一般是bash，但也可以重新设定或切换到其它的 Shell。根据发行版本的情况，bash有两个基本的系统级配置文件：/etc/bashrc和/etc/profile。这些配置文件包含两组不同的 变量：shell变量和环境变量。前者只是在特定的shell中固定（如bash），后者在不同shell中固定。很明显，shell变量是局部的，而环 境变量是全局的。环境变量是通过Shell命令来设置的，设置好的环境变量又可以被所有当前用户所运行的程序所使用。对于bash这个Shell程序来 说，可以通过变量名来访问相应的环境变量，通过export来设置环境变量。下面通过几个实例来说明。
+
+3.1 使用命令echo显示环境变量
+
+#本例使用echo显示常见的变量HOME
+
+$ echo $HOME
+
+/home/xiaosu
+
+3.2 设置一个新的环境变量
+
+$ export HELLO=”Hello!”
+
+$ echo $HELLO
+
+Hello!
+
+3.3 使用env命令显示所有的环境变量
+
+$ env
+
+SSH_AGENT_PID=1875
+
+HOSTNAME=xiaosu-latop
+
+SHELL=/bin/bash
+
+TERM=xterm
+
+HISTSIZE=1000
+
+……
+
+3.4 使用set命令显示所有本地定义的Shell变量
+
+$ set
+
+BASH=/bin/bash
+
+……
+
+3.5 使用unset命令来清除环境变量
+
+$ export TEST=”test” #增加一个环境变量TEST
+
+$ env | grep TEST #此命令有输出，证明环境变量TEST已经存在了
+
+TEST=test
+
+$ unset $TEST #删除环境变量TEST
+
+$ env | grep TEST #此命令无输出，证明环境变量TEST已经存在了
+
+3.6 使用readonly命令设置只读变量
+
+如果使用了readonly命令的话，变量就不可以被修改或清除了。示例如下：
+
+$ export TEST=”Test…” #增加一个环境变量TEST
+
+$ readonly TEST #将环境变量TEST设为只读
+
+$ unset TEST #会发现此变量不能被删除
+
+-bash: unset: TEST: cannot unset: readonly variable
+$ TEST=”New” #会发现此变量不能被修改
+
+-bash: TEST: readonly variable
+
+3.7 用C程序来访问和设置环境变量
+
+对于C程序的用户来说，可以使用下列三个函数来设置或访问一个环境变量。
+
+getenv()访问一个环境变量。输入参数是需要访问的变量名字，返回值是一个字符串。如果所访问的环境变量不存在，则会返回NULL。
+
+setenv()在程序里面设置某个环境变量的函数。
+
+unsetenv()清除某个特定的环境变量的函数。
+
+另外，还有一个指针变量environ，它指向的是包含所有的环境变量的一个列表。下面的程序可以打印出当前运行环境里面的所有环境变量：
+
+#include <stdio.h>
+
+extern char**environ;
+
+int main ()
+
+{
+
+char**var;
+
+for (var =environ;*var !=NULL;++var)
+
+printf (”%s /n “,*var);
+
+return 0;
+
+}
+
+3.8 通过修改环境变量定义文件来修改环境变量。
+
+需要注意的是，一般情况下，这仅仅对于普通用户适用，避免修改根用户的环境定义文件，因为那样可能会造成潜在的危险。
+
+$cd #到用户根目录下
+
+$ls -a #查看所有文件，包含隐藏的文件
+
+$vi .bash_profile #修改环境变量定义文件
+
+然后编辑你的PATH声明，其格式为：
+
+PATH=$PATH:<PATH 1>:<PATH 2>:<PATH 3>:——:<PATH N>
+
+你可以自己加上指定的路径，中间用冒号隔开。环境变量更改后，在用户下次登陆时生效，如果想立刻生效，则可执行下面的语句：$source .bash_profile
+
+需要注意的是，最好不要把当前路径”./”放到PATH里，这样可能会受到意想不到的攻击。完成后，可以通过$ echo $PATH查看当前的搜索路径。这样定制后，就可以避免频繁的启动位于shell搜索的路径之外的程序了。

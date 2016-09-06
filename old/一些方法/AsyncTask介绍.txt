@@ -1,0 +1,39 @@
+
+
+
+在开发Android移动客户端的时候往往要使用多线程来进行操作，我们通常会将耗时的操作放在单独的线程执行，避免其占用主线程而给用户带来不好的用户体验。但是在子线程中无法去操作主线程（UI 线程），在子线程中操作UI线程会出现错误。因此android提供了一个类Handler来在子线程中来更新UI线程，用发消息的机制更新UI界面，呈现给用户。这样就解决了子线程更新UI的问题。但是费时的任务操作总会启动一些匿名的子线程，太多的子线程给系统带来巨大的负担，随之带来一些性能问题。因此android提供了一个工具类AsyncTask，顾名思义异步执行任务。这个AsyncTask生来就是处理一些后台的比较耗时的任务，给用户带来良好用户体验的，从编程的语法上显得优雅了许多，不再需要子线程和Handler就可以完成异步操作并且刷新用户界面。 
+
+        先大概认识下Android.os.AsyncTask类：
+
+       * android的类AsyncTask对线程间通讯进行了包装，提供了简易的编程方式来使后台线程和UI线程进行通讯：后台线程执行异步任务，并把操作结果通知UI线程。
+
+       * AsyncTask是抽象类.AsyncTask定义了三种泛型类型 Params，Progress和Result。
+　  * Params 启动任务执行的输入参数，比如HTTP请求的URL。
+　  * Progress 后台任务执行的百分比。
+　   * Result 后台执行任务最终返回的结果，比如String,Integer等。
+
+       * AsyncTask的执行分为四个步骤，每一步都对应一个回调方法，开发者需要实现这些方法。
+
+　  * 1) 继承AsyncTask
+　   * 2) 实现AsyncTask中定义的下面一个或几个方法
+       * onPreExecute(), 该方法将在执行实际的后台操作前被UI 线程调用。可以在该方法中做一些准备工作，如在界面上显示一个进度条，或者一些控件的实例化，这个方法可以不用实现。
+       * doInBackground(Params...), 将在onPreExecute 方法执行后马上执行，该方法运行在后台线程中。这里将主要负责执行那些很耗时的后台处理工作。可以调用 publishProgress方法来更新实时的任务进度。该方法是抽象方法，子类必须实现。
+      * onProgressUpdate(Progress...),在publishProgress方法被调用后，UI 线程将调用这个方法从而在界面上展示任务的进展情况，例如通过一个进度条进行展示。
+      * onPostExecute(Result), 在doInBackground 执行完成后，onPostExecute 方法将被UI 线程调用，后台的计算结果将通过该方法传递到UI 线程，并且在界面上展示给用户.
+
+      * onCancelled(),在用户取消线程操作的时候调用。在主线程中调用onCancelled()的时候调用。
+
+为了正确的使用AsyncTask类，以下是几条必须遵守的准则：
+
+    　　1) Task的实例必须在UI 线程中创建
+
+    　　2) execute方法必须在UI 线程中调用
+
+    　　3) 不要手动的调用onPreExecute(), onPostExecute(Result)，doInBackground(Params...), onProgressUpdate(Progress...)这几个方法，需要在UI线程中实例化这个task来调用。
+
+    　　4) 该task只能被执行一次，否则多次调用时将会出现异常
+
+      doInBackground方法和onPostExecute的参数必须对应，这两个参数在AsyncTask声明的泛型参数列表中指定，第一个为doInBackground接受的参数，第二个为显示进度的参数，第三个为doInBackground返回和onPostExecute传入的参数。
+
+
+

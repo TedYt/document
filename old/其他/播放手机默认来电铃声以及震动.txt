@@ -1,0 +1,81 @@
+//-开始播放手机铃声及震动
+try {
+    Uri alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
+    mMediaPlayer = new MediaPlayer();
+    mMediaPlayer.setDataSource(mContext, alert);
+    //final AudioManager audioManager = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
+    mMediaPlayer.setAudioStreamType(AudioManager.STREAM_RING);
+    mMediaPlayer.setLooping(true);
+    mMediaPlayer.prepare();
+    mMediaPlayer.start();
+} catch (Exception e) {
+    e.printStackTrace();
+}
+
+try {
+    vibrator = (Vibrator) mContext.getSystemService(Context.VIBRATOR_SERVICE);
+    long[] pattern = {800, 150, 400, 130}; // OFF/ON/OFF/ON...
+    vibrator.vibrate(pattern, 2);
+} catch (Exception e) {
+    e.printStackTrace();
+}
+注：Vibrator.vibrate() 有两个函数实现，一个是设定让其震动多长时间自动关闭，另一个实现（文中所示），是要震动以pattern节奏进行。
+
+//关闭
+try {
+    if(this.mMediaPlayer != null) {
+        if(this.isPlaying()) {
+            this.mMediaPlayer.stop();
+        }
+    }
+} catch (Exception e) {
+    e.printStackTrace();
+}
+
+try {
+    if (null != vibrator) {
+        vibrator.cancel();
+        vibrator = null;
+    }
+} catch (Exception e) {
+    e.printStackTrace();
+}
+
+注意：如果想要改变播放铃声类型，如：想要闹铃：则替换RingtoneManager.TYPE_RINGTONE为RingtoneManager.TYPE_ALARM, 而如果要提示音，则替换为TYPE_NOTIFICATION。
+
+然后将mMediaPlayer.setAudioStreamType(AudioManager.STREAM_XXXXX);即可。
+
+注意：MediaPlayer设置StreamType需要在prepare之前。
+
+先看一段源码。
+
+public static MediaPlayer create(Context context, int resid) {
+
+AssetFileDescriptor afd = context.getResources().openRawResourceFd(resid);
+if (afd == null) return null;
+
+MediaPlayer mp = new MediaPlayer();
+mp.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
+afd.close();
+mp.prepare();
+return mp;
+
+。。。。。
+MediaPlayer mp = MediaPlayer.create(context, R.raw..)
+mMediaPlayer.setAudioStreamType(AudioManager.STREAM_VOICE_CALL); //无效
+mAudioManager.setMode(AudioManager.MODE_IN_CALL); //设置听筒播放
+mAudioManager.setSpeakerphoneOn(false);
+
+改用另一种方式创建MediaPlayer对象。
+
+注意，mMediaPlayer.setAudioStreamType 是在MediaPlayer prepare后，如果在Create之后再设置将不起作用
+
+mMediaPlayer = new MediaPlayer();
+mMediaPlayer.setAudioStreamType(AudioManager.STREAM_VOICE_CALL);
+mMediaPlayer.setDataSource(afd.getFileDescriptor(),
+afd.getStartOffset(),afd.getLength());
+afd.close();
+mMediaPlayer.prepare()
+
+
+

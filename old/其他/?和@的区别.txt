@@ -1,0 +1,26 @@
+
+例:
+
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+   <style name="CustomTheme">
+	 <item name="android:windowNoTitle">true</item>
+	 <item name="windowFrame">@drawable/screen_frame</item>
+	 <item name="windowBackground">@drawable/screen_background_white</item>
+	 <item name="panelForegroundColor">#FF000000</item>
+	 <item name="panelBackgroundColor">#FFFFFFFF</item>
+	 <item name="panelTextColor">?panelForegroundColor</item>
+	 <item name="panelTextSize">14</item>
+	 <item name="menuItemTextColor">?panelTextColor</item>
+	 <item name="menuItemTextSize">?panelTextSize</item>
+  </style>
+</resources>
+
+	@: 表示我们试用的资源是前边定义过的(或者在前一个项目中或者在Android框架中)
+	?: 表示我们引用用的资源的值在当前的主题中定义过, 例如上面的<item name="menuItemTextColor">?panelTextColor</item>
+	   就表明属性menuItemTextColor, 使用了panelTextColor属性的值
+
+	所以
+	@ 表示引用资源(图片,字符等)
+	? 表死引用属性的值, 从这里可以看出?一般用于style定义中
+	

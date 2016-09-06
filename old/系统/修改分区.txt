@@ -1,0 +1,4 @@
+
+修改下面两个文件：
+1. device/qcom/<project>/BoardConfig.mk 
+2. device/qocm/<project>/non_hlos/partition.xml

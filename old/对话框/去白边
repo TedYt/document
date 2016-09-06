@@ -1,0 +1,43 @@
+<style name="dialog" parent="@android:style/Theme.Dialog">
+ 	<item name="android:windowFrame">@android:color/transparent</item>
+ 	<item name="android:windowIsFloating">true</item>
+ 	<item name="android:windowIsTranslucent">false</item>
+ 	<item name="android:windowNoTitle">true</item>
+ 	<!--<item name="android:background">@android:color/black</item>-->
+
+	<item name="android:windowBackground">@null</item>
+ 	<item name="android:backgroundDimEnabled">false</item> 
+</style>
+
+
+<style name="alarmDialog" parent="@android:style/Theme.Dialog">
+    <item name="android:windowFrame">@android:color/transparent</item>
+    <item name="android:panelBackground">@android:color/transparent</item>
+    <item name="android:panelColorForeground">@android:color/transparent</item>
+    <item name="android:background">@android:color/transparent</item>
+    <item name="android:windowBackground">@android:color/transparent</item>
+</style>
+
+
+<shape xmlns:android="http://schemas.android.com/apk/res/android" 
+
+02         android:shape="rectangle">  
+
+03         <gradient android:startColor="#c0000000" android:endColor="#c0000000" 
+
+04                 android:angle="90" /><!--背景颜色渐变 --> 
+
+05         <stroke android:dashWidth="2dp" android:dashGap="2dp" 
+
+06                 android:width="2dp" android:color="#FF00ff00"></stroke>  
+
+07         <!--描边 --> 
+
+08         <corners android:bottomRightRadius="5dp" 
+
+09                 android:bottomLeftRadius="5dp" android:topLeftRadius="5dp" 
+
+10                 android:topRightRadius="5dp" /><!--设置圆角--> 
+
+11 </shape> 
+

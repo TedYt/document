@@ -1,0 +1,4 @@
+
+LinearLayout.LayoutParams param = (LinearLayout.LayoutParams)mTimeDisplay.getLayoutParams();
+param.width = 400;
+mTimeDisplay.setLayoutParams(param);

@@ -1,0 +1,36 @@
+
+
+void showPopupMenu(View v) { // v即被点击的View
+	
+	PopupMenu popup = new PopupMenu(this,v);
+
+	popup.inflate(R.menu.popup_menu.xml);
+	Menu menu = popup.getMenu(); //过的popupmenu中menu的实例
+
+	menu.getItem(index); // 获取某一项
+
+	popup.show();
+
+}
+
+
+
+menu的写法
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- "Audio mode" popup menu for the in-call UI. -->
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/artistAblum"
+          android:title="@string/artists_title" />
+
+    <item android:id="@+id/ablum_list"
+          android:title="@string/albums_title" />
+
+    <item android:id="@+id/song_list"
+          android:title="@string/tracks_title" />
+
+    <item android:id="@+id/playing_list"
+          android:title="@string/playlists_title" />
+
+</menu>
+

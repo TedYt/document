@@ -1,0 +1,13 @@
+
+//sx, sy 是宽和高的缩放比例
+static Bitmap resizeAppBitmap(Bitmap appIcon, float sX, float sY) {
+
+		Matrix matrix = new Matrix();
+		matrix.postScale(sX, sY);
+		Bitmap resizeBmp = Bitmap.createBitmap(appIcon, 0, 0,
+				appIcon.getWidth(), appIcon.getHeight(), matrix, true);
+		return resizeBmp;
+	}
+	
+如果是一个资源文件，可以通过下面的方法现转换为Bitmap：
+Bitmap b = BitmapFactory.decodeResource(Resource res，int id);

@@ -1,0 +1,14 @@
+
+扫描的目的是为了将文件添加到数据库中
+
+全盘扫描：
+sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED,
+                        Uri.parse("file://" + Environment.getExternalStorageDirectory().getAbsolutePath())));
+
+Environment.getExternalStorageDirectory().getAbsolutePath() 的结果是/storage/sdcard0
+
+扫描单个文件：
+sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
+                        Uri.parse("file://" + FilePath)));
+
+FilePath 是文件的绝对路径

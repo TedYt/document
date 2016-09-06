@@ -1,0 +1,7 @@
+1. 获取LayoutInflater 对象
+	1. 如果在一个activity中可以使用
+	    LayoutInflater inflater = getLayoutInflater();
+	2. 如果不再Activity中,但是有context对象
+	    LayoutInflater inflater = (LayoutInflater)mContext.getSystemService(Service.LAYOUT_INFLATER_SERVICE);
+2. 转换成View
+	View layout = infalter.inflater(R.layout.layout_id, null);

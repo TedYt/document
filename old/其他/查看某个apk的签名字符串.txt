@@ -1,0 +1,3 @@
+
+jarsigner -verbose -certs -verify ./out/target/product/mt6575_phone/system/app/Phone.apk
+

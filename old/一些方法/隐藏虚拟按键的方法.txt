@@ -1,0 +1,37 @@
+import android.app.Activity;   
+import android.os.Bundle;   
+import android.view.View;   
+import android.view.View.OnClickListener;   
+   
+public class HideTestActivity extends Activity implements OnClickListener{   
+    View main ;   
+       
+    @Override   
+    public void onCreate(Bundle savedInstanceState) {   
+        super.onCreate(savedInstanceState);   
+        main = getLayoutInflater().from(this).inflate(R.layout.main, null);   
+        main.setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION); //<------  
+        main.setOnClickListener(this);   
+        setContentView(main);   
+    }   
+
+   
+    @Override   
+    public void onClick(View v) {   
+        int i = main.getSystemUiVisibility();   
+        if (i == View.SYSTEM_UI_FLAG_HIDE_NAVIGATION) {   
+            main.setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);   
+        } else if (i == View.SYSTEM_UI_FLAG_VISIBLE){   
+            main.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);   
+        } else if (i == View.SYSTEM_UI_FLAG_LOW_PROFILE) {   
+            main.setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);   
+        }   
+    }   
+}   
+
+
+        setContentView(R.layout.main);
+        Window win = getWindow();
+		WindowManager.LayoutParams lp = win.getAttributes();
+		lp.systemUiVisibility = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
+		win.setAttributes(lp);

@@ -1,0 +1,18 @@
+
+
+private void writeLogToSDCard(String TAG, String msg){
+
+	if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
+		File sdCardDir = Environment.getExternalStorageDirectory();
+		File saveFile = new File(sdCardDir, "Log_SmartMode.txt");
+		try{
+			FileOutputStream outStream = new FileOutputStream(saveFile, true);//true表示可以append
+			outStream.write((TAG + " : " + msg + "\n").getBytes());
+			outStream.close();
+		}catch(FileNotFoundException e){
+			e.printStackTrace();
+		}catch(IOException e){
+			e.printStackTrace();
+		}
+	}
+}

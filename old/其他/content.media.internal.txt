@@ -1,0 +1,1 @@
+MediaProvider中存在两个数据库一个是external对应文件系统为SD Card, 一个是内部数据库internal用于手机flash上的文件系统。遗憾的是虽然MediaProvider提供了操作内外两个数据库的功能，但在发布的应用中并没有使用这个内部文件系统。Android 默认状态下Image，audio等文件是保存在SD card上。External, internal 数据库都保存在手机文件系统上

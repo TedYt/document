@@ -1,0 +1,7 @@
+
+
+<bitmap xmlns:android="http://schemas.android.com/apk/res/android"
+    android:src="@drawable/dial_background_texture"
+    android:tileMode="repeat" />
+
+对一张图片的重复使用

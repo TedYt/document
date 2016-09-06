@@ -1,0 +1,127 @@
+
+
+linux 下的find 命令 小总结..谢谢大家赏光!
+
+
+通用格式:find pathname -options [-print -exec -ok]
+例子:
+find / -name filename 再根目录里面搜索文件名为filename的文件
+find /etc -name *s*在目录里面搜索带有s的文件
+find /etc -name *S 在目录里面搜索以s结尾的文件
+find /etc -name s*在目录里面搜索以s开头的文件
+find / -amin -10在系统中搜索最后１０分钟访问的文件
+find / -atime -2查找在系统中最后４８小时访问的文件
+find / -empty 查找在系统中为空的文件或者是文件夹
+find / -group groupname 查找在系统中属于groupname的文件
+find / -mmin -5查找在系统中最后５分钟修改过的文件
+find / -mtime -1查找在系统中最后２４小时修改过的文件
+find /－nouser查找在系统中属于费用户的文件
+find / -user username 查找在系统中属于username的文件
+find / -ctime -1查找在系统中最后２４小时被改变状态的文件
+find / -fstype type查找在系统中文件类型为？的文件
+find / -user user１name -or -user user２name查找在系统中属于user1name或着属于user2name的文件
+find / -user user1name -and -user2name在系统中查找既属于user1name又属于user2name用户的文件． 
+
+一、find 命令格式
+
+
+1、find命令的一般形式为；
+
+find pathname -options [-print -exec -ok ...]
+
+
+2、find命令的参数；
+
+pathname: find命令所查找的目录路径。例如用.来表示当前目录，用/来表示系统根目录。
+-print： find命令将匹配的文件输出到标准输出。
+-exec： find命令对匹配的文件执行该参数所给出的shell命令。相应命令的形式为'command' { } /;，注意{ }和/；之间的空格。
+-ok： 和-exec的作用相同，只不过以一种更为安全的模式来执行该参数所给出的shell命令，在执行每一个命令之前，都会给出提示，让用户来确定是否执行。
+
+
+3、find命令选项
+
+-name
+按照文件名查找文件。
+-perm
+按照文件权限来查找文件。
+-prune
+使用这一选项可以使find命令不在当前指定的目录中查找，如果同时使用-depth选项，那么-prune将被find命令忽略。
+-user
+按照文件属主来查找文件。
+-group
+按照文件所属的组来查找文件。
+-mtime -n +n
+按照文件的更改时间来查找文件， - n表示文件更改时间距现在n天以内，+ n表示文件更改时间距现在n天以前。find命令还有-atime和-ctime 选项，但它们都和-m time选项。
+-nogroup
+查找无有效所属组的文件，即该文件所属的组在/etc/groups中不存在。
+-nouser
+查找无有效属主的文件，即该文件的属主在/etc/passwd中不存在。
+-newer file1 ! file2
+查找更改时间比文件file1新但比文件file2旧的文件。
+-type
+查找某一类型的文件，诸如：
+b - 块设备文件。
+d - 目录。
+c - 字符设备文件。
+p - 管道文件。
+l - 符号链接文件。
+f - 普通文件。
+-size n：[c] 查找文件长度为n块的文件，带有c时表示文件长度以字节计。
+-depth：在查找文件时，首先查找当前目录中的文件，然后再在其子目录中查找。
+-fstype：查找位于某一类型文件系统中的文件，这些文件系统类型通常可以在配置文件/etc/fstab中找到，该配置文件中包含了本系统中有关文件系统的信息。
+-mount：在查找文件时不跨越文件系统mount点。
+-follow：如果find命令遇到符号链接文件，就跟踪至链接所指向的文件。
+-cpio：对匹配的文件使用cpio命令，将这些文件备份到磁带设备中。
+
+另外,下面三个的区别:
+  -amin n
+　　查找系统中最后N分钟访问的文件
+　　-atime n
+　　查找系统中最后n*24小时访问的文件
+　　-cmin n
+　　查找系统中最后N分钟被改变文件状态的文件
+　　-ctime n
+　　查找系统中最后n*24小时被改变文件状态的文件
+  　-mmin n
+　　查找系统中最后N分钟被改变文件数据的文件
+　　-mtime n
+　　查找系统中最后n*24小时被改变文件数据的文件
+
+
+4、使用exec或ok来执行shell命令
+
+使用find时，只要把想要的操作写在一个文件里，就可以用exec来配合find查找，很方便的
+
+在有些操作系统中只允许-exec选项执行诸如l s或ls -l这样的命令。大多数用户使用这一选项是为了查找旧文件并删除它们。建议在真正执行rm命令删除文件之前，最好先用ls命令看一下，确认它们是所要删除的文件。
+
+exec选项后面跟随着所要执行的命令或脚本，然后是一对儿{ }，一个空格和一个/，最后是一个分号。为了使用exec选项，必须要同时使用print选项。如果验证一下find命令，会发现该命令只输出从当前路径起的相对路径及文件名。
+
+例如：为了用ls -l命令列出所匹配到的文件，可以把ls -l命令放在find命令的-exec选项中
+
+# find . -type f -exec ls -l { } /;
+-rw-r--r-- 1 root root 34928 2003-02-25 ./conf/httpd.conf
+-rw-r--r-- 1 root root 12959 2003-02-25 ./conf/magic
+-rw-r--r-- 1 root root 180 2003-02-25 ./conf.d/README
+
+上面的例子中，find命令匹配到了当前目录下的所有普通文件，并在-exec选项中使用ls -l命令将它们列出。
+在/logs目录中查找更改时间在5日以前的文件并删除它们：
+
+$ find logs -type f -mtime +5 -exec rm { } /;
+
+记住：在shell中用任何方式删除文件之前，应当先查看相应的文件，一定要小心！当使用诸如mv或rm命令时，可以使用-exec选项的安全模式。它将在对每个匹配到的文件进行操作之前提示你。
+
+在下面的例子中， find命令在当前目录中查找所有文件名以.LOG结尾、更改时间在5日以上的文件，并删除它们，只不过在删除之前先给出提示。
+
+$ find . -name "*.conf" -mtime +5 -ok rm { } /;
+< rm ... ./conf/httpd.conf > ? n
+
+按y键删除文件，按n键不删除。
+
+任何形式的命令都可以在-exec选项中使用。
+
+在下面的例子中我们使用grep命令。find命令首先匹配所有文件名为“ passwd*”的文件，例如passwd、passwd.old、passwd.bak，然后执行grep命令看看在这些文件中是否存在一个sam用户。
+
+# find /etc -name "passwd*" -exec grep "sam" { } /;
+sam:x:501:501::/usr/sam:/bin/bash
+
+

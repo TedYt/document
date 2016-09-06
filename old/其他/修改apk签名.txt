@@ -1,0 +1,7 @@
+java -jar out/host/linux-x86/framework/signapk.jar build/target/product/security/platform.x509.pem  build/target/product/security/platform.pk8 Gallery2.apk Gallery2_sign.apk
+
+
+第一个apk是要需改签名的apk文件
+第二个apk是修改签名后的apk文件的名字
+
+这个命令是把apk的签名改成 系统的platform的签名

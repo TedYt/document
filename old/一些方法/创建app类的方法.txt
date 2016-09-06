@@ -1,0 +1,30 @@
+
+
+有些时候会遇到像handler这样的类中,要获得app的资源等,但是由于缺少context对象, 访问起来有点困难,
+下面介绍一个通过app实例来获取资源等的方法.
+
+1. 在manifest中的<application> 标签中加入name属性 比如name="MyApplication", 也可以不放在主包下,比如 name=".sub.MyApplication"
+
+2. 编写类MyApplication, 让其继承与Application, 如下:
+
+	import android.app.Application;
+
+	public class MyApplication extends Application{
+	
+		private static MyApplication instance;
+	
+		public static MyApplication getInstance(){
+			return instance;
+		}
+
+		@Override
+		public void onCreate() {
+			// TODO Auto-generated method stub
+			super.onCreate();
+			instance = this;
+		}
+	}
+
+3. 然后就可以通过MyApplication.getInstance,获取app的实例,然后就可以调用大部分方法了,
+   例如,app中有sharedPreference,就可以通过一下方法获得sharedPreference的对象:
+	 SharedPreferences sp = MyApplication.getInstance().getSharedPreferences(SHARED_PREFERENCE, Context.MODE_PRIVATE);

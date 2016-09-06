@@ -1,0 +1,6 @@
+
+
+透明
+android:background = "#00000000"
+半透明
+android:background = "#e0000000"

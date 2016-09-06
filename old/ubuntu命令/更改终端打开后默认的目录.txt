@@ -1,0 +1,9 @@
+编辑/home/<user>/.bashrc
+
+在最后加上
+
+if [ -d <目录路径> ]; then
+	cd <目录路径>
+fi
+
+~/ :表示用户盘的跟目录, 例如/home/zhangsan/

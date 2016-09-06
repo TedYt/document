@@ -1,0 +1,41 @@
+
+
+	
+1 重写类ContentObserver
+	//MyObserver的实现,重写类ContentObserver
+	public class MyObserver extends ContentObserver{
+
+		private Handler mHandler;
+		private Context mContext;
+		public MSGDeleteObserver(Context context, Handler handler) {
+			super(handler);
+			mHandler = handler;
+			mContext = context;
+		}
+
+		@Override
+		public void onChange(boolean selfChange) {
+			super.onChange(selfChange);
+			//当数指定的据库发生增,删,改操作时,都会触发该方法
+		}
+	}
+
+2 注册要监听数据库
+
+	//建立ContentObserver的对象, 绑定Hanlder
+	MyObserver myObserver = new MyObserver(context,new MyHanlder());
+	//将数据库(Uri)和ContentObserver绑定
+	//第2个参数的意思是:ture的话,不仅可以监听到指定Uri,还可以监听到其派生的Uri,false的话,特殊的uri才会监听
+	context.getContentResolver().registerContentObserver(INBOXFOLDER_URI, true, myObserver);
+
+	如果是要监听设置中的某项,比如监听待机时间的改变, 这项没有对应的URI常量, 可以如下监听
+	mContext.getContentResolver().registerContentObserver(
+                        Settings.System.getUriFor(Settings.System.SCREEN_OFF_TIMEOUT),
+                        true, mTimeoutChangeObserver);
+
+如果不需要监听,可以取消注册:
+	context.getContentResolver().unregisterContentObserver(myObserver);
+
+	MyHanlder就是Handler的继承者
+
+

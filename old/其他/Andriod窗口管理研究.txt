@@ -1,0 +1,18 @@
+一个完整的窗口包含了以下的概念：
+	View
+	ViewRoot
+	Window Manager Service
+	Window
+	Decor View
+	IWIndow
+	ISession
+	WindowState
+
+用户端窗口的概念：
+	Window
+	View
+	ViewRoot
+	Window Manager Proxy
+
+用户端的Activity通过Session与WindowManager建立对话，而WindowManager则通过IWindow接口访问Client
+

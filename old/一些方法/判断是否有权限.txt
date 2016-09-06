@@ -1,0 +1,11 @@
+
+
+
+boolean isPermissionGranted = PowerSavingApp.getInstance().
+	checkCallingPermission("android.permission.DEVICE_POWER") == PackageManager.PERMISSION_GRANTED;
+
+isPermissionGranted : true 说明有权限
+
+改方法可以用来判断,权限已经写在了manifest文件中,但是还是权限没有起作用的情况下
+
+PowerSavingApp 是程序对应的app类, 见文档<创建app类的方法.txt>

@@ -1,0 +1,32 @@
+	
+
+
+	View view = getLayoutInflater().inflate(R.layout.tinnoui_add_shortcut, null);
+	mShorCutEdtiText = (EditText)view.findViewById(R.id.shortcut_text);
+
+	AlertDialog dialog = new Builder(this)
+		.setTitle(R.string.tinnoui_add_shortcut_str)
+		.setView(view)
+		.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				String shorCutname = mShorCutEdtiText.getText().toString().trim();
+			}
+		})
+		.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.dismiss();
+			}
+		}).create();
+
+	dialog.getWindow().setSoftInputMode(
+				WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+	dialog.show();
+
+
+
+
+

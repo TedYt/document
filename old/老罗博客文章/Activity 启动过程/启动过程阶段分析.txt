@@ -1,0 +1,14 @@
+﻿1、Launcher通知AMS要启动一个Activity---以START_ACTIVITY_TRANSACTION这个消息发出为结束标志。step1-step5
+
+2、AMS接到消息后，然后让ActivityStack来处理启动前的准备，主要是做Luancher进入paused状态的准备。以ApplicationThreadProxy 发出SCHEDULE_PAUSE_ACTIVITY_TRANSACTION消息为结束标志。step6-step12
+
+3、ActivityThread 接到消息后，把Luancher推进了paused状态---以ActivityThread执行performPauseActivity(这个方法里会调用Activity的onPause方法)为结束标志。并通知AMS，Launcher已进入paused状态--发出消息ACTIVITY_PAUSED_TRANSACTION。step13-step17
+
+4、AMS接到消息后，让ActivityStack做Launcher Pause状态的维护工作---以ActivityStack 执行completePauseLocked为结束标志。step18-step20
+
+接下来的就是要启动创建的Activity了
+5、为要启动的Activity创建一个ActivityThread--以ActivityManagerProxy 发出ATTACH_APPLICATION_TRANSACTION消息为结束标志。step21-step25
+
+6、AMS接到消息后，将创建的ActivityThread与ApplicationThread绑定在一起，并且启动Activity。首先，做一些准备工作--以ApplicationThreadProxy 发出SCHEDULE_LAUNCH_ACTIVITY_TRANSACTION消息为结束标志。step26--step29
+
+7、ApplicationThread 接到消息后，通过H.LAUNCH_ACTIVITY消息，ActivityThread来处理Activity的启动工作---以MainActivity.onCreate方法的执行为结束标志

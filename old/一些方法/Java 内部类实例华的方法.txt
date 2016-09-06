@@ -1,0 +1,16 @@
+class Out{
+	class Mid{
+		class Inner{
+
+		}
+	}
+}
+
+实例化:
+Out out = new Out();
+Out.Mid mid = out.new Mid();
+Out.Mid.Inner inn = mid.new Inner();
+或者
+Out.Mid mid2 = new Out().new Mid();
+Out.Mid.Inner inn2 = new Out().new Mid().new Inner();
+

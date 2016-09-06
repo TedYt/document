@@ -1,0 +1,2 @@
+
+animation = AnimationUtils.loadAnimation(this, animId);

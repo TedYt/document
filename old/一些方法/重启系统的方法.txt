@@ -1,0 +1,44 @@
+1.在AndroidManifest.xml文件的manifest标签中加入一条android:sharedUserId="android.uid.system"
+
+2.在MainActivity中,有以下2种方式实现：
+1)
+Intent reboot = new Intent(Intent.ACTION_REBOOT);   
+reboot.putExtra("nowait", 1);   
+reboot.putExtra("interval", 1);   
+reboot.putExtra("window", 0);   
+sendBroadcast(reboot);
+2)
+PowerManager pManager=(PowerManager) getSystemService(Context.POWER_SERVICE);  
+pManager.reboot("");  
+
+
+3.要用系统签名
+1) 源码编译
+LOCAL_CERTIFICATE := platform
+2) IDE编译
+
+    签名方法：
+    1)添加权限
+        在AndroidManifest.xml文件下添加android:sharedUserId="android.uid.system" 。
+
+    2)在Eclipse中导出无签名的应用文件
+       在工程中：右键->Android Tools -> Export Unsigned Application Package导出应用
+
+    3)找出系统签名密钥
+       系统密钥为：platform.pk8和platform.x509.pem
+       路径： build\target\product\security 
+
+    4)找出系统签名工具
+       工具为：signApk.jar 
+       路径：/out/host/linux-x86/framework/ signApk.jar
+
+    5)开始签名
+      将第2、3、4步找到的无签名应用、platform.pk8、platform.x509.pem和signApk.jar放到同一文件夹下如F:\sign。
+      打开 dos 操作界面，定们到F:\sign，输入命令：
+      java -jar signapk.jar platform.x509.pem platform.pk8 a.apk b.apk 
+     （a.apk 为未签名应用 b.apk 为签名之后应用）
+
+4. 权限
+<uses-permission android:name="android.permission.REBOOT" />
+
+

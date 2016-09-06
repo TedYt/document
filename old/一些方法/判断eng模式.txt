@@ -1,0 +1,5 @@
+
+
+final boolean showDev = mDevelopmentPreferences.getBoolean(
+                DevelopmentSettings.PREF_SHOW,
+                android.os.Build.TYPE.equals("eng"));

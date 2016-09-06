@@ -1,0 +1,22 @@
+
+
+
+private String getInfo(String cmd) { // from PMU6575.java
+	String result = null;
+	cmd = "echo 1 > " + "/sys/devices/platform/gsensor/driver/noearly";
+	
+	try {
+		String[] cmdx = { "/system/bin/sh", "-c", cmd }; // file must
+		int ret = ShellExe.execCommand(cmdx);
+		if (0 == ret) {
+		    result = ShellExe.getOutput();
+		} else {
+		    // result = "ERROR";
+		    result = ShellExe.getOutput();
+		}
+	} catch (IOException e) {
+		result = "RESULT_FAIL";
+	}
+
+	return result;
+}

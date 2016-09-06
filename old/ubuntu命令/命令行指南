@@ -1,0 +1,283 @@
+
+
+点击GNOME菜单－>附件->终端，就可以启动名为gnome-terminal的程序，它就是GNOME随机的终端模拟器。
+[编辑] 命令模式的基本结构和概念
+
+打开命令终端后你首先可能会注意到类似下面的界面：
+
+dud@shadowplay:~ $
+or
+[dud@shadowplay:~]$
+
+你所看到的这些被称为命令终端提示符，它表示计算机已就绪，正在等待着用户输入操作指令。以我的屏幕画面为例，dud是我所登录的用户，shadowplay是这台计算机的主机名，~表示当前目录。此时输入任何指令按回车之后该指令将会提交到计算机运行，比如你可以输入命令：ls 再按下回车
+
+ls [ENTER]
+
+{i} [ENTER]是指输入完ls后按下回车键，而不是叫你输入这个单词，ls这个命令将会列出你当前所在目录里的所有文件和子目录列表。
+
+
+相关的概念
+
+    终端是与操作系统连接的物理（直接）接口
+    终端模拟器是我们这里要用的，是你运行的GUI中封装的CLI序。当您关闭一个终端模拟器时，通过这个终端打开的所有程序将会关闭。
+    外壳程序（shell）是您的终端的解释程序（purewind：原文的interpeter应为interpreter）。您可以开宝马也可以开本田，但是走得还是是一个方向一条路。简单的说就是交互的方式有点小差异。
+    命令一般是外壳程序为您执行的小程序。它通常会有一些结果提示信息输出。命令经常会接受一些参数（输入）来执行。
+    “运行提示”指的是当执行某一命令时，系统给出的一些提示信息，大多回显到终端上。
+    输入是命令执行时接受的参数或者数据。输入会改变给出命令的行为。
+    参数通常会直接给出，或者通过 --switch="参数" 来给出。一般还会有简写形式，比如 -s 。
+    进程是当前在您的计算机中运行的命令或者程序。它并不总是活动的，它可以睡眠或者是处于其他几种状态。 
+
+[编辑] 基本用法
+
+本节将向您介绍bash shell程序的精要，它是ubuntu缺省的外壳程序。
+[编辑] 常用指令
+
+接下来我将举例阐述一下常用的基本指令： /!\ 记住要正确的按照下面写的输入，后面还得带上回车键！
+
+查询文件列表
+
+dud@shadowplay:~ $ ls
+file1.txt
+file2.pdf
+file3.mp3
+file1.pdf
+another_file.txt
+Yet-Another_file.txt
+file-with_other-NAME.TXT
+
+ls命令默认状态下将按首字母升序列出你当前文件夹下面的所有内容，但这样直接运行所得到的信息也是比较少的，通常它可以结合以下这些参数运行以查询更多的信息：
+
+    ls / 将列出根目录'/'下的文件清单.如果给定一个参数，则命令行会把该参数当作命令行的工作目录。换句话说，命令行不再以当前目录为工作目录。
+    ls -l 将给你列出一个更详细的文件清单.
+    ls -a 将列出包括隐藏文件(以.开头的文件)在内的所有文件.
+    ls -h 将以KB/MB/GB的形式给出文件大小,而不是以纯粹的Bytes. 
+
+查询当前所在目录：
+
+dud@shadowplay:~ $ pwd
+/home/dud
+
+进入其他目录（用命令cd）
+
+dud@shadowplay:~ $ pwd
+/home/dud
+dud@shadowplay:~ $ cd /root/
+dud@shadowplay:/root $ pwd
+/root
+
+上面例子中，当前目录原来是/home/dud,执行cd /root/之后再运行pwd可以发现，当前目录已经改为/root了
+
+
+在屏幕上输出字符：
+
+dud@shadowplay:~ $ echo "Hello World"
+Hello World
+
+这是一个很有用的命令，它可以在屏幕上输入你指定的参数(""号中的内容)，当然这里举的这个例子中它没有多大的实际意义，但随着你对LINUX指令的不断深入，就会发现它的价值所在。
+
+显示文件内容：
+
+dud@shadowplay:~ $ cat file1.txt
+Roses are red.
+Violets are blue,
+and you have the bird-flue!
+
+cat这个命令可以用来在终端上显示txt文本文件的内容。如上例输出的这首“诗”；
+
+复制文件：
+
+dud@shadowplay:~ $ cp file1.txt file1_copy.txt
+dud@shadowplay:~ $ cat file1_copy.txt
+Roses are red.
+Violets are blue,
+and you have the bird-flue!
+
+移动文件：
+
+dud@shadowplay:~ $ ls
+file1.txt
+file2.txt
+dud@shadowplay:~ $ mv file1.txt new_file.txt
+dud@shadowplay:~ $ ls
+file2.txt
+new_file.txt
+
+需要注意的是，在命令操作时系统基本上不会给你什么提示，当然，绝大多数的命令可以通过加上一个参数 －v来要求系统给出执行命令的反馈信息；
+
+dud@shadowplay:~ $ mv -v file1.txt new_file.txt
+`file1.txt' -> `new_file.txt'
+
+加上-v参数后，系统就会输出操作提示
+
+`file1.txt' -> `new_file.txt'
+
+建立一个空文本文件：
+
+dud@shadowplay:~ $ ls
+file1.txt
+dud@shadowplay:~ $ touch tempfile.txt
+dud@shadowplay:~ $ ls
+file1.txt
+tempfile.txt
+
+建立一个目录
+
+dud@shadowplay:~ $ ls
+file1.txt
+tempfile.txt
+dud@shadowplay:~ $ mkdir test_dir
+dud@shadowplay:~ $ ls
+file1.txt
+tempfile.txt
+test_dir
+
+删除文件/目录
+
+dud@shadowplay:~ $ ls -p
+file1.txt
+tempfile.txt
+test_dir/
+dud@shadowplay:~ $ rm -i tempfile.txt
+rm: remove regular empty file `test.txt'? y
+dud@shadowplay:~ $ ls -p
+file1.txt
+test_dir/
+dud@shadowplay:~ $ rm test_dir
+rm: cannot remove `test_dir': Is a directory
+dud@shadowplay:~ $ rm -R test_dir
+dud@shadowplay:~ $ ls -p
+file1.txt
+
+我们来分析一下上面的操作：首先我们通过ls命令查询可知当前目下有两个文件和一个文件夹；
+
+    你可以用参数-p来让系统显示某一项的类型，比如是文件/文件夹/快捷链接等等；
+    接下来我们用rm -i尝试删除文件，-i参数是让系统在执行删除操作前输出一条确认提示；i(interactive)也就是交互性的意思；
+    当我们尝试用上面的命令去删除一个文件夹时会得到错误的提示，因为删除文件夹必须使用-R(recursive,循环）参数 
+
+特别提示：在使用命令操作时，系统假设你很明确自己在做什么，它不会给你太多的提示，比如你执行rm -Rf /，它将会删除你硬盘上所有的东西，并且不会给你任何提示，所以，尽量在使用命令时加上-i的参数，以让系统在执行前进行一次确认，防止你干一些蠢事。如果你觉得每次都要输入-i太麻烦，你可以执行以下的命令，让－i成为默认参数：
+
+alias rm='rm -i'
+
+查询当前进程：
+
+dud@shadowplay:~ $ ps
+PID TTY          TIME CMD
+11278 pts/1    00:00:00 bash
+24448 pts/1    00:00:00 ps
+
+这条命令会例出你所启动的所有进程；
+
+    ps -a可以例出系统当前运行的所有进程，包括由其他用户启动的进程；
+    ps auxww是一条相当人性化的命令，它会例出除一些很特殊进程以外的所有进程，并会以一个高可读的形式显示结果，每一个进程都会有较为详细的解释； 
+
+基本命令的介绍就到此为止，你可以参阅以下地址得到更加详细的命令指南：
+
+    HTML - Bash command reference
+    PDF - Unix commands: A Quick Reference Card 
+
+[编辑] 控制流程
+[编辑] 输入/输出
+
+input用来读取你通过键盘（或其他标准输入设备）输入的信息，output用于在屏幕（或其他标准输出设备）上输出你指定的输出内容.另外还有一些标准的出错提示也是通过这个命令来实现的。通常在遇到操作错误时，系统会自动调用这个命令来输出标准错误提示；
+
+我们能重定向命令中产生的输入和输出流的位置
+[编辑] 重定向
+
+如果你想把命令产生的输出流指向一个文件而不是（默认的）终端，你可以使用如下的语句：
+
+Example:
+
+dud@shadowplay:~ $ ls > file4.txt
+dud@shadowplay:~ $ cat file4.txt
+file1.txt
+file2.pdf
+file3.mp3
+file1.pdf
+another_file.txt
+Yet-Another_file.txt
+file-with_other-NAME.TXT
+file4.txt
+
+以上例子将创建文件file4.txt如果file4.txt不存在的话。注意：如果file4.txt已经存在，那么上面的命令将覆盖文件的内容。如果你想将内容添加到已存在的文件内容的最后，那你可以用下面这个语句：
+
+    command >> filename 
+
+示例:
+
+dud@shadowplay:~ $ ls >> file4.txt
+dud@shadowplay:~ $ cat file4.txt
+file1.txt
+file2.pdf
+file3.mp3
+file1.pdf
+another_file.txt
+Yet-Another_file.txt
+file-with_other-NAME.TXT
+file4.txt
+file1.txt
+file2.pdf
+file3.mp3
+file1.pdf
+another_file.txt
+Yet-Another_file.txt
+file-with_other-NAME.TXT
+file4.txt
+
+在这个例子中，你会发现原有的文件中添加了新的内容。接下来我们会见到另一种重定向方式：我们将把一个文件的内容作为将要执行的命令的输入。以下是这个语句：
+
+    command < filename 
+
+Example:
+
+dud@shadowplay:~ $ sort < file4.txt
+another_file.txt
+another_file.txt
+file1.txt
+file1.txt
+file2.pdf
+file2.pdf
+file3.mp3
+file3.mp3
+file4.txt
+file4.txt
+file-with_other-NAME.TXT
+file-with_other-NAME.TXT
+Yet-Another_file.txt
+Yet-Another_file.txt
+
+如你所见，我们将file4.txt（的内容）作为命令的参数输入。
+[编辑] 管道
+
+Linux的强大之处在于它能把几个简单的命令联合成为复杂的功能，通过键盘上的管道符号'|' 完成。现在，我们来排序上面的"grep"命令：
+
+grep -i command < myfile | sort > result.text
+
+
+搜索 myfile 中的命令，将输出分类并写入分类文件到 result.text 。有时候用ls列出很多命令的时候很不方便这时“｜”就充分利用到了 ls -l | less 慢慢看吧.
+[编辑] 后台进程
+
+CLI 不是系统的串行接口。您可以在执行其他命令时给出系统命令。要启动一个进程到后台，追加一个“&”到命令后面。
+
+sleep 60 &
+ls
+
+睡眠命令在后台运行，您依然可以与计算机交互。除了不同步启动命令以外，最好把 '&' 理解成 ';'。
+
+如果您有一个命令将占用很多时间，您想把它放入后台运行，也很简单。只要在命令运行时按下ctrl-z，它就会停止。然后键入 bg 使其转入后台。fg 命令可使其转回前台。
+
+sleep 60
+<ctrl-z>
+bg
+fg
+
+最后，您可以使用 ctrl-c 来杀死一个前台进程。 2010年7月2日 (五) 18:04 (CST)
+[编辑] 环境
+
+特殊变量。PATH, PS1, ...
+[编辑] 操作变量
+[编辑] 简单脚本
+[编辑] 深入读本
+
+http://rute.2038bug.com/index.html.gz 
+
+

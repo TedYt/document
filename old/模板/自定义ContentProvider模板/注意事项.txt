@@ -1,0 +1,6 @@
+
+1. 要在manifest中声明ContentProvider, 和其authority, 如:
+	  <provider android:name="ProviderBase"
+        	android:authorities="com.mycontentprovider.providerbase"/>
+
+

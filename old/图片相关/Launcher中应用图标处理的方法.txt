@@ -1,0 +1,33 @@
+launcher中应用图标的一般会有背景图和前景图组成，这个两个是怎么何在一起的呢？
+Launcher中有个Utilities类，其中有个createCompoundBitmap的方法，实现如下
+
+static Bitmap createCompoundBitmap(Bitmap bgBitmap, Bitmap iconBitmap, boolean isSetCenter, int offset) {
+		if (bgBitmap == null) {
+			return iconBitmap;
+		}
+		float sx = 1.0f;
+		float sy = 1.0f;
+		
+		final Bitmap bg = scaleBitmap(bgBitmap, sx, sy);
+		final Bitmap icon = scaleBitmap(iconBitmap, sx, sy);
+		final int bgWidth = bg.getWidth();
+		final int bgHeight = bg.getHeight();
+		final int iconWidth = icon.getWidth();
+		final int iconHeight = icon.getHeight();
+
+		Bitmap compoundBitmap = Bitmap.createBitmap(bgWidth, bgWidth,
+				Config.ARGB_8888);
+		Canvas canvas = new Canvas(compoundBitmap);
+		canvas.drawBitmap(bg, 0, 0, null);
+		if (isSetCenter) {
+			canvas.drawBitmap(icon, (bgWidth - iconWidth) / 2,
+					(bgHeight - iconHeight) / 2, null);
+		}else {
+			canvas.drawBitmap(icon, (bgWidth - iconWidth) / 2,
+					(bgHeight - iconHeight) / 2 - offset, null);
+		}
+		canvas.save(Canvas.ALL_SAVE_FLAG);
+		canvas.restore();
+
+		return compoundBitmap;
+	}

@@ -1,0 +1,49 @@
+前提: 针对ListActivity 的继承类 来讨论的.
+   class MyListActivity extends ListActivity{
+   }
+
+找到ListAcitivty.java类的xml文件, 找到里面ListView的ID(@android:id/list),
+
+然后将自己的布局文件中的ListView的ID设置为那个ID(@android:id/list), 其他的控件随便.
+
+其他的布局随便,线性,相对都可以.
+
+然后在MyListActivity的OnCreate方法中使用setContentView就可以了.
+
+布局文件示例如下:
+
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    
+    <ListView 
+        android:id="@android:id/list"
+        android:layout_width="match_parent"
+        android:layout_height="0dip"
+        android:layout_weight="1"/>
+    <LinearLayout 
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="horizontal"
+        android:layout_gravity="bottom"
+        android:layout_marginTop="5dip">
+	    <Button 
+	        android:id="@+id/btn_ok"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="1"
+	        android:text="@string/str_confirm"
+	        android:layout_marginLeft="5dip"
+	        android:layout_marginRight="5dip"/>
+	    <Button 
+	        android:id="@+id/btn_cancle"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="1"
+	        android:text="@string/str_cancle"
+	        android:layout_marginLeft="5dip"
+	        android:layout_marginRight="5dip"/>
+	</LinearLayout>
+</LinearLayout>

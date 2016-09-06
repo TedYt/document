@@ -1,0 +1,16 @@
+
+这是逐帧动画(Drawable Animation)的使用, Drawable Animation 必须放在res/drawable中
+
+1. 假如文件是my_drawable.xml
+	<animation-list
+		xmlns:android="http://schemas.android.com/apk/res/android"
+		android:oneshot="false">
+	    <item android:drawable="@drawable/toolbar_stat_sys_mobile_switch_anim1" android:duration="150" />
+	    <item android:drawable="@drawable/toolbar_stat_sys_mobile_switch_anim2" android:duration="150" />
+	    <item android:drawable="@drawable/toolbar_stat_sys_mobile_switch_anim3" android:duration="150" />
+	    <item android:drawable="@drawable/toolbar_stat_sys_mobile_switch_anim4" android:duration="150" />
+	</animation-list>
+
+2. 使用
+
+	imageView.setImageResource(R.drawable.my_drawable);

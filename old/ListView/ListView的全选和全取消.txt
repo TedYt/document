@@ -1,0 +1,11 @@
+ 	
+listview 对应的Adapter 继承自BaseAdapter
+	
+	int count = mListView.getAdapter().getCount();
+        
+        for (int i = 0; i < count; i++) {
+            ((EditViewAdapter) mListView.getAdapter()).setCheckBox(i, false/true);
+        }
+	
+        ((BaseAdapter)mListView.getAdapter()).notifyDataSetChanged();
+

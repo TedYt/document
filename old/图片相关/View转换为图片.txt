@@ -1,0 +1,14 @@
+
+方法1：当view的内容没有超过1屏时
+		v.buildDrawingCache();
+        Bitmap bitmap = v.getDrawingCache();
+
+方法2：当view的内容超过1屏时
+   	View view;
+   	//w, h 是view的宽和高
+    Bitmap b = Bitmap.createBitmap(w, h, Bitmap.Config.RGB_565);
+    Canvas canvas= new Canvas(b);
+    view.draw(canvas);
+    //view上的视图已经绘制到b中了
+
+

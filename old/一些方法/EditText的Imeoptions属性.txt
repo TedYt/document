@@ -1,0 +1,10 @@
+
+
+
+把EditText的Ime Options属性设置成不同的值，Enter键上可以显示不同的文字或图案
+actionNone : 回车键，按下后光标到下一行
+actionGo ： Go，
+actionSearch ： 一个放大镜, 也会隐藏软键盘
+actionSend ： Send
+actionNext ： Next
+actionDone ： Done，隐藏软键盘，即使不是最后一个文本输入框

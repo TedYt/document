@@ -1,0 +1,20 @@
+
+A 调用B, B 返回结果给A
+
+A:
+Intent intent = new Intent();
+intent.setComponent(A.this, B.class); // 这里可以用随便一种方式
+startActivityForResult(intent, requestCode); // requestCode用于区分不同的intent, 比如A中还调用C 和 D,就是靠requestCode来区分的.
+
+protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+	//这个方法是必须重写的
+	//data 即B返回的数据
+}
+
+B:
+Intent intent = new Intent();
+intent.setComponent(B.this, A.class); // 这里可以用随便一种方式
+intent.putExtra(...);
+setResult(RESULT_OK, intent); // 返回结果
+
+

@@ -1,0 +1,14 @@
+权限：
+<uses-permission android:name="android.permission.SEND_SMS"/>
+
+SmsManager sms = SmsManager.getDefault();
+List<String> texts = sms.divideMessage("text");
+for(String text : texts){
+	sms.sendTextMessage(接收信息方的号码, null, text, null, null);
+}
+sendTextMessage (
+	String destinationAddress,  //接收信息方的号码,
+	String scAddress,  // 短信中心的号码，可以为null
+	String text,      // 短信内容
+	PendingIntent sentIntent,  //发送是否成功的回执
+	PendingIntent deliveryIntent) //接收是否成功的回执

@@ -1,0 +1,6 @@
+
+
+若要用layout_weight来布局, 则最好将layout_width设置为0,这样weight值小的,权重就会小.
+
+如果将layout_width设置为match_parent,则weight小的,反而权重高.
+

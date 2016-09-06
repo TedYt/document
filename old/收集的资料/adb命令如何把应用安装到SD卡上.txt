@@ -1,0 +1,19 @@
+Android 2.2以前的版本，确实是一点办法也没有！我们知道Android 2.2以上系统，可以将应用安装到SD卡上。
+
+那如何使用adb命令将应用安装到SD卡？
+Android 2.2固件中的pm命令支持安装选项参数，新增了参数setInstallLocation，这里我们可以用adb通过shell命令执行 linux的pm添加一些参数即可，
+如: adb shell pm setInstallLocation 0
+
+其中最后一个参数0代表auto自动的，Android系统会自动选择，而1为手机内部的rom，2为外部sd卡存储，主要说明如下
+ adb shell pm setInstallLocation option
+ 
+option 的值可以为以下数字
+       0 [auto] Let the system decide. 自动
+       1 [internal only] ROM中
+        2 [external] SD卡中
+        
+推荐大家对于经常用的小软件可以安装在手机内部，比如来电管理、系统工具这样可以提供更高的可靠性节省电量，而游戏类和APK文件比较大的(超过4MB) 应用可以考虑安装到SD卡上
+通过电脑墙纸让apk安装到sd卡的命令为
+ adb shell pm setInstallLocation 2 
+另外，还有新的获取安装的位置参数为getInstallLocation，我们使用adb shell pm getInstallLocation来获取软件的安装位置列表。
+

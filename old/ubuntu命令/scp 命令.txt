@@ -1,0 +1,11 @@
+ scp <username>@<IP>:<目标路径> <拷贝到的目标路径>
+ 
+ 例子：
+ 我要将192.16.20.30 机器上的一个文件夹/home/SSD/test/，拷贝到本地的/home/test 目录. 远程的用户名是android
+ scp android@192.16.20.30:/home/SSD/test/ /home/test/
+ 
+ 异常：
+ 如果出现Connection refused 情况，应该是远程主机没有安装sshd，用如下命令安装
+ sudo apt-get install openssh-server
+ 
+ 

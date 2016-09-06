@@ -1,0 +1,630 @@
+diff --git a/device/qcom/l9010/l9010.mk b/device/qcom/l9010/l9010.mk
+index 6d48fbb..bfa8993 100644
+--- a/device/qcom/l9010/l9010.mk
++++ b/device/qcom/l9010/l9010.mk
+@@ -189,6 +189,9 @@ ifeq ($(TN_BOOTANIMATION_RES), true)
+ $(call inherit-product, device/qcom/l9010/res/animation/animation.mk)
+ endif
+ 
++#add TnNvOperate by huiyong.yin
++PRODUCT_PACKAGES += TnNvOperate
++
+ # A mechanism for customer to enable their own sign key. liuzongbin add 2014.10.17
+ SIGNATURE_CUSTOMIZATION := true
+ 
+diff --git a/packages/apps/Settings/src/com/android/settings/deviceinfo/msim/MSimStatus.java b/packages/apps/Settings/src/com/android/settings/deviceinfo/msim/MSimStatus.java
+index 5e72732..00461b5 100644
+--- a/packages/apps/Settings/src/com/android/settings/deviceinfo/msim/MSimStatus.java
++++ b/packages/apps/Settings/src/com/android/settings/deviceinfo/msim/MSimStatus.java
+@@ -62,6 +62,9 @@ import com.android.settings.Utils;
+ 
+ import java.lang.ref.WeakReference;
+ 
++//Line<REQ><serial number customization><20141202>huiyong.yin 
++import java.io.*;
++import android.util.Log;
+ /**
+  * Display the following information
+  * # Battery Strength  : TODO
+@@ -348,14 +351,15 @@ public class MSimStatus extends PreferenceActivity {
+         setWifiStatus();
+         setBtStatus();
+         setIpAddressStatus();
+-
+-        String serial = Build.SERIAL;
++	//Begin<REQ><serial number customization><20141202>huiyong.yin
++	 setSerialNumberSatus();
++        /*String serial = Build.SERIAL;
+         if (serial != null && !serial.equals("")) {
+             setSummaryText(KEY_SERIAL_NUMBER, serial);
+         } else {
+             removePreferenceFromScreen(KEY_SERIAL_NUMBER);
+-        }
+-
++        }*/
++	//End<REQ><serial number customization><20141202>huiyong.yin
+         initMSimSummary(mEsnNumberSummary);
+         initMSimSummary(mMeidNumberSummary);
+         initMSimSummary(mMinNumberSummary);
+@@ -375,6 +379,40 @@ public class MSimStatus extends PreferenceActivity {
+         updateMSimSummery(indexOfCDMA);
+     }
+ 
++    //Begin<REQ><serial number customization><20141202>huiyong.yin
++    private void setSerialNumberSatus()
++    {
++	Log.d("setSerialNumberSatus", "yolo setSerialNumberSatus start..." );
++	try{
++		String serial = null;
++		File sn_number_File = new File("/persist", "sn_number");
++		Log.d("setSerialNumberSatus", "yolo setSerialNumberSatus sn_number_File.exists()=" +sn_number_File.exists());
++		if(sn_number_File.exists()){
++			byte[] sn_data = new byte[18];
++			FileInputStream stream =  new FileInputStream("/persist/sn_number");
++			Log.d("setSerialNumberSatus", "yolo setSerialNumberSatus stream=" +stream);
++			stream.read(sn_data, 0, 18);
++			Log.d("setSerialNumberSatus", "yolo setSerialNumberSatus sn_data=" +sn_data);
++			serial= new String(sn_data);
++			if (stream != null){
++				stream.close();
++			}
++		}else{
++			serial = Build.SERIAL;
++		}
++		Log.d("setSerialNumberSatus", "yolo setSerialNumberSatus serial=" +serial);
++		//String serial = Build.SERIAL;
++		if (serial != null && !serial.equals("")) {
++		            setSummaryText(KEY_SERIAL_NUMBER, serial);
++		} else {
++		            removePreferenceFromScreen(KEY_SERIAL_NUMBER);
++		}
++	}catch (IOException e) {
++		Log.d("setSerialNumberSatus"," IOException ="+ e);
++	}
++   }
++   //End<REQ><serial number customization><20141202>huiyong.yin
++
+     private void updateMSimSummery(int indexOfCDMA) {
+         if (DEBUG)
+             Log.d(TAG, "cdma index is " + indexOfCDMA);
+diff --git a/packages/apps/TnNvOperate/.classpath b/packages/apps/TnNvOperate/.classpath
+new file mode 100644
+index 0000000..7bc01d9
+--- /dev/null
++++ b/packages/apps/TnNvOperate/.classpath
+@@ -0,0 +1,9 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<classpath>
++	<classpathentry kind="src" path="src"/>
++	<classpathentry kind="src" path="gen"/>
++	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
++	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
++	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.DEPENDENCIES"/>
++	<classpathentry kind="output" path="bin/classes"/>
++</classpath>
+diff --git a/packages/apps/TnNvOperate/.project b/packages/apps/TnNvOperate/.project
+new file mode 100644
+index 0000000..4bb948a
+--- /dev/null
++++ b/packages/apps/TnNvOperate/.project
+@@ -0,0 +1,33 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<projectDescription>
++	<name>TinnoNvOperate</name>
++	<comment></comment>
++	<projects>
++	</projects>
++	<buildSpec>
++		<buildCommand>
++			<name>com.android.ide.eclipse.adt.ResourceManagerBuilder</name>
++			<arguments>
++			</arguments>
++		</buildCommand>
++		<buildCommand>
++			<name>com.android.ide.eclipse.adt.PreCompilerBuilder</name>
++			<arguments>
++			</arguments>
++		</buildCommand>
++		<buildCommand>
++			<name>org.eclipse.jdt.core.javabuilder</name>
++			<arguments>
++			</arguments>
++		</buildCommand>
++		<buildCommand>
++			<name>com.android.ide.eclipse.adt.ApkBuilder</name>
++			<arguments>
++			</arguments>
++		</buildCommand>
++	</buildSpec>
++	<natures>
++		<nature>com.android.ide.eclipse.adt.AndroidNature</nature>
++		<nature>org.eclipse.jdt.core.javanature</nature>
++	</natures>
++</projectDescription>
+diff --git a/packages/apps/TnNvOperate/Android.mk b/packages/apps/TnNvOperate/Android.mk
+new file mode 100644
+index 0000000..bbf8258
+--- /dev/null
++++ b/packages/apps/TnNvOperate/Android.mk
+@@ -0,0 +1,17 @@
++LOCAL_PATH:= $(call my-dir)
++include $(CLEAR_VARS)
++
++LOCAL_JAVA_LIBRARIES += qcrilhook qcnvitems 
++
++LOCAL_MODULE_TAGS := optional
++
++LOCAL_SRC_FILES := $(call all-java-files-under, src)
++
++LOCAL_PACKAGE_NAME := TnNvOperate
++LOCAL_CERTIFICATE := platform
++
++
++include $(BUILD_PACKAGE)
++
++# Use the folloing include to make our test apk.
++include $(call all-makefiles-under,$(LOCAL_PATH))
+diff --git a/packages/apps/TnNvOperate/AndroidManifest.xml b/packages/apps/TnNvOperate/AndroidManifest.xml
+new file mode 100644
+index 0000000..d34f0a8
+--- /dev/null
++++ b/packages/apps/TnNvOperate/AndroidManifest.xml
+@@ -0,0 +1,39 @@
++<?xml version="1.0" encoding="utf-8"?>
++<manifest xmlns:android="http://schemas.android.com/apk/res/android"
++    package="com.nvoperate.TnNvOperate" 
++    android:sharedUserId="android.uid.system">
++
++
++    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
++
++    <application
++        android:allowBackup="true"
++        android:icon="@drawable/ic_launcher"
++        android:label="@string/app_name"
++        android:theme="@style/AppTheme" >
++        <!--activity
++            android:name=".MainActivity"
++            android:label="@string/app_name" >
++            <intent-filter>
++                <action android:name="android.intent.action.MAIN" />
++
++                <category android:name="android.intent.category.LAUNCHER" />
++            </intent-filter>
++        </activity-->
++
++      <uses-library
++         android:name="com.qualcomm.qcrilhook"></uses-library>
++      <uses-library
++         android:name="com.qualcomm.qcnvitems"></uses-library>
++      <uses-library
++         android:name="org.codeaurora.imslibrary" android:required="true"></uses-library>
++   
++      <receiver android:name="com.nvoperate.TnNvOperate.TnNvOperateReceiver">
++         <intent-filter android:priority="1000">
++             <action android:name="android.intent.action.BOOT_COMPLETED" />
++         </intent-filter>
++      </receiver>
++        <service android:name="com.nvoperate.TnNvOperate.TnNvOperateService" />
++    </application>
++
++</manifest>
+diff --git a/packages/apps/TnNvOperate/proguard-project.txt b/packages/apps/TnNvOperate/proguard-project.txt
+new file mode 100644
+index 0000000..f2fe155
+--- /dev/null
++++ b/packages/apps/TnNvOperate/proguard-project.txt
+@@ -0,0 +1,20 @@
++# To enable ProGuard in your project, edit project.properties
++# to define the proguard.config property as described in that file.
++#
++# Add project specific ProGuard rules here.
++# By default, the flags in this file are appended to flags specified
++# in ${sdk.dir}/tools/proguard/proguard-android.txt
++# You can edit the include path and order by changing the ProGuard
++# include property in project.properties.
++#
++# For more details, see
++#   http://developer.android.com/guide/developing/tools/proguard.html
++
++# Add any project specific keep options here:
++
++# If your project uses WebView with JS, uncomment the following
++# and specify the fully qualified class name to the JavaScript interface
++# class:
++#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
++#   public *;
++#}
+diff --git a/packages/apps/TnNvOperate/project.properties b/packages/apps/TnNvOperate/project.properties
+new file mode 100644
+index 0000000..889dd94
+--- /dev/null
++++ b/packages/apps/TnNvOperate/project.properties
+@@ -0,0 +1,15 @@
++# This file is automatically generated by Android Tools.
++# Do not modify this file -- YOUR CHANGES WILL BE ERASED!
++#
++# This file must be checked in Version Control Systems.
++#
++# To customize properties used by the Ant build system edit
++# "ant.properties", and override values to adapt the script to your
++# project structure.
++#
++# To enable ProGuard to shrink and obfuscate your code, uncomment this (available properties: sdk.dir, user.home):
++#proguard.config=${sdk.dir}/tools/proguard/proguard-android.txt:proguard-project.txt
++
++# Project target.
++#target=android-20
++#android.library.reference.1=../appcompat_v7
+diff --git a/packages/apps/TnNvOperate/res/drawable-hdpi/ic_launcher.png b/packages/apps/TnNvOperate/res/drawable-hdpi/ic_launcher.png
+new file mode 100644
+index 0000000..288b665
+Binary files /dev/null and b/packages/apps/TnNvOperate/res/drawable-hdpi/ic_launcher.png differ
+diff --git a/packages/apps/TnNvOperate/res/drawable-mdpi/ic_launcher.png b/packages/apps/TnNvOperate/res/drawable-mdpi/ic_launcher.png
+new file mode 100644
+index 0000000..6ae570b
+Binary files /dev/null and b/packages/apps/TnNvOperate/res/drawable-mdpi/ic_launcher.png differ
+diff --git a/packages/apps/TnNvOperate/res/drawable-xhdpi/ic_launcher.png b/packages/apps/TnNvOperate/res/drawable-xhdpi/ic_launcher.png
+new file mode 100644
+index 0000000..d4fb7cd
+Binary files /dev/null and b/packages/apps/TnNvOperate/res/drawable-xhdpi/ic_launcher.png differ
+diff --git a/packages/apps/TnNvOperate/res/drawable-xxhdpi/ic_launcher.png b/packages/apps/TnNvOperate/res/drawable-xxhdpi/ic_launcher.png
+new file mode 100644
+index 0000000..85a6081
+Binary files /dev/null and b/packages/apps/TnNvOperate/res/drawable-xxhdpi/ic_launcher.png differ
+diff --git a/packages/apps/TnNvOperate/res/layout/activity_main.xml b/packages/apps/TnNvOperate/res/layout/activity_main.xml
+new file mode 100644
+index 0000000..9c85508
+--- /dev/null
++++ b/packages/apps/TnNvOperate/res/layout/activity_main.xml
+@@ -0,0 +1,16 @@
++<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
++    xmlns:tools="http://schemas.android.com/tools"
++    android:layout_width="match_parent"
++    android:layout_height="match_parent"
++    android:paddingBottom="@dimen/activity_vertical_margin"
++    android:paddingLeft="@dimen/activity_horizontal_margin"
++    android:paddingRight="@dimen/activity_horizontal_margin"
++    android:paddingTop="@dimen/activity_vertical_margin"
++    tools:context="com.nvoperate.TinnoNvOperate.MainActivity" >
++
++    <TextView
++        android:layout_width="wrap_content"
++        android:layout_height="wrap_content"
++        android:text="@string/hello_world" />
++
++</RelativeLayout>
+diff --git a/packages/apps/TnNvOperate/res/values/dimens.xml b/packages/apps/TnNvOperate/res/values/dimens.xml
+new file mode 100644
+index 0000000..55c1e59
+--- /dev/null
++++ b/packages/apps/TnNvOperate/res/values/dimens.xml
+@@ -0,0 +1,7 @@
++<resources>
++
++    <!-- Default screen margins, per the Android Design guidelines. -->
++    <dimen name="activity_horizontal_margin">16dp</dimen>
++    <dimen name="activity_vertical_margin">16dp</dimen>
++
++</resources>
+diff --git a/packages/apps/TnNvOperate/res/values/strings.xml b/packages/apps/TnNvOperate/res/values/strings.xml
+new file mode 100644
+index 0000000..27ab292
+--- /dev/null
++++ b/packages/apps/TnNvOperate/res/values/strings.xml
+@@ -0,0 +1,8 @@
++<?xml version="1.0" encoding="utf-8"?>
++<resources>
++
++    <string name="app_name">TinnoNvOperate</string>
++    <string name="hello_world">Hello world!</string>
++    <string name="action_settings">Settings</string>
++
++</resources>
+diff --git a/packages/apps/TnNvOperate/res/values/styles.xml b/packages/apps/TnNvOperate/res/values/styles.xml
+new file mode 100644
+index 0000000..6ce89c7
+--- /dev/null
++++ b/packages/apps/TnNvOperate/res/values/styles.xml
+@@ -0,0 +1,20 @@
++<resources>
++
++    <!--
++        Base application theme, dependent on API level. This theme is replaced
++        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
++    -->
++    <style name="AppBaseTheme" parent="android:Theme.Light">
++        <!--
++            Theme customizations available in newer API levels can go in
++            res/values-vXX/styles.xml, while customizations related to
++            backward-compatibility can go here.
++        -->
++    </style>
++
++    <!-- Application theme. -->
++    <style name="AppTheme" parent="AppBaseTheme">
++        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
++    </style>
++
++</resources>
+diff --git a/packages/apps/TnNvOperate/src/com/nvoperate/TnNvOperate/TnNvOperateReceiver.java b/packages/apps/TnNvOperate/src/com/nvoperate/TnNvOperate/TnNvOperateReceiver.java
+new file mode 100644
+index 0000000..46a3ea5
+--- /dev/null
++++ b/packages/apps/TnNvOperate/src/com/nvoperate/TnNvOperate/TnNvOperateReceiver.java
+@@ -0,0 +1,42 @@
++package com.nvoperate.TnNvOperate;
++
++import android.content.BroadcastReceiver;
++import android.content.ComponentName;
++import android.content.Context;
++import android.content.Intent;
++import android.content.SharedPreferences;
++import android.util.Log;
++
++
++
++
++public class TnNvOperateReceiver extends BroadcastReceiver {
++
++    private static final String LOG_TAG = "TnNvOperateReceiver";
++
++    private Context mContext;
++    
++
++    @Override
++    public void onReceive(Context context, Intent intent) {
++        mContext = context;
++		Log.d(LOG_TAG, "yolo onReceive...");
++        String action = intent.getAction();
++        Log.d(LOG_TAG, "yolo action"+action);
++        if (Intent.ACTION_BOOT_COMPLETED.equals(action)) {
++          Log.d(LOG_TAG, "yolo start operate nv  service...");
++		try
++		{
++		    Intent service = new Intent(mContext, TnNvOperateService.class);
++
++		    mContext.startService(service);
++		} catch (Exception e)
++		{
++		    Log.e(LOG_TAG, "Can't start service."+e);
++		}
++
++        } 
++
++    }
++
++}
+diff --git a/packages/apps/TnNvOperate/src/com/nvoperate/TnNvOperate/TnNvOperateService.java b/packages/apps/TnNvOperate/src/com/nvoperate/TnNvOperate/TnNvOperateService.java
+new file mode 100644
+index 0000000..800af71
+--- /dev/null
++++ b/packages/apps/TnNvOperate/src/com/nvoperate/TnNvOperate/TnNvOperateService.java
+@@ -0,0 +1,227 @@
++package com.nvoperate.TnNvOperate;
++
++import android.app.Service;
++import android.content.Intent;
++import android.net.Uri;
++import android.os.Environment;
++import android.os.IBinder;
++import android.util.Log;
++
++import java.util.List;
++import android.content.Context;
++import com.qualcomm.qcnvitems.QcNvItems;
++import android.os.SystemProperties;
++import android.util.Slog;
++import java.io.*; 
++
++
++public class TnNvOperateService extends Service
++{
++    private static final String LOG_TAG = "TnNvOperateReceiver";
++    private QcNvItems mQcNvItems;
++    private Context mContext;
++    private void setFactoryInfo()
++	{
++	    try {
++    	   	//write version
++		String internal_build_version=SystemProperties.get("ro.internal.build.version");
++		String custom_build_version=SystemProperties.get("ro.custom.build.version");
++		String custom_certification_version=SystemProperties.get("ro.custom.build.de.version"," ");
++		//String internal_build_version1 = mQcNvItems.getSysPropInfo(6854);
++		//String custom_build_version1 = mQcNvItems.getSysPropInfo(6853);
++		
++		//Log.d(LOG_TAG, "yolo internal_build_version1 = " + internal_build_version1);
++		//Log.d(LOG_TAG, "yolo custom_build_version1 = " + custom_build_version1);
++
++		mQcNvItems.setSysPropInfo(6853,internal_build_version);
++		//mQcNvItems.setSysPropInfo(6854,custom_build_version );
++		mQcNvItems.setSysPropInfo(6854,custom_build_version + "," + custom_certification_version);
++		
++    		Log.d(LOG_TAG, "yolo internal_build_version = " + internal_build_version);
++		Log.d(LOG_TAG, "yolo custom_build_version = " + custom_build_version);
++		Log.d(LOG_TAG, "yolo custom_certification_version= " + custom_certification_version);
++
++
++		//read ps calibration
++		String ps_cal= mQcNvItems.getSysPropInfo(6856);
++		Log.d(LOG_TAG, "yolo ps_cal = "+ps_cal );
++		String ps_calbriation;
++		if(null == ps_cal){
++			ps_calbriation = null;
++			Log.d(LOG_TAG, "yolo ps_calbriation = null" );
++		}else{
++			int ps_cal_offset = ps_cal.indexOf("\0");
++
++                        //LINE<JIRA_ID><DATE20141127><BUG_INFO>zenghaihui
++                        if(ps_cal_offset < 0 || ps_cal_offset > ps_cal.length())
++                        {
++                            ps_calbriation = ps_cal;
++                        }
++                        else
++                        {
++                            ps_calbriation = ps_cal.substring(0,ps_cal_offset );
++                        }
++            
++			Log.d(LOG_TAG, "yolo read ps_calbriation= "+ps_calbriation );
++		}
++			
++                File ps_cali_File = new File("/persist", "ps_cali_data");
++                if (ps_cali_File.exists())
++                {
++                    Log.d(LOG_TAG, "yolo /persist/ps_cali_data exist, write to nv" );
++
++                    byte[] data = new byte[16];
++                    
++                    FileInputStream stream =  new FileInputStream("/persist/ps_cali_data");
++                    
++                    stream.read(data, 0, 16);
++                    
++                    data[15]= 0x00;
++                    
++                    String ps_to_nv_str= new String(data);
++                    
++                    Log.d(LOG_TAG, "yolo write to nv ps_to_nv_str = " + ps_to_nv_str );
++                    
++                    mQcNvItems.setSysPropInfo(6856,ps_to_nv_str);
++                    
++                    if (stream != null)
++                    {
++                        stream.close();
++                    }
++                }
++                else if(ps_calbriation !=null)
++                {
++                   
++                   int firstdashIndex = ps_calbriation.indexOf('-');
++                   int nestdashIndex = -1;
++
++                    if( (firstdashIndex >= 0) && (firstdashIndex < ps_calbriation.length() -1))
++                    {
++                       nestdashIndex = ps_calbriation.indexOf('-', firstdashIndex + 1);
++                    }
++                   
++                   Log.d(LOG_TAG, "yolo zenghh firstdashIndex= "+firstdashIndex );
++                   
++                   Log.d(LOG_TAG, "yolo zenghh nestdashIndex= "+nestdashIndex );
++
++                   if( (firstdashIndex != -1 ) && ( nestdashIndex != -1 ))
++                    {
++                   
++                       String ps_calbriation_flag= ps_calbriation.substring(0, firstdashIndex);
++                       
++                       String ps_calbriation_data= ps_calbriation.substring(firstdashIndex+1,nestdashIndex);
++
++                       
++                       Log.d(LOG_TAG, "yolo read ps_calbriation_flag= "+ps_calbriation_flag );
++                       
++                       Log.d(LOG_TAG, "yolo read ps_calbriation_data= "+ps_calbriation_data );
++
++                       int ps_int_calbriation_flag = Integer.parseInt(ps_calbriation_flag);
++                       int ps_int_calbriation_data = Integer.parseInt(ps_calbriation_data);
++                       
++                       Log.d(LOG_TAG, "yolo read ps_int_calbriation_flag= "+ps_int_calbriation_flag );
++                       
++                       Log.d(LOG_TAG, "yolo read ps_int_calbriation_data= "+ps_int_calbriation_data );
++
++                        
++                        //File ps_cali_File = new File("/persist", "ps_cali_data");
++                        //if (ps_cali_File.exists())
++                        //{
++                            //Log.d(LOG_TAG, "yolo /persist/ps_cali_data exist, do nothing" );
++                        //}
++                        //else if(ps_int_calbriation_flag != 1 )
++                        if(ps_int_calbriation_flag != 1 )
++                        {
++                            Log.d(LOG_TAG, "yolo the ps_cali_data nv data is invalid, do nothing" );
++                        }
++                        else
++                        {
++                            FileOutputStream out =null;
++                            String ps_out= ps_calbriation_flag + "-" + ps_int_calbriation_data + "-";
++                            Log.d(LOG_TAG, "yolo write ps_cali_data data ps_out = " + ps_out );
++                            
++                            byte[] b_ps_out = ps_out.getBytes();
++
++                            out = new FileOutputStream("/persist/ps_cali_data"); 
++                            out.write(b_ps_out, 0, b_ps_out.length);
++                            out.close();
++                        }
++
++                    }
++
++                }
++               else
++                {
++                    Log.d(LOG_TAG, "yolo read ps_calbriation= null" );
++                }
++
++		//read serial number
++		String sn_number0 = mQcNvItems.getSysPropInfo(2497);
++		Log.d(LOG_TAG, "yolo sn_number0 ="+sn_number0 );
++		String sn_number1;
++		String sn_number2;
++		if(null ==sn_number0){
++			sn_number1 = null;
++			sn_number2 = null;
++			Log.d(LOG_TAG, "yolo sn_number = null" );
++		}else{
++			int sn_offset1 =  sn_number0.indexOf(",");
++			int sn_offset2 = sn_number0.indexOf("\0");
++			sn_number1 = sn_number0.substring(0,sn_offset1);
++			sn_number2 = sn_number0.substring(sn_offset1+1,sn_offset2);
++			Log.d(LOG_TAG, "yolo read sn_number1 = " + sn_number1);
++			Log.d(LOG_TAG, "yolo read sn_number2 = " + sn_number2);
++			if(!sn_number2.equals("")){
++				File sn_number_File = new File("/persist", "sn_number");
++				FileOutputStream SnOut =null;
++				Log.d(LOG_TAG, "yolo write sn_number2 to file /persist/sn_number ");   
++				byte[] b_sn_out = sn_number2.getBytes();
++				SnOut = new FileOutputStream("/persist/sn_number");
++				sn_number_File.setReadable(true,false);
++				SnOut.write(b_sn_out, 0, b_sn_out.length);
++				SnOut.close();
++			}
++		}
++               
++		}catch (Exception e) {
++            Log.e(LOG_TAG, "yolo catch error Exception while" + e);
++    	}
++	}
++
++    @Override
++    public IBinder onBind(Intent intent)
++    {
++        // TODO Auto-generated method stub
++        return null;
++    }
++
++    @Override
++    public void onStart(Intent intent, int startId)
++    {
++    	super.onStart(intent, startId);
++    	try
++    	{
++		 if (intent != null)
++	        {
++                mContext= getApplicationContext();
++		  mQcNvItems = new QcNvItems(mContext);
++        	  new Thread(){
++			  	public void run(){
++	               		try {
++						Log.d(LOG_TAG, "yolo start Thread...");
++						Thread.sleep(1000);
++	                  			setFactoryInfo();
++						TnNvOperateService.this.stopSelf();
++	               		} catch (Exception e) { 
++						Log.e(LOG_TAG, "yolo catch error Exception while sleep failed." + e);
++				        }
++            			}
++        	   }.start();  
++	        }
++    	} catch (Exception e)
++    	{
++    		Log.e(LOG_TAG, "Can't start MediaScannerConnection."+e);
++    	}
++        
++    }
++}

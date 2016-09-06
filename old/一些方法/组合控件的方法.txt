@@ -1,0 +1,37 @@
+
+
+
+1. 定义layout, 实现组合控件的内部布局, 假如这个布局文件的名字是inner_layout.xml
+
+2. 重写LinearLayout, 导入刚刚的布局, 构造函数中用LayoutInflater导入布局,如下:
+	public class MemeoryDetail extends LinearLayout{
+
+		public MemeoryDetail(Context context, AttributeSet attrs) {
+			super(context, attrs);
+			// TODO Auto-generated constructor stub
+			LayoutInflater.from(context).inflate(R.layout.my_preference, this, true);
+		
+			mColor = (TextView)findViewById(R.id.color);		
+			mText = (TextView)findViewById(R.id.text);
+
+		}
+	}
+
+3. 使用自定义的布局, 在xml中如下使用
+	<com.android.settings.deviceinfo.MemeoryDetail
+		android:id="@+id/md_apps_usage"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_margin="5dip"
+		settings:tvtext="@string/memory_apps_usage"
+		settings:tvcolor="@color/memory_apps_usage">
+    	</com.android.settings.deviceinfo.MemeoryDetail>
+
+	有自定义属性的, 在布局文件的开头加上名字空间, 如:
+	 	xmlns:settings="http://schemas.android.com/apk/res/com.android.settings"
+	最后面的是主包名, 前面的都一样.
+
+4. 在Activity中使用
+	MemeoryDetail md1;
+		
+	md1 = (MemeoryDetail) findViewById(R.id.md_apps_usage);

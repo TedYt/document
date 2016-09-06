@@ -1,0 +1,11 @@
+df -hl
+文件系统            容量  已用  可用 已用%% 挂载点
+/dev/sda7             9.4G  4.8G  4.2G  54% /
+none                  929M  668K  928M   1% /dev
+none                  936M  924K  935M   1% /dev/shm
+none                  936M  224K  936M   1% /var/run
+none                  936M     0  936M   0% /var/lock
+/dev/sda8             187G   32G  146G  18% /home
+/dev/sda1              51G   38G   13G  76% /media/WINXP
+/dev/sda5             217G  196G   21G  91% /media/000C580B000E3478
+

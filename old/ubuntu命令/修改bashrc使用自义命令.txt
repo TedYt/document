@@ -1,0 +1,28 @@
+
+
+vim ~/.bashrc
+# some more ls aliases
+alias ll='ls -alF'
+alias la='ls -A'
+alias l='ls -CF'
+alias rm='rm -i'
+alias cp='cp -u'
+alias lg='ls -al|grep'
+alias upsysdate='sudo apt-get update'
+alias upsysgrade='sudo apt-get upgrade'
+添加此命令
+ll =ls =alf
+la =ls -A
+ls =ls -CF
+rm=rm -i (有必要添加。删除文件时会问你是否确定删除)
+cp=cp -u (更新复制。自己看须要，有源文件比目标文件有修改才会复制)
+lg=ls -al|grep (是否每次查找目录文件时都须要输入grep 参数。修改一下使用lg就可以少了这些参数)
+输入upsysdate 就可以相当于运行sudo apt-get update upsysgrade 也一样！
+自义命令更方便自己使用！
+修改完须要退出终端再进才会生效！
+kun@kun:~$ lg te
+drwxrwxr-x 2 kun kun 4096 9月 27 08:18 text
+____________________________________________
+最近看书发现。这方法只要自己记着自义命令，也不要和系统的冲突。这样还是简化自己命令的输入量的。
+
+

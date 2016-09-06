@@ -1,0 +1,12 @@
+
+
+Timer timer = new Timer();
+timer.schedule(new MyTimerTask(), delay, period);
+
+private class MyTimerTask extends TimerTask{
+
+	@Override
+	public void run() {
+
+	}
+}

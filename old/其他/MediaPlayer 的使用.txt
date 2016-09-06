@@ -1,0 +1,28 @@
+
+sMediaPlayer = new MediaPlayer();
+            sMediaPlayer.setOnErrorListener(new OnErrorListener() {
+                @Override
+                public boolean onError(MediaPlayer mp, int what, int extra) {
+                    Log.e("Error occurred while playing audio. Stopping AlarmKlaxon.");
+                    AlarmKlaxon.stop(context);
+                    return true;
+                }
+            });
+sMediaPlayer.setVolume(IN_CALL_VOLUME, IN_CALL_VOLUME);
+//alarmNoise 是音频的URI
+sMediaPlayer.setDataSource(context, alarmNoise);
+
+startAlarm(context, sMediaPlayer);
+
+private static void startAlarm(Context context, MediaPlayer player) throws IOException {
+    AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+    // do not play alarms if stream volume is 0 (typically because ringer mode is silent).
+    if (audioManager.getStreamVolume(AudioManager.STREAM_ALARM) != 0) {
+        player.setAudioStreamType(AudioManager.STREAM_ALARM);
+        player.setLooping(true);
+        player.prepare();
+        audioManager.requestAudioFocus(null,
+                AudioManager.STREAM_ALARM, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
+        player.start();
+    }
+}

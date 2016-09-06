@@ -1,0 +1,19 @@
+plural的作用: 可以根据要描述对象的单复数变化,选用对应的语言描述
+
+定义:
+<resources>
+    <plurals name="numberOfSongsAvailable">
+        <item quantity="one">Znaleziono jedną piosenkę.</item>
+        <item quantity="few">Znaleziono %d piosenki.</item>
+        <item quantity="other">Znaleziono %d piosenek.</item>
+    </plurals>
+</resources>
+
+quantity可以取的值有:["zero" | "one" | "two" | "few" | "many" | "other"]
+
+注意: 这里的two 不仅仅只能代表2个, 如果需要描述2 12 102等, 均可以被当作one another 来处理, 但是这个不同于 other
+
+用法:
+	int count = getNumberOfsongsAvailable(); //该函数是自定义的, 根据需求来写
+	Resources res = getResoureces();
+	String songsFound = res.getQuantityString(R.plurals.numberOfsongsAvailable, count);

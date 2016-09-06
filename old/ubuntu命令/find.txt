@@ -1,0 +1,4 @@
+只显示目录// find -type d -maxdepth 1 -printf "%f\n"
+只显示文件// find -type f -maxdepth 1 -printf "%f\n"
+显示特定文件的权限// find -maxdepth 1 -type f -perm 644 -printf "%f\n"
+显示特定目录的权限// find -maxdepth 1 -type d -perm 644 -printf "%f\n"

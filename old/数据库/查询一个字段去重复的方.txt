@@ -1,0 +1,15 @@
+﻿private String[] mFolderPro = {
+            "distinct " + Images.ImageColumns.BUCKET_DISPLAY_NAME,
+    };
+    
+    
+
+mCursor = cr.query(uri, mFolderPro, null, null, null);
+    
+    
+
+关键是“distinct”这个关键字，要去掉那个字段的重复就加在那个字段前面
+    
+    
+
+另外，这个方法只是用于一个字段的查询，对多个字段不适用。

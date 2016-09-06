@@ -1,0 +1,10 @@
+
+具体的应用还需要再针对具体的做修改mrcamera.py脚本
+
+执行方法：
+	monkeyrunner在/android-sdk/tools下面
+	执行命令 monkeyrunner mrcamera.py
+
+1 真正的monkey测试像m1.sh文件那样些就好
+
+2 sumsung_monkey.py 这文件中，使用monkey测试来完成特定的一组操作

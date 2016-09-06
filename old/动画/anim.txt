@@ -1,0 +1,1 @@
+Animation anim = AnimationUtils.loadAnimation(this, R.anim.anim_bg_chooser_show);

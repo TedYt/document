@@ -1,0 +1,18 @@
+
+
+android:scaletype属性决定了图片在view上显示的样子, 如位置,缩放等.
+
+可能的值,及其意义：
+center: 按图片原来的size居中显示, 当图片长/宽超过View的长/宽时, 截取图片居中的部分显示
+
+centerCrop: 按比例扩大/缩小图片的size, 居中显示, 使得图片长/宽等于或大于View的长/宽
+
+ceterInside: 将图片内容完整居中显示, 通过比例缩小或原来的size使得图片长/宽等于或小于View
+
+fitCenter: 把图片按比例扩大/缩小到View的宽度, 居中显示; fitStart,显示在顶部; fitEnd显示在底部
+
+fitXY: 不按比例缩放图片, 把图片填充整个View
+
+matrix: 可以通过Matrix等类的结合使用, 使图片放缩
+
+

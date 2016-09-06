@@ -1,0 +1,85 @@
+获取网络信息需要在AndroidManifest.xml文件中加入相应的权限。
+
+<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+ 
+
+1）判断是否有网络连接
+
+ 
+
+
+ 1 public boolean isNetworkConnected(Context context) {  
+ 2     if (context != null) {  
+ 3         ConnectivityManager mConnectivityManager = (ConnectivityManager) context  
+ 4                 .getSystemService(Context.CONNECTIVITY_SERVICE);  
+ 5         NetworkInfo mNetworkInfo = mConnectivityManager.getActiveNetworkInfo();  
+ 6         if (mNetworkInfo != null) {  
+ 7             return mNetworkInfo.isAvailable();  
+ 8         }  
+ 9     }  
+10     return false;  
+11 }  
+
+
+2）判断WIFI网络是否可用
+
+
+ 1 public boolean isWifiConnected(Context context) {  
+ 2     if (context != null) {  
+ 3         ConnectivityManager mConnectivityManager = (ConnectivityManager) context  
+ 4                 .getSystemService(Context.CONNECTIVITY_SERVICE);  
+ 5         NetworkInfo mWiFiNetworkInfo = mConnectivityManager  
+ 6                 .getNetworkInfo(ConnectivityManager.TYPE_WIFI);  
+ 7         if (mWiFiNetworkInfo != null) {  
+ 8             return mWiFiNetworkInfo.isAvailable();  
+ 9         }  
+10     }  
+11     return false;  
+12 }   
+
+
+3）判断MOBILE网络是否可用
+
+
+ 1 public boolean isMobileConnected(Context context) {  
+ 2     if (context != null) {  
+ 3         ConnectivityManager mConnectivityManager = (ConnectivityManager) context  
+ 4                 .getSystemService(Context.CONNECTIVITY_SERVICE);  
+ 5         NetworkInfo mMobileNetworkInfo = mConnectivityManager  
+ 6                 .getNetworkInfo(ConnectivityManager.TYPE_MOBILE);  
+ 7         if (mMobileNetworkInfo != null) {  
+ 8             return mMobileNetworkInfo.isAvailable();  
+ 9         }  
+10     }  
+11     return false;  
+12 }   
+
+
+4）获取当前网络连接的类型信息
+
+ 1 public static int getConnectedType(Context context) {  
+ 2     if (context != null) {  
+ 3         ConnectivityManager mConnectivityManager = (ConnectivityManager) context  
+ 4                 .getSystemService(Context.CONNECTIVITY_SERVICE);  
+ 5         NetworkInfo mNetworkInfo = mConnectivityManager.getActiveNetworkInfo();  
+ 6         if (mNetworkInfo != null && mNetworkInfo.isAvailable()) {  
+ 7             return mNetworkInfo.getType();  
+ 8         }  
+ 9     }  
+10     return -1;  
+11 }   
+
+在开发android应用时，涉及到要进行网络访问，时常需要进行网络状态的检查，以提供给用户必要的提醒。一般可以通过ConnectivityManager来完成该工作。
+
+ConnectivityManager有四个主要任务：
+
+1、监听手机网络状态（包括GPRS，WIFI， UMTS等)
+
+2、手机状态发生改变时，发送广播
+
+3、当一个网络连接失败时进行故障切换
+
+4、为应用程序提供可以获取可用网络的高精度和粗糙的状态
+
+

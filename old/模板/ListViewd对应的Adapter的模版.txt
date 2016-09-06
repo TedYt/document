@@ -1,0 +1,84 @@
+
+
+对于自定义布局的情况,关键是Adapter 中getView方法的编写,
+
+class MyAdapter extends BaseAdapter{
+
+	private Drawable[] mAppIcon;
+	private CharSequence[] mAppName ;
+	private String[] mAppPak ;
+	
+	private Context mContext;
+	private int mCount;
+	public MyAdapter(Context context,
+			Drawable[] appIcon, CharSequence[] appName, String[] appPak,
+			int length) {
+		mAppIcon = appIcon;
+		mAppName = appName;
+		mAppPak = appPak;
+		mCount = length;
+
+		mContext = context;
+	}
+
+	@Override
+	public int getCount() {
+		return mCount;
+	}
+
+	@Override
+	public Object getItem(int position) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public long getItemId(int position) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public View getView(int position, View convertView, ViewGroup parent) {
+		ViewHolder holder = null;
+		
+		if (convertView == null){
+			holder = new ViewHolder();
+			LayoutInflater inflater = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			convertView =  inflater.inflate(R.layout.my_listview, null);
+			
+			holder.img = (ImageView)convertView.findViewById(R.id.list_icon);
+			holder.title = (TextView)convertView.findViewById(R.id.list_title);
+			holder.subTitle = (TextView)convertView.findViewById(R.id.list_sub_title);
+			convertView.setTag(holder);
+		}else{
+			holder = (ViewHolder)convertView.getTag();
+		}
+		
+		holder.img.setImageDrawable(mAppIcon[position]);
+		holder.title.setText(mAppName[position]);
+		holder.subTitle.setText(mAppPak[position]);
+		
+		return convertView;
+	}
+	
+	public final class ViewHolder{
+		public ImageView img;
+		public TextView title;
+		public TextView subTitle;
+	}
+	
+}
+
+
+对于简单的情况,可以中系统的简单布局, 如android.R.layout.simple_list_itme_checked
+
+
+2. 如果使用了ListActivity, onCreate方法最简单的写法是:
+	public void onCreate(Bundle savedInstanceState) {
+	        super.onCreate(savedInstanceState);
+	        mListView = getListView();
+	        mListView.setAdapter(new MyAdapter(this));
+        	//不要加setContentView
+	}
+

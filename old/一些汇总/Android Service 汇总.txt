@@ -1,0 +1,81 @@
+Entropy Service
+
+Power Manager
+
+Activity Manager
+
+Telephony Registry
+
+Package Manager
+
+Account Manager
+
+Content Manager
+
+System Content Providers
+
+Battery Service
+
+Lights Service
+
+Vibrator Serivce
+
+Alarm Manager
+
+Init Watchdog
+
+Window Manager
+
+Bluethooth Service
+
+Device Policy
+
+Status Bar
+
+Clipboard Service
+
+Input Method Service
+
+NetStat Service
+
+NetworkManagement Service
+
+Connectivity Service
+
+Throttle Service
+
+Accessibility Manager
+
+Mount Service
+
+Notification Manager
+
+Device Storage Monitor
+
+Location Manager
+
+Search Service
+
+DropBox Service
+
+Wallpaper Service
+
+Audio Service
+
+Headset Observer
+
+Dock Observer
+
+USB Observer
+
+UI Mode Manager Service
+
+Backup Service
+
+AppWidget Service
+
+Recognition Service
+
+DiskStats Service
+
+

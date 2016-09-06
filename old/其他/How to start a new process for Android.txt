@@ -1,0 +1,195 @@
+
+
+We need start a new process when we tap application launcher or start a new service which is in a different process. This artical will describe how a new process is created but no matter whoever the caller is.
+
+1.startProcessLocked in ActivityManagerService.java
+    Ignore rest of the function and focus on below code.
+
+ 
+[c-sharp] view plaincopy
+
+    int pid = Process.start("android.app.ActivityThread",  
+            mSimpleProcessManagement ? app.processName : null, uid, uid,  
+            gids, debugFlags, null);    
+
+
+    According to above code,we can find that another process created with a nice name "app.processName" or NULL where the first args is the first class started by the new process.
+
+    Now, we look into the start function of the Process class.
+
+2.startViaZygote in Process.java
+
+[java] view plaincopy
+
+    argsForZygote.add("--runtime-init");  
+    argsForZygote.add("--setuid=" + uid);  
+    argsForZygote.add("--setgid=" + gid);   
+
+ 
+    The first sentence means that we need to init runtime when create this Process, the purpose of this initialization will be discussed later.
+    We should know the communication between ActivityManagerService and  zygote relies on socket, AM writes the arguments of the new process into the buffer for zygote socket.
+    Then the starter's work is done, let's turn over into the zygote at looked at the other socket communication side.
+
+3.
+    The zygote process will be in a loop in order to detect any connect into the zygote socket and fork the request process after being started by init deamon process, all this work is running in function runSelectLoopMode in ZygoteInit.java and calls runOnce function in ZygoteConnection.java to fork new process.
+
+4.runOnce in ZygoteConnection.java
+ 
+[c-sharp] view plaincopy
+
+    pid = Zygote.forkAndSpecialize(parsedArgs.uid, parsedArgs.gid,  
+            parsedArgs.gids, parsedArgs.debugFlags, rlimits);  
+
+ 
+    Above code forks a new process, It is very easy to understand and  unnecessary to look into.
+ 
+[c-sharp] view plaincopy
+
+    if (pid == 0) {  
+        // in child  
+        handleChildProc(parsedArgs, descriptors, newStderr);  
+        // should never happen  
+        return true;  
+    } else { /* pid != 0 */  
+        // in parent...pid of < 0 means failure  
+        return handleParentProc(pid, descriptors, parsedArgs);  
+    }    
+
+   
+
+    As we know, parent process and child process will execute the code simultaneously after fork operation, therefore, the parent process will get the real pid of child process and call handleParentProc method, meanwhile, the child process will get a zero pid value and call handleChildProc.
+    We ignore the handleParentProc in which there is nothing important but cleanup of parent process.
+
+The belowing operations are in the new process.
+
+5.handleChildProc in ZygoteConnection.java
+
+    Function handleChildProc will check if the process starter needs the runtime initialization which is set in step 2. Here need to init runtime while every process is being created.
+
+[c-sharp] view plaincopy
+
+    if (parsedArgs.runtimeInit) {  
+        RuntimeInit.zygoteInit(parsedArgs.remainingArgs);  
+    }      
+
+
+6.zygoteInit in RuntimeInit.java
+
+   
+[c-sharp] view plaincopy
+
+    public static final void zygoteInit(String[] argv)  
+               throws ZygoteInit.MethodAndArgsCaller {  
+           // TODO: Doing this here works, but it seems kind of arbitrary. Find  
+           // a better place. The goal is to set it up for applications, but not  
+           // tools like am.  
+           System.setOut(new AndroidPrintStream(Log.INFO, "System.out"));  
+           System.setErr(new AndroidPrintStream(Log.WARN, "System.err"));  
+      
+           commonInit();  
+           zygoteInitNative();  
+      
+           int curArg = 0;  
+           for ( /* curArg */ ; curArg < argv.length; curArg++) {  
+               String arg = argv[curArg];  
+      
+               if (arg.equals("--")) {  
+                   curArg++;  
+                   break;  
+               } else if (!arg.startsWith("--")) {  
+                   break;  
+               } else if (arg.startsWith("--nice-name=")) {  
+                   String niceName = arg.substring(arg.indexOf('=') + 1);  
+                   Process.setArgV0(niceName);  
+               }  
+           }  
+      
+           if (curArg == argv.length) {  
+               Slog.e(TAG, "Missing classname argument to RuntimeInit!");  
+               // let the process exit  
+               return;  
+           }  
+      
+           // Remaining arguments are passed to the start class's static main  
+      
+           String startClass = argv[curArg++];  
+           String[] startArgs = new String[argv.length - curArg];  
+      
+           System.arraycopy(argv, curArg, startArgs, 0, startArgs.length);  
+           invokeStaticMain(startClass, startArgs);  
+       }  
+
+
+6.1 zygoteInitNative
+    This function is a native function which spawns a pool thread to detect binder IPCs. Its prototype in JNI layer is underlying:
+
+[c-sharp] view plaincopy
+
+    static void com_android_internal_os_RuntimeInit_zygoteInit(JNIEnv* env, jobject clazz)  
+    {  
+        gCurRuntime->onZygoteInit();  
+    }  
+
+ 
+
+    gCurRuntime is a global variable which is initialized when app_main starts. We can find this process in AndroidRuntime constructor. So we confirm that the gCurRuntime is an AppRuntime instance and class AppRuntime extends AndroidRuntime.According to all the facts, we can conclude the onZygoteInit function belongs to class AppRuntime.
+[c-sharp] view plaincopy
+
+    virtual void onZygoteInit()  
+    {  
+        sp<ProcessState> proc = ProcessState::self();  
+        if (proc->supportsProcesses()) {  
+            LOGV("App process: starting thread pool./n");  
+            proc->startThreadPool();  
+        }         
+    }  
+
+
+6.2 invokeStaticMain
+
+After creating process and corresponding pool thread for binder IPC, the last job here is to call the "main" method of the process's first class. It should be "android.app.ActivityThread" for AM to start a new activity or service of different processes.
+ActivityThread instance is the main thread of the new process.
+
+7.main method in ActivityThread.java
+   
+[c-sharp] view plaincopy
+
+    public static final void main(String[] args) {  
+           SamplingProfilerIntegration.start();  
+      
+           Process.setArgV0("<pre-initialized>");  
+      
+           Looper.prepareMainLooper();  
+           if (sMainThreadHandler == null) {  
+               sMainThreadHandler = new Handler();  
+           }  
+      
+           ActivityThread thread = new ActivityThread();  
+           thread.attach(false);  
+      
+           if (false) {  
+               Looper.myLooper().setMessageLogging(new  
+                       LogPrinter(Log.DEBUG, "ActivityThread"));  
+           }  
+      
+           Looper.loop();  
+      
+           if (Process.supportsProcesses()) {  
+               throw new RuntimeException("Main thread loop unexpectedly exited");  
+           }  
+      
+           thread.detach();  
+           String name = (thread.mInitialApplication != null)  
+               ? thread.mInitialApplication.getPackageName()  
+               : "<unknown>";  
+           Slog.i(TAG, "Main thread of " + name + " is now exiting");  
+       }  
+
+
+In above code, we can not find any sentence create the new activity or service. where is the operation hiding?
+
+The implementation is very complicated, the above code has a sentence "thread.attach(false)" where all the stuff is hiding.
+
+I will discuss how activity starts in later artical.
+
+

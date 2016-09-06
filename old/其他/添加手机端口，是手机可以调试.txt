@@ -1,0 +1,25 @@
+1.查找端口ID
+链接手机，输入下面命令，会得到下面的结果：
+yutao@tinno:~/AndroidTools/Adt-eclipse$ lsusb
+Bus 001 Device 002: ID 8087:8008 Intel Corp. 
+Bus 002 Device 002: ID 8087:8000 Intel Corp. 
+Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+Bus 002 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+Bus 003 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+Bus 004 Device 001: ID 1d6b:0003 Linux Foundation 3.0 root hub
+Bus 002 Device 043: ID 2a45:0c02  
+Bus 002 Device 004: ID 04d9:1818 Holtek Semiconductor, Inc. 
+Bus 002 Device 005: ID 04ca:0061 Lite-On Technology Corp. 
+如果不确定是那个端口，可以把手机拔掉再查看一次
+
+这里我用的是
+Bus 002 Device 043: ID 2a45:0c02 
+
+2. 编辑文件adb_usb.ini
+vim <主目录>/.android/adb_sub.ini
+这个文件可能是空的，没关系，写入一下内容：
+0x2a45
+
+3. 通过adb shell 验证是否可以访问端口，如果不可以，执行sudo adb kill-server，然后再用 adb shell
+
+

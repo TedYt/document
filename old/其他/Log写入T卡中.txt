@@ -1,0 +1,13 @@
+public static void writeLogToSDCard(String TAG, String msg){
+		File sdCardDir = new File("/storage/sdcard0");
+		File saveFile = new File(sdCardDir, "Log_SmartMode.txt");
+		try{
+			FileOutputStream outStream = new FileOutputStream(saveFile, true);
+			outStream.write((TAG + " : " + msg + "\n").getBytes());
+			outStream.close();
+		}catch(FileNotFoundException e){
+			e.printStackTrace();
+		}catch(IOException e){
+			e.printStackTrace();
+		}
+}

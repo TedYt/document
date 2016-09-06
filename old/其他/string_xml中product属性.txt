@@ -1,0 +1,15 @@
+string的ID相同,但是product属性不同
+
+<string name="bluetooth_ask_discovery" product="default">
+
+<string name="bluetooth_ask_discovery" product="tablet">
+
+这个product 属性与工程根目录下 device目录中的几个device.mk文件有关
+
+这个文件中有一段:
+	PRODUCT_CHARACTERISTICS:=nosdcard, default, tablet
+
+如过是default,则会显示第一个string, 以此类推,
+
+如果是PRODUCT_CHARACTERISTICS的值是两个或多个, 我也不知道会怎么样
+

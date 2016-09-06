@@ -1,0 +1,56 @@
+在你的android—IDE中找到D:\Softwave_Ghost\技术软件\IDE\adt_android_eclipse\adt-bundle-windows-x86-20130219\sdk\platform-tools 目录下有adb.exe  cd到这个目录下 然后可以进行adb操作 
+或者设置环境变量  
+我的电脑->属性->高级系统设置->环境变量->path编辑将上面那个目录复制到里面
+或者管理员身份打开cmd在其中  setpath=上面的路径
+试一试adb看看出没出来他的使用方法
+
+在模拟器中安装apk
+1. 启动和关闭ADB服务（adb start-server和adb kill-server）
+经作者测试，模拟器在运行一段时间后，adb服务有可能（在Windows进程中可找到这个服务，该服务用来为模拟器或通过USB数据线连接的真机服务）会出现异常。这时需要重新对adb服务关闭和重启。当然，重启Eclipse可能会解决问题。但那比较麻烦。如果想手工关闭adb服务，可以使用下面的命令。
+adb kill-server
+在关闭adb服务后，要使用如下的命令启动adb服务。
+adb start-server
+2 查询当前模拟器/设备的实例（adb devices）
+有时需要启动多个模拟器实例，或启动模拟器的同时通过USB数据线连接了真机。在这种情况下就需要使用如下的命令查询当前有多少模拟器或真机在线。
+adb devices
+如果在运行Android程序时有多个模拟器或真机在线，那么会出现一个选择对话框。如果选择在真机运行，ADT会直接将程序安装在手机上。
+3. 安装、卸载和运行程序（adb install、adb uninstall和am）
+在Eclipse中运行Android程序必须得有Android源码工程。那如果只有apk文件（Android应用程序的发行包，相当于Windows中的exe文件）该如何安装和运行呢？答案就是adb命令。假设我们要安装一个ebook.apk文件，可以使用如下的命令。
+adb install ebook.apk
+假设ebook.apk中的package是net.blogjava.mobile.ebook，可以使用如下的命令卸载这个应用程序。
+adb uninstall net.blogjava.mobile.ebook
+
+关于package的概念在以后的学习中会逐渐体会到。现在只要知道package是Android应用程序的唯一标识即可。如果在安装程序之前，该程序已经在模拟器或真机上存在了，需要先使用上面的命令卸载这个应用程序，然后再安装。或使用下面的命令重新安装。
+adb install -r ebook.apk <-----------
+
+在卸载应用程序时可以加上-k命令行参数保留数据和缓冲目录，只卸载应用程序。命令如下所示。
+adb uninstall -k net.blogjava.mobile.ebook
+
+如果机器上有多个模拟器或真机实例，需要使用-s命令行参数指定具体的模拟器或真机。例如，下面的命令分别在模拟器和真机上安装、重新安装和卸载应用程序。
+在emulator-5554模拟器上安装ebook.apk
+adb -s emulator-5554 install ebook.apk
+
+在真机上安装ebook.apk
+adb -s HT9BYL904399 install ebook.apk
+
+在emulator-5554模拟器上重新安装ebook.apk
+adb -s emulator-5554 install -r ebook.apk
+
+在真机上重新安装ebook.apk
+adb -s HT9BYL904399 install -r ebook.apk
+
+在emulator-5554模拟器上卸载ebook.apk（不保留数据和缓冲目录）
+adb -s emulator-5554 uninstall net.blogjava.mobile.ebook
+
+在真机上卸载ebook.apk（保留数据和缓冲目录）
+adb -s HT9BYL904399 uninstall -k net.blogjava.mobile.ebook
+
+如果想在模拟器或真机上运行已安装的应用程序，除了直接在模拟器或真机上操作外，还可以使用如下的命令直接运行程序。
+在emulator-5554模拟器上运行ebook.apk
+adb -s emulator-5554 shell am start -n net.blogjava.mobile.ebook/net.blogjava.mobile.ebook.Main
+
+在真机上运行ebook.apk
+adb -s HT9BYL904399 shell am start -n net.blogjava.mobile.ebook/net.blogjava.mobile.ebook.Main
+
+其中Main是ebook.apk的主Activity。相当于Windows应用程序的主窗体或Web应用程序的主页面。am是shell命令。关于shell命令将在后成的部分
+

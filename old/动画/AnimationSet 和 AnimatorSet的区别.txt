@@ -1,0 +1,102 @@
+前言
+        在Android 中, 制作混合型动画,肯定少不了AnimationSet和 AnimatorSet了，接下来我会简单说一下这两个的区别
+
+                1. AnimationSet 可以让许多个动画在同一时间开始(也就是动画的叠加)
+
+                2.AnimatorSet 就比 AnimationSet 功能强大很多了， AnimatorSet 可以使用 playSequentially、playTogether两个方法，来让一些列的动画串行和并行
+
+1.AnimationSet的简单使用
+
+ImageView01 = (ImageView) findViewById(R.id.ImageView01);
+AnimationSet set = new AnimationSet(true);
+Animation temAnimation01 = new TranslateAnimation(0,120 , 0, -300);
+	temAnimation01.setDuration(1000);
+	set.addAnimation(temAnimation01);
+
+	temAnimation01 = new ScaleAnimation(2, 1, 2, 1);
+	temAnimation01.setDuration(1000);
+			
+	set.addAnimation(temAnimation01);
+ImageView01.startAnimation(set);//这样ImageView01就可以同时平移和缩放了
+2.AnimatorSet的简单使用
+
+   温馨提示，下面的代码不可以直接运行 
+
+   其中。 balls 是一个球的数组 。 getHeight() 可以获取屏幕的高度
+
+
+
+// ===============================================
+// 第1个球球的动画效果：用ObjectAnimator
+// 用工厂方法构造对象：用ofFloat()因为属性值是float类型
+// 第1个参数为目标对象：balls.get(0)
+// 第2个参数为属性名：y 这里要求目标对象要有“set属性名()”的方法。
+// 后面是可变参数，表明属性目标值，一个参数表明是终止值（对象要有get属性方法）
+// 可变参数的个数为2时，表明第一个是起始值，第二个是终止值；更多个参数时，动画属性值会逐个经过这些值
+
+ObjectAnimator anim1 = ObjectAnimator.ofFloat(balls.get(0),
+"y", 0f, getHeight() - balls.get(0).getHeight())
+.setDuration(500);//三个参数第一个分别是 要运行动画的控件(通常是一个imageView或者 view的子类) 、属性名、从哪里运动到哪里(    ofFloat(Object target, String propertyName, float... values)   )
+
+// ===============================================
+// 第二个球球的动画效果：clone动画效果1，但是重新设置目标物体
+ObjectAnimator anim2 = anim1.clone();
+anim2.setTarget(balls.get(1));
+anim1.addUpdateListener(this);
+// 因为前两个动画完全相同，所以设置刷新监听的时候就只设置了一个（它们刷新的是同一个View）
+
+// ===============================================
+// 第三个球球的动画效果：先加速下落，再减速上升
+ShapeHolder ball2 = balls.get(2);
+// 动画效果：落下效果
+ObjectAnimator animDown = ObjectAnimator.ofFloat(ball2, "y",
+0f, getHeight() - ball2.getHeight()).setDuration(500);
+// 落下效果改变了Interpolator,设置为加速
+animDown.setInterpolator(new AccelerateInterpolator());
+// 动画效果：上升效果
+ObjectAnimator animUp = ObjectAnimator.ofFloat(ball2, "y",
+getHeight() - ball2.getHeight(), 0f).setDuration(500);
+// 上升效果设置为减速上升
+animUp.setInterpolator(new DecelerateInterpolator());
+
+// 用一个AnimatorSet对象将下落效果和上升效果顺序播放
+AnimatorSet s1 = new AnimatorSet();
+s1.playSequentially(animDown, animUp);// 顺序播放效果，参数个数可变
+
+// 下落动画刷新View
+animDown.addUpdateListener(this);
+// 上升动画刷新View
+animUp.addUpdateListener(this);
+// ===============================================
+// 第四个球球的动画效果
+// 另一个AnimatorSet克隆了上一个set，更换了对象
+AnimatorSet s2 = (AnimatorSet) s1.clone();
+s2.setTarget(balls.get(3));
+
+// ===============================================
+// 第五个球球的动画效果:使用ValueAnimator
+final ShapeHolder ball5 = balls.get(4);
+ValueAnimator valueAnimator5 = ValueAnimator.ofFloat(0f,
+getHeight() - ball5.getHeight());
+valueAnimator5.setDuration(500);
+valueAnimator5.addUpdateListener(new AnimatorUpdateListener() {
+
+// ValueAnimator需要自己在监听处理中设置对象参数
+@Override
+public void onAnimationUpdate(ValueAnimator animation) {
+// 用animation.getAnimatedValue()得到当前的属性值，设置进动画对象中
+ball5.setY((Float) animation.getAnimatedValue());
+
+// 记得要刷新View否则不会调用重新绘制
+invalidate();
+}
+});
+
+// =============================================================
+// 用一个总的AnimatorSet对象管理以上所有动画
+animation = new AnimatorSet();
+animation.playTogether(anim1, anim2, s1);// 并行
+animation.playSequentially(s1, s2, valueAnimator5);// 串行
+animation.start();// 播放动画时，我们只要使用 animation.start()，你就可以看到动画效果了
+
+

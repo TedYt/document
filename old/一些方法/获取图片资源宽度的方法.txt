@@ -1,0 +1,1 @@
+int width = BitmapFactory.decodeResource(getResources(), R.drawable.icon).getWidth();

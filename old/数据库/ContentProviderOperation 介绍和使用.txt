@@ -1,0 +1,129 @@
+
+
+Android数据库的批处理操作（以添加联系人为例） .
+
+
+Batch operations
+Data rows can be inserted/updated/deleted using the traditional insert(Uri, ContentValues), update(Uri, ContentValues, String, String[]) and delete(Uri, String, String[]) methods, however the newer mechanism based on a batch of ContentProviderOperation will prove to be a better choice in almost all cases. All operations in a batch are executed in a single transaction, which ensures that the phone-side and server-side state of a raw contact are always consistent. Also, the batch-based approach is far more efficient: not only are the database operations faster when executed in a single transaction, but also sending a batch of commands to the content provider saves a lot of time on context switching between your process and the process in which the content provider runs. 
+
+The flip side of using batched operations is that a large batch may lock up the database for a long time preventing other applications from accessing data and potentially causing ANRs ("Application Not Responding" dialogs.) 
+
+To avoid such lockups of the database, make sure to insert "yield points" in the batch. A yield point indicates to the content provider that before executing the next operation it can commit the changes that have already been made, yield to other requests, open another transaction and continue processing operations. A yield point will not automatically commit the transaction, but only if there is another request waiting on the database. Normally a sync adapter should insert a yield point at the beginning of each raw contact operation sequence in the batch. See withYieldAllowed(boolean). 
+
+Operations
+
+---Insert
+An individual data row can be inserted using the traditional insert(Uri, ContentValues) method. Multiple rows should always be inserted as a batch. 
+
+An example of a traditional insert: 
+
+ ContentValues values = new ContentValues();
+ values.put(Data.RAW_CONTACT_ID, rawContactId);
+ values.put(Data.MIMETYPE, Phone.CONTENT_ITEM_TYPE);
+ values.put(Phone.NUMBER, "1-800-GOOG-411");
+ values.put(Phone.TYPE, Phone.TYPE_CUSTOM);
+ values.put(Phone.LABEL, "free directory assistance");
+ Uri dataUri = getContentResolver().insert(Data.CONTENT_URI, values);
+ The same done using ContentProviderOperations: 
+
+ ArrayList<ContentProviderOperation> ops =
+          new ArrayList<ContentProviderOperation>();
+
+ ops.add(ContentProviderOperation.newInsert(Data.CONTENT_URI)
+          .withValue(Data.RAW_CONTACT_ID, rawContactId)
+          .withValue(Data.MIMETYPE, Phone.CONTENT_ITEM_TYPE)
+          .withValue(Phone.NUMBER, "1-800-GOOG-411")
+          .withValue(Phone.TYPE, Phone.TYPE_CUSTOM)
+          .withValue(Phone.LABEL, "free directory assistance")
+          .build());
+ getContentResolver().applyBatch(ContactsContract.AUTHORITY, ops);
+ 
+
+---Update
+Just as with insert, update can be done incrementally or as a batch, the batch mode being the preferred method: 
+
+ ArrayList<ContentProviderOperation> ops =
+          new ArrayList<ContentProviderOperation>();
+
+ ops.add(ContentProviderOperation.newUpdate(Data.CONTENT_URI)
+          .withSelection(Data._ID + "=?", new String[]{String.valueOf(dataId)})
+          .withValue(Email.DATA, "somebody@android.com")
+          .build());
+ getContentResolver().applyBatch(ContactsContract.AUTHORITY, ops);
+ 
+
+
+---Delete
+Just as with insert and update, deletion can be done either using the delete(Uri, String, String[]) method or using a ContentProviderOperation: 
+
+ ArrayList<ContentProviderOperation> ops =
+          new ArrayList<ContentProviderOperation>();
+
+ ops.add(ContentProviderOperation.newDelete(Data.CONTENT_URI)
+          .withSelection(Data._ID + "=?", new String[]{String.valueOf(dataId)})
+          .build());
+ getContentResolver().applyBatch(ContactsContract.AUTHORITY, ops);
+ 
+ 
+
+
+ ---Query
+Finding all Data of a given type for a given contact
+ Cursor c = getContentResolver().query(Data.CONTENT_URI,
+          new String[] {Data._ID, Phone.NUMBER, Phone.TYPE, Phone.LABEL},
+          Data.CONTACT_ID + "=?" + " AND "
+                  + Data.MIMETYPE + "='" + Phone.CONTENT_ITEM_TYPE + "'",
+          new String[] {String.valueOf(contactId)}, null);
+ 
+
+Finding all Data of a given type for a given raw contact
+ Cursor c = getContentResolver().query(Data.CONTENT_URI,
+          new String[] {Data._ID, Phone.NUMBER, Phone.TYPE, Phone.LABEL},
+          Data.RAW_CONTACT_ID + "=?" + " AND "
+                  + Data.MIMETYPE + "='" + Phone.CONTENT_ITEM_TYPE + "'",
+          new String[] {String.valueOf(rawContactId)}, null);
+ Finding all Data for a given raw contact
+Most sync adapters will want to read all data rows for a raw contact along with the raw contact itself. For that you should use the ContactsContract.RawContactsEntity. See also ContactsContract.RawContacts. 
+
+
+以添加联系人为例：
+
+    protected void createContactEntry() {
+       
+        ArrayList<ContentProviderOperation> ops = new ArrayList<ContentProviderOperation>();
+        ops.add(ContentProviderOperation.newInsert(ContactsContract.RawContacts.CONTENT_URI)
+                .withValue(ContactsContract.RawContacts.ACCOUNT_TYPE, mSelectedAccount.getType())
+                .withValue(ContactsContract.RawContacts.ACCOUNT_NAME, mSelectedAccount.getName())
+                .build());
+        ops.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
+                .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
+                .withValue(ContactsContract.Data.MIMETYPE,
+                        ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE)
+                .withValue(ContactsContract.CommonDataKinds.StructuredName.DISPLAY_NAME, "小明")
+                .build());
+        ops.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
+                .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
+                .withValue(ContactsContract.Data.MIMETYPE,
+                        ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE)
+                .withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, "10086")
+                .withValue(ContactsContract.CommonDataKinds.Phone.TYPE, "1")
+                .build());
+        ops.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
+                .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
+                .withValue(ContactsContract.Data.MIMETYPE,
+                        ContactsContract.CommonDataKinds.Email.CONTENT_ITEM_TYPE)
+                .withValue(ContactsContract.CommonDataKinds.Email.DATA, "google@sina.com")
+                .withValue(ContactsContract.CommonDataKinds.Email.TYPE, "1")
+                .build());
+
+        try {
+            getContentResolver().applyBatch(ContactsContract.AUTHORITY, ops);
+        } catch (Exception e) {
+            Log.e(TAG, "Exceptoin encoutered while inserting contact: " + e);
+        }
+    }
+这里withValueBackReference("column","index");第一个参数对应于数据库中的列，第二个参数代表着回引的值。这个比较抽象，也就是说，批量操作数据库时，index表示ArrayList<ContentProviderOperation> ops 这个操作列表中，第几个操作返回结果的id或是数量。
+
+例如：上面的代码withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)；这个表示将ContactsContract.Data.RAW_CONTACT_ID的值设为以下插入操作执行完毕后返回的uri中Id的值。
+
+ContentProviderOperation.newInsert(ContactsContract.RawContacts.CONTENT_URI) .withValue(ContactsContract.RawContacts.ACCOUNT_TYPE, mSelectedAccount.getType()) .withValue(ContactsContract.RawContacts.ACCOUNT_NAME, mSelectedAccount.getName()) .build()

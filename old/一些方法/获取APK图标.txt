@@ -1,0 +1,80 @@
+
+
+本方法来自packages/apps/PackageInstaller中的代码
+该方法需要有Android的源码才能实现
+
+
+public static AppSnippet getAppSnippet(
+            Activity pContext, ApplicationInfo appInfo, File sourceFile) {
+        final String archiveFilePath = sourceFile.getAbsolutePath();
+        Resources pRes = pContext.getResources();
+        AssetManager assmgr = new AssetManager();
+        assmgr.addAssetPath(archiveFilePath);
+        Resources res = new Resources(assmgr, pRes.getDisplayMetrics(), pRes.getConfiguration());
+        CharSequence label = null;
+        // Try to load the label from the package's resources. If an app has not explicitly
+        // specified any label, just use the package name.
+        if (appInfo.labelRes != 0) {
+            try {
+                label = res.getText(appInfo.labelRes);
+            } catch (Resources.NotFoundException e) {
+            }
+        }
+        if (label == null) {
+            label = (appInfo.nonLocalizedLabel != null) ?
+                    appInfo.nonLocalizedLabel : appInfo.packageName;
+        }
+        Drawable icon = null;
+        // Try to load the icon from the package's resources. If an app has not explicitly
+        // specified any resource, just use the default icon for now.
+        if (appInfo.icon != 0) {
+            try {
+                icon = res.getDrawable(appInfo.icon);
+            } catch (Resources.NotFoundException e) {
+            }
+        }
+        if (icon == null) {
+            icon = pContext.getPackageManager().getDefaultActivityIcon();
+        }
+        return new PackageUtil.AppSnippet(label, icon);
+    }
+
+对这个方法的调用
+	final File sourceFile = new File(filepath);
+        mPackageInfo = getPackageInfo(sourceFile);
+	getAppSnippet(context, mPkgInfo.applicationInfo, sourceFile);
+
+getPackageInfo 方法原型:
+
+public static PackageParser.Package getPackageInfo(File sourceFile) {
+        final String archiveFilePath = sourceFile.getAbsolutePath();
+        PackageParser packageParser = new PackageParser(archiveFilePath);
+        DisplayMetrics metrics = new DisplayMetrics();
+        metrics.setToDefaults();
+        PackageParser.Package pkg =  packageParser.parsePackage(sourceFile,
+                archiveFilePath, metrics, 0);
+        // Nuke the parser reference.
+        packageParser = null;
+        return pkg;
+    }
+
+
+
+其.mk文件的写法是:
+	LOCAL_PATH:= $(call my-dir)
+	include $(CLEAR_VARS)
+
+	LOCAL_MODULE_TAGS := optional
+
+	LOCAL_SRC_FILES := $(call all-subdir-java-files)
+
+	#LOCAL_STATIC_JAVA_LIBRARIES += android-support-v4
+
+	LOCAL_PACKAGE_NAME := PackageInstaller
+	LOCAL_CERTIFICATE := platform
+	
+	#这个比较特殊
+	LOCAL_PROGUARD_FLAG_FILES := proguard.flags 
+
+	include $(BUILD_PACKAGE)
+

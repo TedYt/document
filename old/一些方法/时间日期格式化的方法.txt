@@ -1,0 +1,71 @@
+
+import java.util.Date;
+
+long date = 123456789;
+
+if (DateUtils.isToday(date)){
+	int flag = DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_24HOUR;
+	date = (String)DateUtils.formatDateTime(context, date, flag);
+}else {
+	int flag = DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_ALL;
+	date = (String)DateUtils.formatDateTime(context, date, flag);
+}
+
+
+
+
+由long型转为Date
+	long timeMillis = System.currentTimeMillis();
+	SimpleDateFormat sdf = new SimpleDateFormat("yy-MM-dd HH:mm:ss");
+	Date date = new Date(timeMillis);
+	String dateFormat = sdf.format(date); // 这字符串就是我们想要的日期时间, 如: 12-11-16 10:06:28
+
+时间格式 还可以写成: MM/dd/yyyy HH:mm:ss 等
+
+格式中字母的大小写意义是不一样的:
+
+y    Year                             1996;96             哪一年
+M   Month in year  J              uly;Jul;07           一年中的哪一月
+m   Minute in hour                 30                    一个小时中的第几分钟
+w   Week in year                   27                   一年中的第几个星期
+W   Week in month                 2                    一个月中的第几个星期
+D    Day in year                     189                 一年中的第几天
+d    Day in month                   10                  一个月中的第几天
+H    Hour in day (0-23)            0                   一天中的第几个小时（24小时制）
+h    Hour in am/pm (1-12)        12                  一天中上午、下午的第几个小时（12小时制）
+S    Millisecond                      978                 毫秒数
+s    Second in minute              55                  一分钟的第几秒
+
+For the month of September:
+M -> 9
+MM -> 09   09
+MMM -> Sep 9月
+MMMM -> September 
+
+For 7 minutes past the hour:
+m -> 7
+mm -> 07
+mmm -> 007
+mmmm -> 0007 
+
+Examples for April 6, 1970 at 3:23am:
+"MM/dd/yy h:mmaa" -> "04/06/70 3:23am"
+"MMM dd, yyyy h:mmaa" -> "Apr 6, 1970 3:23am"
+"MMMM dd, yyyy h:mmaa" -> "April 6, 1970 3:23am"
+"E, MMMM dd, yyyy h:mmaa" -> "Mon, April 6, 1970 3:23am&
+"EEEE, MMMM dd, yyyy h:mmaa" -> "Monday, April 6, 1970 3:23am"
+"'Noteworthy day: 'M/d/yy" -> "Noteworthy day: 4/6/70" 
+
+
+另一个个是化日期的例子: 
+final Context context = getContext();
+Date now = new Date();
+CharSequence dow = DateFormat.format("EEEE", now);
+CharSequence date = DateFormat.getLongDateFormat(context).format(now);
+setText(context.getString(R.string.status_bar_date_formatter, dow, date));
+//<string name="status_bar_date_formatter">%2$s\n%1$s</string>
+最终效果是:
+	2012年12月29日
+	星期六
+setText(context.getString(R.string.status_bar_date_formatter, dow, date));
+

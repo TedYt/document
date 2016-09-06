@@ -1,0 +1,27 @@
+
+//strPath 图片的绝对路径
+private void savePic(Bitmap b, String strPath) {
+        if (b == null){
+            return;
+        }
+
+        FileOutputStream fos = null;
+        File file = new File(strPath);
+
+        if (file.exists()) {
+            return;
+        }
+        
+        try {
+            fos = new FileOutputStream(strPath);
+            if (null != fos) {
+                b.compress(Bitmap.CompressFormat.PNG, 100, fos);
+                fos.flush();
+                fos.close();
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }

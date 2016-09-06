@@ -1,0 +1,4 @@
+
+1. Android 中提供了ViewGroup, view, Activity 3个等级的Touch事件处理. 也就是说,这三个地方都有事件回调方法
+
+2. 事件的传递顺序为:ViewGroup::onIntercepTouchEvent() -> VeiwGroup或View 的onTouchEvent() -> Activity::onTouchEvent()

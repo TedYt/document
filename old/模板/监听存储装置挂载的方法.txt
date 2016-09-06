@@ -1,0 +1,8 @@
+
+
+IntentFilter intentFilter = new IntentFilter();
+intentFilter.addAction(Intent.ACTION_MEDIA_MOUNTED);
+intentFilter.addAction(Intent.ACTION_MEDIA_UNMOUNTED);
+intentFilter.addAction(Intent.ACTION_MEDIA_EJECT);
+intentFilter.addDataScheme("file");
+context.registerReceiver(receiver, intentFilter);

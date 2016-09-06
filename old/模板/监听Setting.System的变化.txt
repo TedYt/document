@@ -1,0 +1,42 @@
+
+
+
+//创建一个类
+private final class SettingsObserver extends ContentObserver {
+        private final Uri DIRAC_HD_SOUND_URI
+                = Settings.System.getUriFor(KEY_DIRAC_HD_SOUND);
+
+        public SettingsObserver(Handler handler) {
+            super(handler);
+        }
+
+        @Override
+        public void onChange(boolean selfChange, Uri uri) {
+        	Log.d("tui", "SettingsObserver, onChange");
+            if (DIRAC_HD_SOUND_URI.equals(uri)) {
+                //do something
+            }
+        }
+
+        //辅助方法
+        public void setListening(boolean listening) {
+            final ContentResolver cr = getContentResolver();
+            if (listening) {
+                cr.registerContentObserver(DIRAC_HD_SOUND_URI, false, this);
+            } else {
+                cr.unregisterContentObserver(this);
+            }
+        }
+}
+
+
+//创建一个对象
+private SettingsObserver mSettingsObserver = new SettingsObserver(new Handler());
+
+//打开 关闭监听
+mSettingsObserver.setListening(true);
+
+mSettingsObserver.setListening(false);
+
+
+

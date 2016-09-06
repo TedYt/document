@@ -1,0 +1,449 @@
+diff --git a/vendor/qcom/proprietary/qcNvItems/src/com/qualcomm/qcnvitems/QcNvItems.java b/vendor/qcom/proprietary/qcNvItems/src/com/qualcomm/qcnvitems/QcNvItems.java
+index b49ccdd..e80c755 100755
+--- a/vendor/qcom/proprietary/qcNvItems/src/com/qualcomm/qcnvitems/QcNvItems.java
++++ b/vendor/qcom/proprietary/qcNvItems/src/com/qualcomm/qcnvitems/QcNvItems.java
+@@ -42,6 +42,8 @@ public class QcNvItems implements IQcNvItems {
+     private static String LOG_TAG = "QC_NV_ITEMS";
+ 
+     private static final int HEADER_SIZE = 8;
++	//20141031 zyh add
++	private static final int INT_SIZE = 4;
+ 
+     private QcRilHook mQcRilOemHook;
+     private boolean mIsQcRilHookReady = false;
+@@ -766,7 +768,84 @@ public class QcNvItems implements IQcNvItems {
+             InvalidParameterException {
+         setVoiceConfig(voiceConfig, DEFAULT_SPC);
+     }
++    //20141031 zyh add for reading&writing NV_FACTORY_INFO_I
++    //public String getFactoryInfo() throws IOException
++	public String getSysPropInfo(int nvItems) throws IOException
++    {
+ 
++        if (!mIsQcRilHookReady) {
++            // return if the QcRilHook isn't ready
++            Log.w(LOG_TAG, "zyh setSysPropInfo return if the QcRilHook isn't ready");
++            return null;
++        }
++
++        AsyncResult result;
++		String strResult;
++
++        //NvFactoryInfoType mFactoryInfo = new NvFactoryInfoType();
++
++        /*result = mQcRilOemHook.sendQcRilHookMsg(IQcRilHook.QCRILHOOK_NV_READ,
++                QcNvItemIds.NV_FACTORY_INFO_I);*/
++		 //result = mQcRilOemHook.sendQcRilHookMsg(0x91001,114);
++		 result = mQcRilOemHook.sendQcRilHookMsg(0x91001,nvItems);
++		 //result = mQcRilOemHook.sendQcRilHookMsg(0x91000+1,0x80000000+0x100);
++
++        if ((result.exception == null) /*&& (result.result != null)*/) {//<nv is null not throw exception><20141119>huiyong.yin
++
++            //LINE<JIRA_ID><DATE20141127><BUG_INFO>zenghaihui
++            if(result.result == null)
++            {
++                Log.w(LOG_TAG, "zyh read nvItems == null");
++                return null;
++            }
++			Log.w(LOG_TAG, "zyh read" + bytesToHexString((byte[]) result.result));
++            strResult = new String((byte[]) result.result);
++
++            //mFactoryInfo.factory_info = responseData[1];
++        } else {
++            Log.w(LOG_TAG, "zyh Unable to read Factory Info Value from NV Memory");
++            throw new IOException();
++        }
++
++        return strResult;
++    }
++    public void setSysPropInfo(int nvItems, String nvValues /*, String spc*/) throws IOException {
++       if (!mIsQcRilHookReady) {
++            // return if the QcRilHook isn't ready
++             Log.w(LOG_TAG, "zyh setSysPropInfo return if the QcRilHook isn't ready");
++            return;
++       }
++       try {
++            //checkSpc(spc);
++            int bufSize = INT_SIZE;
++    	    if (nvValues != null)
++		       bufSize +=  (INT_SIZE + nvValues.length());	
++    
++	        ByteBuffer buf = ByteBuffer.allocate( bufSize);
++	        buf.order(ByteOrder.nativeOrder());
++	        buf.putInt(nvItems);
++		 Log.d(LOG_TAG, "zyh setSysPropInfo nvItems" +nvItems);
++		   if (nvValues != null) {
++		  	   buf.putInt(nvValues.length());
++		  	   buf.put(nvValues.getBytes());
++		   }
++
++            // NV Item
++            //buf.put(mFactoryInfo.factory_info);
++            //buf.put(spc.getBytes());
++
++            AsyncResult result = mQcRilOemHook.sendQcRilHookMsg(0x91002,buf.array());
++
++            if (result.exception != null) {
++                Log.w(LOG_TAG, "zyh Unable to Set Factory Info");
++                throw new IOException();
++            }
++       } catch (InvalidParameterException e) {
++            Log.w(LOG_TAG, e.toString());
++     }
++   // Log.v(LOG_TAG,  "Set  nvItems ID :" +nvItems + " " + nvValues + "  success.");
++  }
++    //20141031 zyh end
+     public AutoAnswer getAutoAnswerStatus() throws IOException {
+         vLog("getAutoAnswerStatus()");
+ 
+diff --git a/vendor/qcom/proprietary/qcril/qcril_qmi/oem_socket/qcril_qmi_oem_socket.cc b/vendor/qcom/proprietary/qcril/qcril_qmi/oem_socket/qcril_qmi_oem_socket.cc
+index 42df3f1..82d533f 100755
+--- a/vendor/qcom/proprietary/qcril/qcril_qmi/oem_socket/qcril_qmi_oem_socket.cc
++++ b/vendor/qcom/proprietary/qcril/qcril_qmi/oem_socket/qcril_qmi_oem_socket.cc
+@@ -425,7 +425,7 @@ boolean qcril_qmi_oem_socket_agent::process_incoming_message
+       }
+     }
+ 
+-    if ( RIL_E_SUCCESS != audit_result )
++    if ( RIL_E_SUCCESS != audit_result&&(param.event_id!=0x91001)&&(param.event_id!=0x91002))//zyh 1109
+     {
+       QCRIL_LOG_ERROR( "Send error response" );
+       qcril_default_request_resp_params( param.instance_id, param.t, param.event_id, audit_result, &resp );
+@@ -737,6 +737,7 @@ boolean qmi_ril_get_req_details_from_oem_req
+   int                                     recv_byte_num
+ )
+ {
++  qcril_request_resp_params_type		   resp;//zyh 1109
+   if (!oem_hook_req_details || !audit_result || !data || !param)
+   {
+     return FALSE;
+@@ -758,6 +759,128 @@ boolean qmi_ril_get_req_details_from_oem_req
+         // externally provided by an OEM, otherwise will be dispatched via qcril_dispatch_event()
+         QCRIL_LOG_DEBUG("diverting inbound OEM HOOK request to external handler");
+         qcrilhook_oem( param->instance_id, param->event_id, (char *)data, recv_byte_num, param->t);
++#if 1
++		//20141031 zyh add,Read&Write NV_00114(true version) & NV_00307(customer version)
++		// parse the OEM hook request to distinguish between internal or customer specific requests  
++		QCRIL_LOG_ERROR("zyh print OEM HOOK request_1,event_id = 0x%x", param->event_id);
++		if ((RIL_E_SUCCESS == qmi_ril_parse_oem_hook_header(data, oem_hook_req_details)) && oem_hook_req_details->is_oem_hook)
++			{              
++		        if ((( oem_hook_req_details->hook_req > QCRIL_EVT_HOOK_BASE) && (oem_hook_req_details->hook_req < QCRIL_EVT_HOOK_MAX)) || 
++					((oem_hook_req_details->hook_req > QCRIL_EVT_OEM_BASE) && (oem_hook_req_details->hook_req < QCRIL_EVT_OEM_MAX )))
++				{
++                // This is an OEM_HOOK request, Convert it to look like a internal RIL REQUEST 
++                // Move data pointer past the QCRILHook header and re-adjusting the length 
++                param->event_id = oem_hook_req_details->hook_req;
++				QCRIL_LOG_ERROR("zyh print OEM HOOK request_2,event_id = 0x%x", param->event_id);
++                param->data = (char *)data + QCRIL_HOOK_HEADER_SIZE;
++                param->datalen = oem_hook_req_details->hook_req_len;
++                if ( ( oem_hook_req_details->hook_req > QCRIL_EVT_OEM_BASE ) && ( oem_hook_req_details->hook_req < QCRIL_EVT_OEM_MAX ) )
++                {
++                  // externally provided by an OEM, otherwise will be dispatched via qcril_dispatch_event()
++		            qmi_client_error_type qmi_client_error;
++					RIL_Errno rilRet = RIL_E_GENERIC_FAILURE;
++					char oemResult[QMI_VOICE_TINNO_GENRDWR_BUFFER_MAX];
++					uint32 sys_prop_id = 0;
++
++				  //sys_prop_id = 215; //test
++					QCRIL_LOG_ERROR("zyh print OEM HOOK request,event_id = 0x%x", param->event_id);
++					memset(oemResult, 0, sizeof(oemResult));
++					memcpy(&sys_prop_id, (char *)data + QCRIL_HOOK_HEADER_SIZE, 4);
++					QCRIL_LOG_INFO("zyh print QCRIL_EVT_OEM,sys_prop_id = 0x%x", sys_prop_id);
++					
++                    if (param->event_id == QCRIL_EVT_TINNO_RIL_SYSPROP_READ)
++					{
++                     voice_get_config_req_msg_v02 get_config_req_msg_test;
++                     voice_get_config_resp_msg_v02 get_config_resp_msg_test;
++                     memset(&get_config_req_msg_test, 0, sizeof(get_config_req_msg_test));
++                     memset(&get_config_resp_msg_test, 0, sizeof(get_config_resp_msg_test));
++                     
++					 QCRIL_LOG_INFO("--------QCRIL_EVT_TINNO_RIL_SYSPROP_READ--------sys_prop_id:%x",sys_prop_id); 		 
++                     get_config_req_msg_test.sys_prop_id_valid= TRUE;
++                     get_config_req_msg_test.sys_prop_id = sys_prop_id;//NV_DIR_NUMBER_PCS_I;
++                     
++					 QCRIL_LOG_INFO("qcril_qmi_client_send_msg_sync returned error: %d", get_config_resp_msg_test.resp.error);		 
++					 qmi_client_error = qcril_qmi_client_send_msg_sync(QCRIL_QMI_CLIENT_VOICE,
++                                             QMI_VOICE_GET_CONFIG_REQ_V02,
++                                             &get_config_req_msg_test, sizeof(get_config_req_msg_test),
++                                             &get_config_resp_msg_test, sizeof(get_config_resp_msg_test) );
++
++					 rilRet = qcril_qmi_util_convert_qmi_response_codes_to_ril_result(qmi_client_error, &get_config_resp_msg_test.resp);
++					 QCRIL_LOG_INFO("--------QCRIL_EVT_TINNO_RIL_SYSPROP_READ--------qmi_client_error:%d >>> rilRet:%d", qmi_client_error, rilRet);		 
++					 if (RIL_E_SUCCESS != rilRet) 
++                     {
++                        //QCRIL_LOG_INFO("qcril_qmi_client_send_msg_sync returned error 2: %d", get_config_resp_msg_test.resp.error);			
++                     } 
++                     else 
++                     {  /* check response status */
++						QCRIL_LOG_INFO("qcril_qmi_client_send_msg_sync returned: ===[0x%x]===resp.result:%d, valid:%d", sys_prop_id, get_config_resp_msg_test.resp.result, get_config_resp_msg_test.sys_prop_data_valid);		 
++                        
++                        memcpy( &oemResult, &get_config_resp_msg_test.sys_prop_data, sizeof( get_config_resp_msg_test.sys_prop_data ) );
++                     }
++				  	 
++                  }
++				  else if (param->event_id == QCRIL_EVT_TINNO_RIL_SYSPROP_WRITE)
++				  {
++					 int  setlen;
++					 //uint32 nv_item_id = 215;//test
++					 voice_set_config_req_msg_v02 set_config_req_msg_test;
++                     voice_set_config_resp_msg_v02 set_config_resp_msg_test;
++                     memset(&set_config_req_msg_test, 0, sizeof(set_config_req_msg_test));
++                     memset(&set_config_resp_msg_test, 0, sizeof(set_config_resp_msg_test));
++					 
++					 memcpy(&setlen, (char*)data + QCRIL_HOOK_HEADER_SIZE + 4, 4);
++					 memcpy(oemResult, (char*)data + QCRIL_HOOK_HEADER_SIZE + 8, setlen);
++					 oemResult[setlen] = '\0';
++					 
++					 QCRIL_LOG_DEBUG( "--------zyh QCRIL_EVT_TINNO_RIL_SYSPROP_WRITE--------data(%d):%s", setlen, oemResult);
++                     
++					 //set_config_req_msg_test.nv_item_data_valid = TRUE;
++					 //memcpy(set_config_req_msg_test.nv_item_data, &nv_item_id, sizeof(nv_item_id));
++					 //memset(set_config_req_msg_test.nv_item_data+sizeof(nv_item_id), 10, sizeof(set_config_req_msg_test.nv_item_data)-sizeof(nv_item_id));
++                     memcpy(set_config_req_msg_test.sys_prop_data, &sys_prop_id, sizeof(sys_prop_id));
++                     memcpy(set_config_req_msg_test.sys_prop_data+sizeof(sys_prop_id), oemResult, setlen);
++                     set_config_req_msg_test.sys_prop_data_valid = TRUE;
++                     qmi_client_error = qcril_qmi_client_send_msg_sync(QCRIL_QMI_CLIENT_VOICE,
++	                     					QMI_VOICE_SET_CONFIG_REQ_V02,
++	                     					&set_config_req_msg_test,
++	                     					sizeof(set_config_req_msg_test),
++	                     					&set_config_resp_msg_test,
++	                     					sizeof(set_config_resp_msg_test) );
++                     rilRet = qcril_qmi_util_convert_qmi_response_codes_to_ril_result(qmi_client_error, &set_config_resp_msg_test.resp);
++					 QCRIL_LOG_INFO("--------zyh QCRIL_EVT_TINNO_RIL_SYSPROP_WRITE--------qmi_client_error:%d >>> rilRet:%d", qmi_client_error, rilRet);		 
++					 QCRIL_LOG_INFO("--------zyh QCRIL_EVT_TINNO_RIL_SYSPROP_WRITE--------valid:%d, sys_prop_outcome:%d", set_config_resp_msg_test.sys_prop_outcome_valid, set_config_resp_msg_test.sys_prop_outcome);		 
++					 sprintf(oemResult, "%d", set_config_resp_msg_test.sys_prop_outcome);
++                     if ( RIL_E_SUCCESS != rilRet )
++                     {
++                        QCRIL_LOG_INFO("Response is invalid");
++                     }
++				  }
++				  qcril_default_request_resp_params( param->instance_id, param->t, param->event_id, rilRet, &resp );
++				  resp.resp_len = QMI_VOICE_TINNO_GENRDWR_BUFFER_MAX;//strlen( oemResult );
++				  resp.resp_pkt = ( void * )oemResult ; 
++				  qcril_send_request_response( &resp );
++                   //2014/10/31 zyh. mark audit_result as a success as everything is already handled above regardless of read/write success or failure
++                   //so common handler outside while loop won't send response again. 
++                   *audit_result = RIL_E_SUCCESS;
++		        }
++			  }
++              else
++              {
++                // The request is not supported 
++                *audit_result = RIL_E_REQUEST_NOT_SUPPORTED;
++				QCRIL_LOG_DEBUG("zyh print RIL_E_REQUEST_NOT_SUPPORTED,event_id = 0x%x", param->event_id);
++				return FALSE;
++              }
++			}
++			else
++            {
++              // The request is not supported 
++              *audit_result = RIL_E_REQUEST_NOT_SUPPORTED;
++			  QCRIL_LOG_DEBUG("zyh print RIL_E_REQUEST_NOT_SUPPORTED,event_id = 0x%x", param->event_id);
++			  return FALSE;
++ 
++            }
++#endif
+         *audit_result = RIL_E_SUCCESS;
+         return FALSE;
+       }
+diff --git a/vendor/qcom/proprietary/qcril/qcril_qmi/qcril.c b/vendor/qcom/proprietary/qcril/qcril_qmi/qcril.c
+index 1a3f280..244cda5 100755
+--- a/vendor/qcom/proprietary/qcril/qcril_qmi/qcril.c
++++ b/vendor/qcom/proprietary/qcril/qcril_qmi/qcril.c
+@@ -4897,7 +4897,8 @@ RIL_Errno qmi_ril_parse_oem_hook_header ( unsigned char *data, qmi_ril_oem_hook_
+ 
+     QCRIL_LOG_DEBUG("command-id = %d", cmd_id);
+ 
+-    if( cmd_id >= QCRIL_EVT_HOOK_MAX )
++    if( cmd_id >= QCRIL_EVT_HOOK_MAX 
++	    && (!(cmd_id >= QCRIL_EVT_TINNO_RIL_BASE && cmd_id <= QCRIL_EVT_TINNO_MAX)))//zyh 1109
+     {
+        QCRIL_LOG_ERROR( "Received un expected command id = %lu", cmd_id );
+        break;
+diff --git a/vendor/qcom/proprietary/qcril/qcril_qmi/qcrili.h b/vendor/qcom/proprietary/qcril/qcril_qmi/qcrili.h
+index c59cb10..a1ed89b 100755
+--- a/vendor/qcom/proprietary/qcril/qcril_qmi/qcrili.h
++++ b/vendor/qcom/proprietary/qcril/qcril_qmi/qcrili.h
+@@ -669,6 +669,12 @@ typedef enum
+   QCRIL_EVT_HOOK_MAX,
+ 
+   QCRIL_EVT_OEM_BASE                           = 0x90000,
++//20141031 zyh add for writing&reading nv data
++  QCRIL_EVT_TINNO_RIL_BASE				   = 0x91000,
++  QCRIL_EVT_TINNO_RIL_SYSPROP_READ		   = QCRIL_EVT_TINNO_RIL_BASE + 1,
++  QCRIL_EVT_TINNO_RIL_SYSPROP_WRITE 	   = QCRIL_EVT_TINNO_RIL_BASE + 2,
++  QCRIL_EVT_TINNO_MAX,
++//20141031 zyh end
+   QCRIL_EVT_OEM_MAX                            = 0x9ffff,
+ 
+   /* QMI */
+diff --git a/vendor/qcom/proprietary/qmi/services/voice_service_v02.c b/vendor/qcom/proprietary/qmi/services/voice_service_v02.c
+index afd66da..83ed230 100755
+--- a/vendor/qcom/proprietary/qmi/services/voice_service_v02.c
++++ b/vendor/qcom/proprietary/qmi/services/voice_service_v02.c
+@@ -2965,6 +2965,7 @@ static const uint8_t voice_set_config_req_msg_data_v02[] = {
+   QMI_IDL_OFFSET8(voice_set_config_req_msg_v02, preferred_voice_so),
+   QMI_IDL_TYPE88(0, 63),
+ 
++//20141031 zyh add for writing nv data to modem
+   QMI_IDL_TLV_FLAGS_OPTIONAL | (QMI_IDL_OFFSET8(voice_set_config_req_msg_v02, voice_domain) - QMI_IDL_OFFSET8(voice_set_config_req_msg_v02, voice_domain_valid)),
+   0x15,
+    QMI_IDL_1_BYTE_ENUM,
+@@ -2974,6 +2975,13 @@ static const uint8_t voice_set_config_req_msg_data_v02[] = {
+   0x16,
+    QMI_IDL_1_BYTE_ENUM,
+   QMI_IDL_OFFSET8(voice_set_config_req_msg_v02, ui_tty_setting)
++//20141031 zyh add for writing nv data to modem
++  ,QMI_IDL_TLV_FLAGS_LAST_TLV | QMI_IDL_TLV_FLAGS_OPTIONAL | (QMI_IDL_OFFSET8(voice_set_config_req_msg_v02, sys_prop_data) - QMI_IDL_OFFSET8(voice_set_config_req_msg_v02, sys_prop_data_valid)),
++  0x4F,
++  QMI_IDL_FLAGS_IS_ARRAY| QMI_IDL_GENERIC_1_BYTE | QMI_IDL_FLAGS_SZ_IS_16,
++  QMI_IDL_OFFSET8(voice_set_config_req_msg_v02, sys_prop_data),
++  00,02
++//20141031 zyh end
+ };
+ 
+ static const uint8_t voice_set_config_resp_msg_data_v02[] = {
+@@ -3007,15 +3015,21 @@ static const uint8_t voice_set_config_resp_msg_data_v02[] = {
+    QMI_IDL_GENERIC_1_BYTE,
+   QMI_IDL_OFFSET8(voice_set_config_resp_msg_v02, pref_voice_so_outcome),
+ 
++//20141031 zyh add for writing nv data to modem
+   QMI_IDL_TLV_FLAGS_OPTIONAL | (QMI_IDL_OFFSET8(voice_set_config_resp_msg_v02, voice_domain_pref_outcome) - QMI_IDL_OFFSET8(voice_set_config_resp_msg_v02, voice_domain_pref_outcome_valid)),
+   0x15,
+    QMI_IDL_GENERIC_1_BYTE,
+   QMI_IDL_OFFSET8(voice_set_config_resp_msg_v02, voice_domain_pref_outcome),
+-
+   QMI_IDL_TLV_FLAGS_LAST_TLV | QMI_IDL_TLV_FLAGS_OPTIONAL | (QMI_IDL_OFFSET8(voice_set_config_resp_msg_v02, ui_tty_setting_outcome) - QMI_IDL_OFFSET8(voice_set_config_resp_msg_v02, ui_tty_setting_outcome_valid)),
+   0x16,
+    QMI_IDL_GENERIC_1_BYTE,
+   QMI_IDL_OFFSET8(voice_set_config_resp_msg_v02, ui_tty_setting_outcome)
++  //20141031 zyh add for writing nv data to modem
++  ,QMI_IDL_TLV_FLAGS_LAST_TLV | QMI_IDL_TLV_FLAGS_OPTIONAL | (QMI_IDL_OFFSET8(voice_set_config_resp_msg_v02, sys_prop_outcome) - QMI_IDL_OFFSET8(voice_set_config_resp_msg_v02, sys_prop_outcome_valid)),
++  0x4F,
++  QMI_IDL_GENERIC_1_BYTE,
++  QMI_IDL_OFFSET8(voice_set_config_resp_msg_v02, sys_prop_outcome )
++//20141031 zyh end
+ };
+ 
+ static const uint8_t voice_get_config_req_msg_data_v02[] = {
+@@ -3059,6 +3073,7 @@ static const uint8_t voice_get_config_req_msg_data_v02[] = {
+    QMI_IDL_GENERIC_1_BYTE,
+   QMI_IDL_OFFSET8(voice_get_config_req_msg_v02, nam_id),
+ 
++//20141031 zyh add for reading nv data from modem
+   QMI_IDL_TLV_FLAGS_OPTIONAL | (QMI_IDL_OFFSET8(voice_get_config_req_msg_v02, voice_domain_pref) - QMI_IDL_OFFSET8(voice_get_config_req_msg_v02, voice_domain_pref_valid)),
+   0x18,
+    QMI_IDL_GENERIC_1_BYTE,
+@@ -3068,6 +3083,12 @@ static const uint8_t voice_get_config_req_msg_data_v02[] = {
+   0x19,
+    QMI_IDL_GENERIC_1_BYTE,
+   QMI_IDL_OFFSET8(voice_get_config_req_msg_v02, ui_tty_setting)
++//20141031 zyh add for reading nv data from modem
++  ,QMI_IDL_TLV_FLAGS_LAST_TLV | QMI_IDL_TLV_FLAGS_OPTIONAL | (QMI_IDL_OFFSET8(voice_get_config_req_msg_v02, sys_prop_id) - QMI_IDL_OFFSET8(voice_get_config_req_msg_v02, sys_prop_id_valid)),
++  0x4F,
++  QMI_IDL_GENERIC_4_BYTE,
++  QMI_IDL_OFFSET8(voice_get_config_req_msg_v02, sys_prop_id )
++//20141031 zyh end
+ };
+ 
+ static const uint8_t voice_get_config_resp_msg_data_v02[] = {
+@@ -3115,6 +3136,7 @@ static const uint8_t voice_get_config_resp_msg_data_v02[] = {
+    QMI_IDL_1_BYTE_ENUM,
+   QMI_IDL_OFFSET8(voice_get_config_resp_msg_v02, current_voice_privacy_pref),
+ 
++//20141031 zyh add for reading nv data from modem
+   QMI_IDL_TLV_FLAGS_OPTIONAL | (QMI_IDL_OFFSET8(voice_get_config_resp_msg_v02, voice_domain) - QMI_IDL_OFFSET8(voice_get_config_resp_msg_v02, voice_domain_valid)),
+   0x17,
+    QMI_IDL_1_BYTE_ENUM,
+@@ -3124,6 +3146,13 @@ static const uint8_t voice_get_config_resp_msg_data_v02[] = {
+   0x18,
+    QMI_IDL_1_BYTE_ENUM,
+   QMI_IDL_OFFSET8(voice_get_config_resp_msg_v02, current_ui_tty_setting)
++//20141031 zyh add for reading nv data from modem
++  ,QMI_IDL_TLV_FLAGS_LAST_TLV | QMI_IDL_TLV_FLAGS_OPTIONAL | (QMI_IDL_OFFSET8(voice_get_config_resp_msg_v02, sys_prop_data) - QMI_IDL_OFFSET8(voice_get_config_resp_msg_v02, sys_prop_data_valid)),
++  0x4F,
++  QMI_IDL_FLAGS_IS_ARRAY| QMI_IDL_GENERIC_1_BYTE | QMI_IDL_FLAGS_SZ_IS_16,
++  QMI_IDL_OFFSET8(voice_get_config_resp_msg_v02, sys_prop_data),
++  00,02
++//20141031 zyh end
+ };
+ 
+ static const uint8_t voice_sups_ind_msg_data_v02[] = {
+@@ -4234,8 +4263,8 @@ static const qmi_idl_service_message_table_entry voice_service_command_messages_
+   {QMI_VOICE_ORIG_USSD_REQ_V02, QMI_IDL_TYPE16(0, 44), 187},
+   {QMI_VOICE_ANSWER_USSD_REQ_V02, QMI_IDL_TYPE16(0, 46), 187},
+   {QMI_VOICE_CANCEL_USSD_REQ_V02, QMI_IDL_TYPE16(0, 48), 0},
+-  {QMI_VOICE_SET_CONFIG_REQ_V02, QMI_IDL_TYPE16(0, 53), 43},
+-  {QMI_VOICE_GET_CONFIG_REQ_V02, QMI_IDL_TYPE16(0, 55), 40},
++  {QMI_VOICE_SET_CONFIG_REQ_V02, QMI_IDL_TYPE16(0, 53), 1000},//zyh change 39 to 1000
++  {QMI_VOICE_GET_CONFIG_REQ_V02, QMI_IDL_TYPE16(0, 55), 512},//zyh change 36 to 512
+   {QMI_VOICE_ORIG_USSD_NO_WAIT_REQ_V02, QMI_IDL_TYPE16(0, 58), 187},
+   {QMI_VOICE_BIND_SUBSCRIPTION_REQ_V02, QMI_IDL_TYPE16(0, 61), 4},
+   {QMI_VOICE_ALS_SET_LINE_SWITCHING_REQ_V02, QMI_IDL_TYPE16(0, 63), 4},
+@@ -4282,7 +4311,7 @@ static const qmi_idl_service_message_table_entry voice_service_response_messages
+   {QMI_VOICE_ANSWER_USSD_RESP_V02, QMI_IDL_TYPE16(0, 47), 7},
+   {QMI_VOICE_CANCEL_USSD_RESP_V02, QMI_IDL_TYPE16(0, 49), 7},
+   {QMI_VOICE_SET_CONFIG_RESP_V02, QMI_IDL_TYPE16(0, 54), 35},
+-  {QMI_VOICE_GET_CONFIG_RESP_V02, QMI_IDL_TYPE16(0, 56), 59},
++  {QMI_VOICE_GET_CONFIG_RESP_V02, QMI_IDL_TYPE16(0, 56), 1000},//zyh changed 55 to 1000 as voice_get_config_resp_msg_v02 is added more fields.
+   {QMI_VOICE_ORIG_USSD_NO_WAIT_RESP_V02, QMI_IDL_TYPE16(0, 59), 7},
+   {QMI_VOICE_BIND_SUBSCRIPTION_RESP_V02, QMI_IDL_TYPE16(0, 62), 7},
+   {QMI_VOICE_ALS_SET_LINE_SWITCHING_RESP_V02, QMI_IDL_TYPE16(0, 64), 7},
+diff --git a/vendor/qcom/proprietary/qmi/services/voice_service_v02.h b/vendor/qcom/proprietary/qmi/services/voice_service_v02.h
+index 7b19e2a..d355768 100755
+--- a/vendor/qcom/proprietary/qmi/services/voice_service_v02.h
++++ b/vendor/qcom/proprietary/qmi/services/voice_service_v02.h
+@@ -173,6 +173,9 @@ extern "C" {
+ #define QMI_VOICE_AOC_CALL_METER_INFO_ACM_BIT_V02 0
+ #define QMI_VOICE_AOC_CALL_METER_INFO_ACMMAX_BIT_V02 1
+ #define QMI_VOICE_AOC_CALL_METER_INFO_CCM_BIT_V02 2
++//20141031 zyh add for reading&writing nv
++#define QMI_VOICE_TINNO_GENRDWR_BUFFER_MAX 512 //max buffer size for teleepoch general read/write.
++//20141031 zyh end
+ /**
+     @}
+   */
+@@ -6253,6 +6256,10 @@ typedef struct {
+        - 0x02 -- TTY_MODE_HCO  -- Hearing carry over \n
+        - 0x03 -- TTY_MODE_OFF  -- Off (default)
+   */
++  //20141031 zyh add for writing nv data to modem
++  uint8_t sys_prop_data_valid;
++  uint8_t sys_prop_data[QMI_VOICE_TINNO_GENRDWR_BUFFER_MAX];
++//20141031 zyh end
+ }voice_set_config_req_msg_v02;  /* Message */
+ /**
+     @}
+@@ -6331,6 +6338,10 @@ typedef struct {
+        - 0x00 -- Information was written successfully \n
+        - 0x01 -- Information write failed
+   */
++  //20141031 zyh add for writing nv data to modem
++  uint8_t sys_prop_outcome_valid;
++  uint8_t sys_prop_outcome;
++//20141031 zyh end
+ }voice_set_config_resp_msg_v02;  /* Message */
+ /**
+     @}
+@@ -6427,6 +6438,10 @@ typedef struct {
+        - 0x01 -- Include UI TTY configuration status information in the response 
+                  message
+   */
++  //20141031 zyh add for reading nv data from modem
++  uint8_t sys_prop_id_valid;
++  uint32_t sys_prop_id;
++//20141031 zyh end
+ }voice_get_config_req_msg_v02;  /* Message */
+ /**
+     @}
+@@ -6542,6 +6557,10 @@ typedef struct {
+        - 0x02 -- TTY_MODE_HCO  -- Hearing carry over \n
+        - 0x03 -- TTY_MODE_OFF  -- Off
+   */
++  //20141031 zyh add for reading nv data from modem
++  uint8_t sys_prop_data_valid;
++  uint8_t sys_prop_data[QMI_VOICE_TINNO_GENRDWR_BUFFER_MAX];
++//20141031 zyh end
+ }voice_get_config_resp_msg_v02;  /* Message */
+ /**
+     @}

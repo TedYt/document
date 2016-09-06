@@ -1,0 +1,15 @@
+diff --git a/packages/apps/TnNvOperate/AndroidManifest.xml b/packages/apps/TnNvOperate/AndroidManifest.xml
+index d34f0a8..e46cf55 100644
+--- a/packages/apps/TnNvOperate/AndroidManifest.xml
++++ b/packages/apps/TnNvOperate/AndroidManifest.xml
+@@ -25,8 +25,8 @@
+          android:name="com.qualcomm.qcrilhook"></uses-library>
+       <uses-library
+          android:name="com.qualcomm.qcnvitems"></uses-library>
+-      <uses-library
+-         android:name="org.codeaurora.imslibrary" android:required="true"></uses-library>
++      <!--uses-library
++         android:name="org.codeaurora.imslibrary" android:required="true"></uses-library>-->
+    
+       <receiver android:name="com.nvoperate.TnNvOperate.TnNvOperateReceiver">
+          <intent-filter android:priority="1000">

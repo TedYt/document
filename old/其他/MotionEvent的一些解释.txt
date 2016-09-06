@@ -1,0 +1,22 @@
+
+MotionEvent中一般用4位16进制数表示, 低两位表示动作, 如up,down,move等之类的动作,如:
+    public static final int ACTION_DOWN             = 0;
+    public static final int ACTION_UP               = 1;
+    public static final int ACTION_POINTER_DOWN     = 5;
+
+高2位表示索引,用于多点触摸,.
+
+但是在4.x中, 触摸点的索引被封装了, 如:
+
+    public static final int ACTION_POINTER_1_DOWN   = ACTION_POINTER_DOWN | 0x0000;
+    public static final int ACTION_POINTER_2_DOWN   = ACTION_POINTER_DOWN | 0x0100;
+    public static final int ACTION_POINTER_1_UP     = ACTION_POINTER_UP | 0x0000;
+
+由上面分析,低2位表动作, 高2位表索引, 可以通过如下方法, 从一个动作中剥离出索引:
+
+	(mAction & 0xff00)>>0x08
+先与ff00向与, 再右移8位,就会得到触摸点的索引
+
+anroid源码是:
+
+	(mAction & ACTION_POINTER_INDER_MASK) >> ACTION_POINTER_INDEX_SHIFT

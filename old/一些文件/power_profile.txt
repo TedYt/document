@@ -1,0 +1,7 @@
+power_profile.xml 文件配置了wifi 蓝牙等单位时间的耗电量, 以及电池的容量.
+
+import com.android.internal.os.PowerProfile;
+
+PowerProfile mPowerProfile; //test for battery capacity
+mPowerProfile = new PowerProfile(Activity.this);
+double capacity = mPowerProfile.getBatteryCapacity();

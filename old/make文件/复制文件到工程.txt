@@ -1,0 +1,11 @@
+在make文件中添加如下语句：
+
+
+PRODUCT_COPY_FILES += \
+       packages/apps/Settings/libs/libdirac.so:system/lib/soundfx/libdirac.so \
+       packages/apps/Settings/libs/libDiracAPI_SHARED.so:system/vendor/lib/libDiracAPI_SHARED.so \
+       packages/apps/Settings/libs/diracmobile.config:system/vendor/etc/diracmobile.config \
+	   packages/apps/Settings/libs/audio_effects.conf:system/vendor/etc/audio_effects.conf \
+	   packages/apps/Settings/libs/diracvdd.bin:/system/vendor/etc/diracvdd.bin
+
+冒号前面的路径是从android的根目录开始

@@ -1,0 +1,11 @@
+
+
+1. 
+	LayoutInflater inflate = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        	View maintitle = inflate.inflate(R.layout.tinnoui_main_titile_navigate, null);
+        	actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM, 
+                    ActionBar.DISPLAY_SHOW_CUSTOM | ActionBar.DISPLAY_SHOW_HOME
+                    | ActionBar.DISPLAY_SHOW_TITLE);
+        	actionBar.setCustomView(maintitle);
+
+

@@ -1,0 +1,17 @@
+
+以MySample为例，将/src/com/android/settings/TestAudioCalibrationLib.java 转为jni的.h文件
+
+1. 转到目录MySample，输入一下命令
+    javac src/com/android/settings/TestAudioCalibrationLib.java
+    
+    这样会在目录src/com/android/settings/下生产一个class 文件
+ 
+ 2. 再转到目录src，输入以下命令
+    javah -jni com.android.settings.TestAudioCalibr
+    
+    这样会在src目录中生产.h文件
+    
+ 说明：
+1. javac 命令 在那个目录都可以，只要指到.java文件就可以，即可在与java文件相同的目录下生产class文件
+2. javah 命令必须在一定的目录中，这个例子中因为java文件的包名是com.android.settings， 所以javah就要在src目录下执行，否则命令将失败。
+

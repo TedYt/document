@@ -1,0 +1,147 @@
+
+
+final static String MESSAGFILE = "message_template.xml";
+final static String MESSAGEFILE_PATH = "/data/data/com.android.mms/files/message_template.xml";
+
+boolean CreateMessageTemplateXML() {
+        XmlSerializer serializer = Xml.newSerializer();
+        StringWriter writer = new StringWriter();
+
+        try {
+            serializer.setOutput(writer);
+
+            serializer.startDocument("UTF-8",true);
+
+            serializer.startTag("","MessageTemplate");
+
+            // load the pre-define message template
+            String[] smsTempPreArray = getContext().getResources().getStringArray(
+                    R.array.pre_define_message_template);
+
+            for (int i = 0; i < smsTempPreArray.length; i++) {
+                 serializer.startTag("","message");
+                 serializer.text(smsTempPreArray[i]);
+                 serializer.endTag("","message");
+            }
+
+            for (int i = 0; i < preDefineNum; i++) {
+                 serializer.startTag("", "preDefineNumState");
+                 serializer.text(Integer.toString(i));
+                 serializer.endTag("", "preDefineNumState");
+            }
+
+            serializer.endTag("","MessageTemplate");
+            serializer.endDocument();
+        } catch(Exception e) {
+            if (DBG)
+                Log.d(TAG,"CreateMessageTemplateXML occurs exception!");
+            return false;
+        }
+
+        FileOutputStream stream = null;
+        try {
+            stream = getContext().openFileOutput(MESSAGFILE, Context.MODE_WORLD_WRITEABLE);
+        } catch (FileNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            if (DBG)
+                Log.d(TAG,"CreateMessageTemplateXML occurs exception!");
+            return false;
+        }
+
+        try {
+            stream.write(writer.toString().getBytes());
+            stream.close();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            if (DBG)
+                Log.d(TAG,"CreateMessageTemplateXML occurs exception!");
+            return false;
+        }
+         return true;
+ }
+ 
+
+其中 R.array.pre_define_message_template 的内容是：
+<string-array name="pre_define_message_template">
+        <item>I\'ll call you back later.</item>
+        <item>I am in conference. I\'ll call you back later.</item>
+        <item>Please call me later.</item>
+        <item>Will you please call me back?</item>
+        <item>Arrive soon</item>
+        <item>Be there or be square!</item>
+        <item>On my way home.</item>
+        <item>What are you doing?</item>
+        <item>Sorry, I have a meeting now.</item>
+</string-array>
+
+
+
+//获取已生成的xml文件
+Document getXMLDoc() {
+
+        DocumentBuilderFactory docBuilderFactory = null;
+        DocumentBuilder docBuilder = null;
+        Document doc = null;
+
+        docBuilderFactory = DocumentBuilderFactory.newInstance();
+        try {
+            docBuilder = docBuilderFactory.newDocumentBuilder();
+        } catch (ParserConfigurationException e2) {
+            // TODO Auto-generated catch block
+            if (DBG)
+                Log.e(TAG, "Generate DOM builder failed!");
+            return null;
+        }
+
+        File messageFile = new File(MESSAGEFILE_PATH);
+        String locale = getContext().getResources().getConfiguration().locale.toString();
+        /*
+         * When we change system language, current language is different from last language.
+         * In this case, we also need to call CreateMessageTemplateXML().
+         */
+        if (!messageFile.exists()) {
+            if (DBG)
+                Log.d(TAG, "Create Message Template File: " + MESSAGEFILE_PATH
+                        + " for first time call");
+            if (!CreateMessageTemplateXML())
+                return null;
+        }
+
+        if (!mLocale.equals(locale)) {
+            // Keep mLocale consistent with current locale.
+            mLocale = locale;
+            updateXML();
+        }
+
+        FileInputStream inputStream = null;
+        try {
+            inputStream = getContext().openFileInput(MESSAGFILE);
+        } catch (FileNotFoundException e1) {
+            // TODO Auto-generated catch block
+            if (DBG)
+                Log.e(TAG, "Open message template file exception!");
+            e1.printStackTrace();
+            return null;
+        }
+
+        try {
+            doc = docBuilder.parse(inputStream);
+        } catch (SAXException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return null;
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return null;
+        }
+        if (doc == null) {
+            if (DBG)
+                Log.d(TAG, "Cannot parse the message template file!");
+            return null;
+        }
+        return doc;
+    }
+

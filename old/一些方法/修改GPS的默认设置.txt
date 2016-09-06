@@ -1,0 +1,6 @@
+
+
+
+<string name="def_location_providers_allowed" translatable="false">gps</string>
+改成
+<string name="def_location_providers_allowed" translatable="false"></string>

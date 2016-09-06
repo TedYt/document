@@ -1,0 +1,8 @@
+
+定义:
+	<string name="welcome">Welcome to <b>Android</b>!</string>
+解释:
+<b> 粗体
+<i> 斜体
+<u> 下划线
+

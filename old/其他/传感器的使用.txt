@@ -1,0 +1,31 @@
+private SensorEventListener mSensorListener;
+private Sensor mOrientationSensor;
+private SensorManager mSensorManager = null;
+
+
+
+mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+mOrientationSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);//指定Sensor的类型为 Osensor
+mSensorListener = new OrientationListener(); //新建自定义的Listener对象
+
+//注册监听器，注册后监听器开始工作
+mSensorManager.registerListener(mSensorListener,
+                            mOrientationSensor, SensorManager.SENSOR_DELAY_NORMAL);
+
+//注销监听器, 注销的是SensorEventListener， 而不是Sensor
+mSensorManager.unregisterListener(mSensorListener);
+
+//自定义SensorEventListener，
+ private class OrientationListener implements SensorEventListener {
+
+        @Override
+        public void onSensorChanged(SensorEvent event) {
+            //在这个函数中监听数值的变化。
+        }
+
+        @Override
+        public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+        }
+    }
+

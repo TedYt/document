@@ -1,0 +1,35 @@
+ 
+定义:
+ mTimer = new Timer();
+ mTimer.schedule(new TimerTask() {
+			
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+		Message msg = new Message();
+		msg.what = 0;
+		mHandler.sendMessage(msg);
+	}
+}, 100, 2000);
+
+
+处理:
+Handler mHandler = new Handler(){
+
+	@Override
+	public void handleMessage(Message msg) {
+		// TODO Auto-generated method stub
+			
+		switch(msg.what){
+			case 0:
+				text.setText("pasted time = " + i * 2 + " seconds");
+				i++;
+				break;
+			default:
+				break;
+			}
+		super.handleMessage(msg);
+			
+		}
+		
+	};

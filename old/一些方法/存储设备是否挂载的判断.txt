@@ -1,0 +1,10 @@
+
+
+
+StorageManager sm = (StorageManager)getSystemService(Context.STORAGE_SERVICE);
+String state = sm.getVolumeState("/mnt/sdcard"); //内部存储, 外部存储的路径是/mnt/sdcard2
+if (!Environment.MEDIA_MOUNTED.equals(state)){
+	//没有挂载, 即像文件管理,music等某块都无法使用
+}
+
+

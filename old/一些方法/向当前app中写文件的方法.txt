@@ -1,0 +1,14 @@
+
+private static final String CACHE_VIDEO_FILE_COUNT = "NativeVideoCount";
+private void saveNativeVideoCount(int count) {
+		try {
+			FileOutputStream lFile = mContext.openFileOutput(CACHE_VIDEO_FILE_COUNT,
+					Context.MODE_PRIVATE);
+			lFile.write(count);
+			lFile.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+文件存在的路径是：/data/data/<包名>/files/

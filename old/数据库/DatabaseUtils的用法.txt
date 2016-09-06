@@ -1,0 +1,10 @@
+
+
+String nameField = MediaStore.Files.FileColumns.DISPLAY_NAME;
+sb.append(nameField + " like ");
+DatabaseUtils.appendEscapedSQLString(sb, "%" + mSearchName + "%");
+sb.append(" and ").append(MediaStore.Files.FileColumns.DATA + " like ");
+DatabaseUtils.appendEscapedSQLString(sb, "%" + mPath + "%");
+String selection = sb.toString();
+Cursor cursor = mContentResolver.query(uri, projection, selection,
+                null, null);

@@ -1,0 +1,9 @@
+注册:
+registerReceiver(mBatInfo, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
+
+
+接受:
+if (Intent.ACTION_BATTERY_CHANGED.equals(action)){
+	int level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, 0);//当前的电量
+	int scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, 100);//总电量				
+}

@@ -1,0 +1,100 @@
+
+播放4中资源：
+1. res/raw 中的资源
+2. assest 中的资源
+3. 播放SDcard上的文件
+4. 播放网络上的音频
+
+
+package com.jiahui.media;
+
+import java.io.IOException;
+
+public class MediaPlayerDemoActivity extends Activity implements
+                OnClickListener {
+
+        private Button btnAppStart, btnAssetsStart, btnSdcardStart,
+                        btnNetworkStart;
+
+        public void onCreate(Bundle savedInstanceState) {
+                super.onCreate(savedInstanceState);
+                setContentView(R.layout.main);
+
+                btnAppStart = (Button) this.findViewById(R.id.btnAppStart);
+                btnAssetsStart = (Button) this.findViewById(R.id.btnAssetsStart);
+                btnSdcardStart = (Button) this.findViewById(R.id.btnSdcardStart);
+                btnNetworkStart = (Button) this.findViewById(R.id.btnNetworkStart);
+
+                btnAppStart.setOnClickListener(this);
+                btnAssetsStart.setOnClickListener(this);
+                btnSdcardStart.setOnClickListener(this);
+                btnNetworkStart.setOnClickListener(this);
+
+        }
+
+        @Override
+        public void onClick(View v) {
+                MediaPlayer mediaPlayer = null;
+                switch (v.getId()) {
+                case R.id.btnAppStart://res/raw 中的资源
+                        System.out.println("---播放应用的资源文件----");
+                        // 使用raw下的资源文件创建MediaPlayer对象
+                        mediaPlayer = MediaPlayer.create(MediaPlayerDemoActivity.this,
+                                        R.raw.a1);
+                        mediaPlayer.start();
+                        break;
+                case R.id.btnAssetsStart://assest 中的资源
+                        System.out.println("---播放assest的资源文件----");
+                        AssetManager assetManager = this.getAssets();
+                        try {
+                                AssetFileDescriptor fileDescriptor = assetManager
+                                                .openFd("a2.mp3");
+                                mediaPlayer = new MediaPlayer();
+                                mediaPlayer.setDataSource(fileDescriptor.getFileDescriptor(),
+                                                fileDescriptor.getStartOffset(),
+                                                fileDescriptor.getLength());
+
+                                mediaPlayer.prepare();
+                                mediaPlayer.start();
+                        } catch (IOException e) {
+                                // TODO Auto-generated catch block
+                                e.printStackTrace();
+                        }
+                        break;
+                case R.id.btnSdcardStart:
+                        System.out.println("---播放SDcard上的文件---");
+                        try {
+                                mediaPlayer = new MediaPlayer();
+                                mediaPlayer.setDataSource("/mnt/sdcard/a3.mp3");
+                                mediaPlayer.prepare();
+                                mediaPlayer.start();
+                        } catch (Exception e) {
+                        }
+                        break;
+                case R.id.btnNetworkStart:
+                        System.out.println("播放网络上的音频");
+                        // http://zhangmenshiting2.baidu.com/data2/music/9138619/9138619.mp3?
+                        // xcode=dd0d0d0df7218eb9a79c7fd72cefb648&mid=0.18926789458694
+                        try {
+                                // mediaPlayer = new MediaPlayer();
+                                // 通过Uri解析一个网络地址
+                                Uri uri = Uri
+                                .parse("http://zhangmenshiting2.baidu.com/data2/music/9138619/9138619.mp3?xcode=dd0d0d0df7218eb9a79c7fd72cefb648&mid=0.18926789458694");
+                                mediaPlayer.setDataSource(MediaPlayerDemoActivity.this, uri);
+
+                                // mediaPlayer.prepare();
+                                // 也可以直接通过这种方式装载网络上的音频文件
+                                mediaPlayer = MediaPlayer.create(MediaPlayerDemoActivity.this,
+                                                uri);
+                                mediaPlayer.start();
+                        } catch (Exception e) {
+                                // TODO: handle exception
+                        }
+
+                        break;
+
+                default:
+                        break;
+                }
+        }
+}

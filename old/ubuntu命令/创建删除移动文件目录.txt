@@ -1,0 +1,17 @@
+
+mkdir  --创建一个目录
+
+rmdir   --删除一个空目录
+
+rm <filename> <filename> --删除一个或多个文件
+ 
+rm -rf  --删除一个非空目录下的一切 f是强制删除的意思
+
+touch   --创建一个空文件
+
+mv file1 file2 --将file1 命名为file2
+
+mv file1 dir1  --将文件file1移到目录dir1中，名字不变
+
+mv dir1 dir2   --若目录dir2存在,则将dir1及子目录和所有文件，移到dir2下，名字不变； 若dir2不存在， 则将dir1更名为dir2
+		在跨文件系统移动文件时,mv先拷贝,在将原有文件删除,而该文件的链接也将丢失

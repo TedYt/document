@@ -1,0 +1,30 @@
+
+1	mmssms.db库中的pdu表存储了彩信标题,彩信接收时间和彩信ID等信息,其中_id是唯一的主键
+
+	pdu表的URI是Uri.parse("content://mms/inbox");
+
+2. 	数据库mmssms.db中的part表,存储了财信的内容(文本, 音乐, 图像)的文件名, 文件类型的信息
+	
+	其中mid对应pdu表中的阿_id, ct是文件类型, _data是存储路径
+	
+	part表对应的URI是Uri.parse("content://mms/part")
+
+3.	表Canonical_address, 对应的Uri是Uri.parse("content://mms-sms/canonical-addresses");
+
+
+以号码 13423447866为例,对于编程时的,情况有:
+	如果该号码,没有被存为联系人, 那么此人发彩信时,会在手机上显示为:1252013423447866
+	
+	如果没有被存为联系人, 那么此人发短信时, 会在手机上显示为: +8613423447866
+
+	如果被存为联系人, 那么此人不管是发短信还是彩信, 显示为: 13423447866
+	
+
+sms表一些数据字段的解释:
+type: 接收发送的类型, 1 收件箱; 2 发件箱; 3 草稿箱; 4 已发送
+
+
+pdu表一些字段的解释:
+msg_box: 同sms表中的type
+m_type: 彩信规范中的message类型. 130 表示未下载; 多数为132
+

@@ -1,0 +1,31 @@
+
+1. 线程
+	new Thread(new Runnable(){
+		public void run(){
+			try {
+    		    Thread.sleep(1000);//延迟的时间,毫秒为单位
+		    } catch (InterruptedException  e) {
+		    
+		    } 
+			hanlder.sendMessage(); //通知主线程执行任务
+		}
+	})
+
+2. 延时器
+	TimerTask task = new TimerTask(){
+		public void run(){
+			//execute the task
+		}
+	};
+
+	Timer timer = new Timer();
+	timer.schedule(task, delay);
+
+3. android 消息处理
+	new Hanlder().postDelayed(new Runnable(){
+		public void run(){
+			//execute the task		
+		}
+	}, delay);
+
+

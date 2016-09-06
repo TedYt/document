@@ -1,0 +1,40 @@
+diff --git a/vendor/qcom/proprietary/qmi/services/voice_service_v02.c b/vendor/qcom/proprietary/qmi/services/voice_service_v02.c
+index 83ed230..328e367d 100755
+--- a/vendor/qcom/proprietary/qmi/services/voice_service_v02.c
++++ b/vendor/qcom/proprietary/qmi/services/voice_service_v02.c
+@@ -2971,7 +2971,7 @@ static const uint8_t voice_set_config_req_msg_data_v02[] = {
+    QMI_IDL_1_BYTE_ENUM,
+   QMI_IDL_OFFSET8(voice_set_config_req_msg_v02, voice_domain),
+ 
+-  QMI_IDL_TLV_FLAGS_LAST_TLV | QMI_IDL_TLV_FLAGS_OPTIONAL | (QMI_IDL_OFFSET8(voice_set_config_req_msg_v02, ui_tty_setting) - QMI_IDL_OFFSET8(voice_set_config_req_msg_v02, ui_tty_setting_valid)),
++  QMI_IDL_TLV_FLAGS_OPTIONAL | (QMI_IDL_OFFSET8(voice_set_config_req_msg_v02, ui_tty_setting) - QMI_IDL_OFFSET8(voice_set_config_req_msg_v02, ui_tty_setting_valid)),
+   0x16,
+    QMI_IDL_1_BYTE_ENUM,
+   QMI_IDL_OFFSET8(voice_set_config_req_msg_v02, ui_tty_setting)
+@@ -3020,7 +3020,7 @@ static const uint8_t voice_set_config_resp_msg_data_v02[] = {
+   0x15,
+    QMI_IDL_GENERIC_1_BYTE,
+   QMI_IDL_OFFSET8(voice_set_config_resp_msg_v02, voice_domain_pref_outcome),
+-  QMI_IDL_TLV_FLAGS_LAST_TLV | QMI_IDL_TLV_FLAGS_OPTIONAL | (QMI_IDL_OFFSET8(voice_set_config_resp_msg_v02, ui_tty_setting_outcome) - QMI_IDL_OFFSET8(voice_set_config_resp_msg_v02, ui_tty_setting_outcome_valid)),
++  QMI_IDL_TLV_FLAGS_OPTIONAL | (QMI_IDL_OFFSET8(voice_set_config_resp_msg_v02, ui_tty_setting_outcome) - QMI_IDL_OFFSET8(voice_set_config_resp_msg_v02, ui_tty_setting_outcome_valid)),
+   0x16,
+    QMI_IDL_GENERIC_1_BYTE,
+   QMI_IDL_OFFSET8(voice_set_config_resp_msg_v02, ui_tty_setting_outcome)
+@@ -3079,7 +3079,7 @@ static const uint8_t voice_get_config_req_msg_data_v02[] = {
+    QMI_IDL_GENERIC_1_BYTE,
+   QMI_IDL_OFFSET8(voice_get_config_req_msg_v02, voice_domain_pref),
+ 
+-  QMI_IDL_TLV_FLAGS_LAST_TLV | QMI_IDL_TLV_FLAGS_OPTIONAL | (QMI_IDL_OFFSET8(voice_get_config_req_msg_v02, ui_tty_setting) - QMI_IDL_OFFSET8(voice_get_config_req_msg_v02, ui_tty_setting_valid)),
++  QMI_IDL_TLV_FLAGS_OPTIONAL | (QMI_IDL_OFFSET8(voice_get_config_req_msg_v02, ui_tty_setting) - QMI_IDL_OFFSET8(voice_get_config_req_msg_v02, ui_tty_setting_valid)),
+   0x19,
+    QMI_IDL_GENERIC_1_BYTE,
+   QMI_IDL_OFFSET8(voice_get_config_req_msg_v02, ui_tty_setting)
+@@ -3142,7 +3142,7 @@ static const uint8_t voice_get_config_resp_msg_data_v02[] = {
+    QMI_IDL_1_BYTE_ENUM,
+   QMI_IDL_OFFSET8(voice_get_config_resp_msg_v02, voice_domain),
+ 
+-  QMI_IDL_TLV_FLAGS_LAST_TLV | QMI_IDL_TLV_FLAGS_OPTIONAL | (QMI_IDL_OFFSET8(voice_get_config_resp_msg_v02, current_ui_tty_setting) - QMI_IDL_OFFSET8(voice_get_config_resp_msg_v02, current_ui_tty_setting_valid)),
++  QMI_IDL_TLV_FLAGS_OPTIONAL | (QMI_IDL_OFFSET8(voice_get_config_resp_msg_v02, current_ui_tty_setting) - QMI_IDL_OFFSET8(voice_get_config_resp_msg_v02, current_ui_tty_setting_valid)),
+   0x18,
+    QMI_IDL_1_BYTE_ENUM,
+   QMI_IDL_OFFSET8(voice_get_config_resp_msg_v02, current_ui_tty_setting)

@@ -1,0 +1,10 @@
+
+
+SQL 语句中的判断
+
+	where name is no null //不是null的判断
+	where name is null //为null的判断
+
+获取数据库的值的判断
+
+	cursor.getString(INDEX_NAME) == null

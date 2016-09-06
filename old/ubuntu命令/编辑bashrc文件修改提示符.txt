@@ -1,0 +1,161 @@
+
+
+这两天在看关于shell变量的一些内容，突然有个想法，就是修改下自己终端的提示符.
+记得先前的提示符应该是：
+wjl@wjl-desktop: ~$        //使用wjl账户在/home/wjl目录下
+root@wjl-desktop: ~#      //使用root账户在/root目录下
+在终端下输入echo $PS1首先PS1变量的值如下：
+\[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\u@\h：\w\$
+首先让我们认识下PS1中特殊符号所代表的含义：
+
+\d ：代表日期，格式为weekday month date
+
+
+\H ：完整的主机名称。例如：我的机器名称为：linux.wjl，则这个名称就是linux.wjl
+
+\h ：仅取主机的第一个名字，如上例，则为linux，.wjl则被省略
+
+\t ：显示时间为24小时格式，如：HH：MM：SS
+
+\T ：显示时间为12小时格式
+
+\A ：显示时间为24小时格式：HH：MM
+
+\u ：当前用户的账号名称
+
+\v ：BASH的版本信息
+
+\w ：完整的工作目录名称。家目录会以 ~代替
+
+\W ：利用basename取得工作目录名称，所以只会列出最后一个目录
+
+\# ：下达的第几个命令
+
+\$ ：提示字符，如果是root时，提示符为：# ，普通用户则为：$
+
+下面如何修改呢？在终端使用PS1='[\u@\h \w \A #\#]\$'(我比较喜欢这个提示符格式，你自己可以根据自己的喜好和以上的含义自己编写。)命令可以暂时的修改，但是无法永久的修改，但是我们要知道用户登录bash后，变量的设置文件的读取顺序如下：
+
+1.先读取/etc/profile，再根据/etc/profile的内容去读取其他附加的设置文件。
+
+2.根据不同的用户，到用户家目录下去读取～/.bash_profile或者~/.bash_login或者~/.profile等设置文件。
+
+3.根据不同的用户，到家目录下去读取~/.bashrc
+
+所以，我们可以看出，我们登录bash后，最终读取的设置文件是~/.bashrc，也就是说，在~/.bashrc里的设置就是最终的设置值。所以我们可以将个人的一些常用的变量都写到这个文件。
+
+下来我来说说在~/.bashrc中如何修改提示符：
+
+首先，我们在普通用户的方式下,在终端输入：vim /home/wjl/.bashrc      显示如下：
+
+
+  1 # ~/.bashrc: executed by bash(1) for non-login shells.
+  2 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
+  3 # for examples
+  4 
+  5 # If not running interactively, don't do anything
+  6 [ -z "$PS1" ] && return
+  7 
+  8 # don't put duplicate lines in the history. See bash(1) for more options
+  9 # ... or force ignoredups and ignorespace
+ 10 HISTCONTROL=ignoredups:ignorespace
+ 11 
+ 12 # append to the history file, don't overwrite it
+ 13 shopt -s histappend
+ 14 
+ 15 # for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
+ 16 HISTSIZE=1000
+ 17 HISTFILESIZE=2000
+ 18 
+ 19 # check the window size after each command and, if necessary,
+ 20 # update the vals of LINES and COLUMNS.
+ 21 shopt -s checkwinsize
+ 22 
+ 23 # make less more friendly for non-text input files, see lesspipe(1)
+ 24 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
+ 25 
+ 26 # set variable identifying the chroot you work in (used in the prompt below)
+ 27 if [ -z "$debian_chroot" ] && [ -r /etc/debian_chroot ]; then
+ 28     debian_chroot=$(cat /etc/debian_chroot)
+ 29 fi
+ 30 
+ 31 # set a fancy prompt (non-color, unless we know we "want" color)
+ 32 case "$TERM" in
+ 33     xterm-color) color_prompt=yes;;
+ 34 esac
+ 35 
+ 36 # uncomment for a colored prompt, if the terminal has the capability; turned
+ 37 # off by default to not distract the user: the focus in a terminal window
+ 38 # should be on the output of commands, not on the prompt
+ 39 #force_color_prompt=yes
+ 40 
+ 41 if [ -n "$force_color_prompt" ]; then
+ 42     if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
+ 43         # We have color support; assume it's compliant with Ecma-48
+ 44         # (ISO/IEC-6429). (Lack of s h support is extremely rare, and s h
+ 45         # a case would tend to support setf rather than setaf.)
+ 46         color_prompt=yes
+ 47     else
+ 48         color_prompt=
+ 49     fi
+ 50 fi
+ 51 
+ 52 if [ "$color_prompt" = yes ]; then
+ 53     PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
+ 54 else
+ 55     PS1='${debian_chroot:+($debian_chroot)}[\u@\h \w \A #\#]$ '          //注意这里，这便是修改PS1的位置！
+ 56 fi
+ 57 unset color_prompt force_color_prompt
+ 58 
+ 59 # If this is an xterm set the title to user@host:dir
+ 60 case "$TERM" in
+ 61 xterm*|rxvt*)
+ 62     PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
+ 63     ;;
+ 64 *)
+ 65     ;;
+ 66 esac
+ 67 
+ 68 # enable color support of ls and also add handy aliases
+ 69 if [ -x /usr/bin/dircolors ]; then
+ 70     test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+ 71     alias ls='ls --color=auto'
+ 72     #alias dir='dir --color=auto'
+ 73     #alias vdir='vdir --color=auto'
+ 74 
+ 75     alias grep='grep --color=auto'
+ 76     alias fgrep='fgrep --color=auto'
+ 77     alias egrep='egrep --color=auto'
+ 78 fi
+ 79 
+ 80 # some more ls aliases
+ 81 alias ll='ls -alF'
+ 82 alias la='ls -A'
+ 83 alias l='ls -CF'
+ 84 
+ 85 # Alias definitions.
+ 86 # You may want to put all your additions into a separate file like
+ 87 # ~/.bash_aliases, instead of adding them here directly.
+ 88 # See /usr/share/doc/bash-doc/examples in the bash-doc package.
+ 89 
+ 90 if [ -f ~/.bash_aliases ]; then
+ 91     . ~/.bash_aliases
+ 92 fi
+ 93 
+ 94 # enable programmable completion features (you don't need to enable
+ 95 # this, if it's already enabled in /etc/bash.bashrc and /etc/profile
+ 96 # sources /etc/bash.bashrc).
+ 97 if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
+ 98     . /etc/bash_completion
+ 99 fi
+在这么多的代码里，找到55行，就是我标记的位置，就行修改，保存即可，然后在终端输入：source ～/.bashrc就好了！你就会看到你的提示符变成了：
+
+[wjl@wjl-desktop ~ 17:20 #21]$ （可以根据自己的喜好进行设置！）
+
+现在切换到root身份，就会发现提示符又回去了，这是因为每个用户都有自己的设置文件，root也同样！
+
+root的PS1值的修改和普通用户的一样，大概如下：
+
+切换到/root目录下（注意首先切换身份到root），vim目录下.bashrc，同样的方法修改，即可修改root身份的提示符！
+
+
+

@@ -1,0 +1,25 @@
+保存文件
+File phoneDir = new File("/storage/sdcard0");
+File saveFile = new File(sdCardDir, "Log_SmartMode.txt");
+try{
+	FileOutputStream outStream = new FileOutputStream(saveFile, true);
+	outStream.write((TAG + " : " + msg + "\n").getBytes());
+	outStream.close();
+}catch(FileNotFoundException e){
+	e.printStackTrace();
+}catch(IOException e){
+	e.printStackTrace();
+}
+
+
+保存图片
+try{
+    fos = new FileOutputStream(thumbnailName);//thumbnailName是图片的绝对路径
+    thumbnail.compress(Bitmap.CompressFormat.PNG, 100, fos);//thumbnail是要保存的bitmap对象
+    fos.flush();
+    fos.close();
+}catch (FileNotFoundException e){
+    e.printStackTrace();
+}catch (IOException e){
+    e.printStackTrace();
+}

@@ -1,0 +1,57 @@
+
+
+对于自定义布局的情况,关键是Adapter 中getView方法的编写,
+
+	private static int[] SW_MORE_CION = new int[]{
+		R.drawable.sw_more_call,
+		R.drawable.sw_more_new,
+		R.drawable.sw_more_openinbox,
+		R.drawable.sw_more_delete,
+	};
+	
+	private static int[] SW_MORE_MENU = new int[]{
+		R.string.smswidget_more_call,
+		R.string.smswidget_more_new,
+		R.string.smswidget_more_openinbox,
+		R.string.smswidget_more_delete,
+	};
+	
+
+	public View getView(int position, View convertView, ViewGroup parent) {
+		ViewHolder holder = null;
+		
+		if (convertView == null){
+			holder = new ViewHolder();
+			LayoutInflater inflater = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			convertView =  inflater.inflate(R.layout.sms_widget_more, null);
+			
+			holder.img = (ImageView)convertView.findViewById(R.id.sw_more_icon);
+			holder.menu = (TextView)convertView.findViewById(R.id.sw_more_menu);
+			convertView.setTag(holder);
+		}else{
+			holder = (ViewHolder)convertView.getTag();
+		}
+		
+		holder.img.setImageResource(SW_MORE_CION[position]);
+		holder.menu.setText(SW_MORE_MENU[position]);
+		
+		return convertView;
+	}
+	
+	public final class ViewHolder{
+		public ImageView img;
+		public TextView menu;
+	}
+
+
+对于简单的情况,可以中系统的简单布局, 如android.R.layout.simple_list_itme_checked
+
+
+2. 如果使用了ListActivity, onCreate方法最简单的写法是:
+	public void onCreate(Bundle savedInstanceState) {
+	        super.onCreate(savedInstanceState);
+	        mListView = getListView();
+	        mListView.setAdapter(new MyAdapter(this));
+        	//不要加setContentView
+	}
+

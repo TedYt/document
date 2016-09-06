@@ -1,0 +1,6 @@
+
+
+
+  SIMInfo sim1Info = SIMInfo.getSIMInfoBySlot(this, com.android.internal.telephony.Phone.GEMINI_SIM_1);
+
+  SIMInfo sim2Info = SIMInfo.getSIMInfoBySlot(this, com.android.internal.telephony.Phone.GEMINI_SIM_2);

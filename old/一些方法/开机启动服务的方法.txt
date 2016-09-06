@@ -1,0 +1,3 @@
+捕捉Intent : android.intent.action.BOOT_COMPLETED
+
+权限:  <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>

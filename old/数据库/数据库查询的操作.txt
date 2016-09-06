@@ -1,0 +1,14 @@
+select  a.raw_contact_id, a.normalized_number, b.name
+from phone_lookup as a, view_v1_group_membership  as b
+where a.raw_contact_id =  b.person and b.name = ' in Android'
+
+select  a.raw_contact_id, a.normalized_number, b.name
+from phone_lookup as a, view_v1_group_membership  as b
+where (a.raw_contact_id =  b.person) and b.group_id in (2,25)
+
+
+select num count(*)
+form a,b
+where a.num = b.num
+group by num
+having count(*) >= 2

@@ -1,0 +1,12 @@
+
+
+
+1. 让光标的颜色和EditText中字的颜色一样
+	
+	android:textCursorDrawable="@null"
+
+2. 让光标的位置不再最前端, 离最前端有一段距离
+
+	这是通过设置EditText的内边距来实现, 比如
+
+	android:paddingLeft="12dp"

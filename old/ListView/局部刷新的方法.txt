@@ -1,0 +1,33 @@
+ 
+ 有这样的需求，针对一条消息操作，这里是 下载图片，需要不断的刷新下载进度，
+如果用notifyChanged() 会整个刷新list，导致 本来 看靠前的 记录，结果 list跑到最后面去了，
+所以就使用的局部刷新，
+
+ //得到第一个可显示控件的位置，
+int visiblePosition = listview.getFirstVisiblePosition();
+//只有当要更新的view在可见的位置时才更新，不可见时，跳过不更新
+int lastPosition = listview.getLastVisiblePosition();
+if (position >= visiblePosition && position <= lastPosition) {
+        //得到要更新的item的view
+        View view = listview.getChildAt(position - visiblePosition + 1);
+        handle = (ViewHandler) view.getTag();
+        if(null == handle)
+                handle = new ViewHandler();
+        //从view中取得holder
+
+        int type = getItemViewType(position);
+        int key = getKey(type);
+        info = mInfos.get(position);
+        manageView(key,view,info,position);
+}                
+        
+
+
+最后一种 及 之前的 item 完全被挡住了， getChildAt(position - visiblePosition + 1)就得不到正确的view
+了，
+
+搞定了 采用了 另一种方式
+list.setTranscriptMode(AbsListView.TRANSCRIPT_MODE_DISABLED);
+list.notifyDataSetChanged();
+
+然后 需要滚动时 再将 模式 设置回来 

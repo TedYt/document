@@ -1,0 +1,14 @@
+tar zcvpf filename.tar.gz Dirname/ // 压缩
+
+tar cvf filename.tar Dirname/ //打包
+
+-z: 有 gzip 的属性
+-j: 有bzip2的属性
+-c: 建立压缩文档
+-x: 解压压缩文档
+-v: 压缩过程中显示文件
+-p: 保持文件的原有属性
+-f: 最后一个参数, f后必须立即接文件名, 不能再加其他参数
+
+解压/解包
+tar xvf filename.tar

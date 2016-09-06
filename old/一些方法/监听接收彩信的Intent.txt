@@ -1,0 +1,20 @@
+
+
+	<intent-filter>
+                <action android:name="android.provider.Telephony.WAP_PUSH_RECEIVED" />
+
+                <data android:mimeType="application/vnd.wap.sic" />
+                <data android:mimeType="text/vnd.wap.si" />
+                
+                <data android:mimeType="application/vnd.wap.slc" />
+                <data android:mimeType="text/vnd.wap.sl" />
+                
+                <data android:mimeType="application/vnd.wap.coc" />
+                <data android:mimeType="text/vnd.wap.co" />
+                
+                <data android:mimeType="application/vnd.wap.mms-message"/>
+                
+                <data android:mimeType="application/vnd.syncml.notification"/>
+            </intent-filter>
+
+这里的data全部都要

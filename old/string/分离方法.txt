@@ -1,0 +1,15 @@
+
+
+
+使用StringTokenizer
+ StringTokenizer st = new StringTokenizer("a:b:c", ":");
+ while (st.hasMoreTokens()) {
+     System.err.println(st.nextToken());
+ }
+
+
+使用String类的split方法
+ for (String token : "a:b:c".split(":")) {
+     System.err.println(token);
+ }
+ 

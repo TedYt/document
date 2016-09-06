@@ -1,0 +1,6 @@
+
+
+
+<string name="nc_charge_complete_soon">"即将充满&#8230;"</string>
+
+显示为: 即将充满...

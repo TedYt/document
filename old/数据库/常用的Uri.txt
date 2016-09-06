@@ -1,0 +1,5 @@
+                
+查询文件
+Uri uri = MediaStore.Files.getContentUri("external");
+列名：
+MediaStore.Files.FileColumns.

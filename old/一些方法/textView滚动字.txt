@@ -1,0 +1,41 @@
+
+
+textview上字滚动,需要的条件有:
+	1. android:singleLine="true"
+	2. android:ellipsize="marquee"
+	3. textview需要获得焦点 这是最重要,也是被忽略的一项
+
+
+过程:
+1. 重写textview
+
+ public class AlwaysMaqureeTextView extends TextView{
+
+	public AlwaysMaqureeTextView(Context context) {
+		super(context);
+	}
+	
+	public AlwaysMaqureeTextView(Context context, AttributeSet attrs){
+		super(context, attrs);
+	}
+
+	public AlwaysMaqureeTextView(Context context, AttributeSet attrs, int defstyle){
+		super(context, attrs, defstyle);
+	}
+
+	@Override
+	public boolean isFocused() {
+		return true;
+	}	
+}
+
+
+2. 自定义控件
+
+<com.mediatek.filemanager.tinnoui.AlwaysMaqureeTextView
+        android:id="@+id/tinnoui_folder_path"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:singleLine="true"
+        android:ellipsize="marquee"
+        android:marqueeRepeatLimit="3"/>  //最后一个参数是 重复滚动的次数

@@ -1,0 +1,3 @@
+用AlertDialog设置自定义view的时候会有一个白底
+
+这时不要用AlertDialog，用Dialog即可。

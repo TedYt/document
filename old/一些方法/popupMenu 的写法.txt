@@ -1,0 +1,14 @@
+
+
+void showPopupMenu(View v) { // v即被点击的View
+	
+	PopupMenu popup = new PopupMenu(this,v);
+
+	popup.inflate(R.menu.popup_menu.xml);
+	Menu menu = popup.getMenu(); //过的popupmenu中menu的实例
+
+	menu.getItem(index); // 获取某一项
+
+	popup.show();
+
+}

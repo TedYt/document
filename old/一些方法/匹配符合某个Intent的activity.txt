@@ -1,0 +1,36 @@
+
+
+比如匹配Lancher程序
+
+	Intent intent = new Intent(Intent.ACTION_MAIN);  
+	intent.addCategory(Intent.CATEGORY_HOME); 
+
+	List<ResolveInfo> resolveInfo = pManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
+
+	如果某个程序的action中包含 Intent.ACTION_MAIN, categroy中包含Intent.CATEGORY_HOME 和 Intent.CATEGORY_DEFAULT,
+	那么这个app就能够被检索到.
+
+	其中Intent.CATEGORY_DEFAULT的限制由于PackageManager.MATCH_DEFAULT_ONLY决定的
+
+匹配自定义的app
+
+	Intent intent = new Intent(Intent.ACTION_MAIN);  
+	intent.setAction("custom.getallapplication.info");
+	intent.addCategory(Intent.CATEGORY_LAUNCHER);  
+	    
+	List<ResolveInfo> resolveInfo = pManager.queryIntentActivities(intent, PackageManager.GET_INTENT_FILTERS);
+
+	PackageManager.GET_INTENT_FILTERS 这个参数的意思是不对Intent有要求,只要上面所设定的3个元素在intent-filter中被包含即可
+
+
+特殊的CATEGORY 还有
+CATEGORY_APP_BROWSER
+CATEGORY_APP_CALCULATOR
+CATEGORY_APP_CALENDAR
+CATEGORY_APP_MUSIC
+CATEGORY_APP_GALLERY
+CATEGORY_APP_MESSAGING
+等等
+
+
+可以看出, 当你打开一个图片, 出现让你选择查看图片的app的时候, 这些app应该就是通过这种方式获得

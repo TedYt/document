@@ -1,0 +1,34 @@
+﻿
+
+近日正准备彻底抛弃windows,无奈还是有些东西要在windows里用，如exchange的邮箱和MS communicator.
+
+不过通过自己的研究发现， exchange可以搞定了。
+
+方法一：OWA --->用evolution
+
+exchange的邮箱服务器一般可以在网页上收发邮件，使用OWA的功能。
+
+evolution支持者个这个插件。
+
+使用方法， 在添加帐户时选在类型为microsoft exchange
+
+OWA的地址选择 你上网的时候可以浏览网页查邮件的地址。具体可以问问管理员。我以前就使用这种方法，不好使，老死，特慢。抛弃。
+
+方法2：imap -->evolution或其它邮件客户端如kmail, 或者thunderbird.
+
+之前我一致认为exchange使用不同于pop3, imap的其他的邮件协议。
+
+后来发现，原来exchange用得就是imap协议。
+
+下面在windows里打开你的outlook
+
+在Tools->Email Accouts...选view or change exisiting email accounts->选中exchange的server再点change, 在下一个对话框里就会出现服务器的地址，记下来。
+
+使用linux, 在evolution或其它邮件客户端如kmail, 或者thunderbird创建邮件帐户，使用imap协议
+
+服务器地址就是上面的抄下来的地址，用户名和密码就是你outlook或者域的帐号密码
+
+试试吧，我是成功了。
+
+
+mail.tinnomobile.com

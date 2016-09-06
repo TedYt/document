@@ -1,0 +1,24 @@
+a. 对于ICS、ICS2和JB的平台，可以根据以下情况修改：
+
+1.    若是希望修改成为出厂时的默认配置，可以找到build/tools/buildinfo.sh文件，在里面找到如下内容：
+
+echo “dalvik.vm.heapsize=128M”
+
+在此句的后面添加：
+
+echo “dalvik.vm.heapgrowthlimit=64M”
+
+其中64M为Heap增长所能达到的最大值。这个值可以根据需要设定，但是不能超过heapsize的大小，即不能超过上面的128M。此修改会在编译后生效，当编译生成的系统，烧到手机上后，默认的Heap增长的的上限就成为64M。即一个进程所能占用的最大空间不会超过64M。
+
+2.    若不需要量产，只希望修改某一台手机，可以采用如下的办法：
+
+adb pull /system/build.prop C:\build.prop
+
+用文本编辑器打开build.prop找到dalvik.vm.heapsize=128m,在其后面添加dalvik.vm.heapgrowthlimit=64m(若已经有此句，则只需要修改为64m即可)。
+
+然后通过adb push build.prop /system
+
+最后重启手机生效。
+
+b. 对于GB平台只需要按照上述方法修改dalvik.vm.heapsize即可。
+

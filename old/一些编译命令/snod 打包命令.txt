@@ -1,0 +1,19 @@
+[DESCRIPTION]
+mm命令快速编译一个模块之后，一般用adb push到手机看效果，如果环境不允许用adb push或模块不经常改，希望直接放到image里，则可以用./mk snod，这个命令仅仅将system目录打包成system.img，然后方便直接下载，但是这个命令还是很慢（慢在搜索所有的Android.mk），有一种方法可以加速该编译到1分钟以内
+ 
+[KEYWORD]
+./mk snod
+ 
+ 
+[SOLUTION]
+修改alps/build/core/main.mk：
+subdir_makefiles :=\
+    $(shell build/tools/findleaves.py --prune=out --prune=.repo --prune=.git $(subdirs) Android.mk)
+修改为：
+ifneq ($(MAKECMDGOALS),snod)
+subdir_makefiles :=\
+    $(shell build/tools/findleaves.py --prune=out --prune=.repo --prune=.git $(subdirs) Android.mk)
+endif
+ 
+以上避免了不必要的耗时操作，加速./mk snod编译
+

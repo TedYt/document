@@ -1,0 +1,63 @@
+
+
+查询语句：
+
+SQLiteDatabase db = databaseHelper.getWritableDatabase();  
+     Cursor cursor = db.query("person", new String[]{"personid,name,age"}, "name like ?", new String[]{"%传智%"}, null, null, "personid desc", "1,2");  
+     while (cursor.moveToNext()) {  
+     	int personid = cursor.getInt(0); //获取第一列的值,第一列的索引从0开始  
+     	String name = cursor.getString(1);//获取第二列的值  
+     	int age = cursor.getInt(2);//获取第三列的值  
+     }  
+     cursor.close();  
+     db.close();  
+
+	上面代码用于从person表中查找name字段含有“传智”的记录，匹配的记录按personid降序排序，对排序后的结果略过第一条记录，只获取2条记录
+     
+
+ query(table, columns, selection, selectionArgs, groupBy, having, orderBy, limit)方法各参数的含义：
+
+        table：表名。相当于select语句from关键字后面的部分。如果是多表联合查询，可以用逗号将两个表名分开。
+
+        columns：要查询出来的列名。相当于select语句select关键字后面的部分。
+
+        selection：查询条件子句，相当于select语句where关键字后面的部分，在条件子句允许使用占位符“?”
+
+        selectionArgs：对应于selection语句中占位符的值，值在数组中的位置与占位符在语句中的位置必须一致，否则就会有异常。
+
+        groupBy：相当于select语句group by关键字后面的部分
+
+        having：相当于select语句having关键字后面的部分
+
+        orderBy：相当于select语句order by关键字后面的部分，如：personid desc, age asc;
+
+        limit：指定偏移量和获取的记录数，相当于select语句limit关键字后面的部分。
+
+
+更新方法：
+	SQLiteDatabase db = databaseHelper.getWritableDatabase();  
+              ContentValues values = new ContentValues();  
+             values.put(“name”, “安桌”);//key为字段名，value为值  
+             db.update("person", values, "personid=?", new String[]{"1"});   
+             db.close();  
+             上面代码用于把person表中personid等于1的记录的name字段的值改为“安桌”。
+        
+        
+删除方法：
+
+SQLiteDatabase db = databaseHelper.getWritableDatabase();  
+     db.delete("person", "personid<?", new String[]{"2"});  
+     db.close();  
+     
+        上面代码用于从person表中删除personid小于2的记录。
+
+
+插入方法：
+
+SQLiteDatabase db = databaseHelper.getWritableDatabase();  
+     ContentValues values = new ContentValues();  
+     values.put("name", "安桌");  
+     values.put("age", 4);  
+     long rowid = db.insert(“person”, null, values);//返回新添记录的行号，与主键id无关  
+     
+ 不管第三个参数是否包含数据，执行Insert()方法必然会添加一条记录，如果第三个参数为空，会添加一条除主键之外其他字段值为Null的记录。Insert()方法内部实际上通过构造insert语句完成数据的添加，Insert()方法的第二个参数用于指定空值字段的名称，相信大家对此参数会感到疑惑，此参数的作用是干嘛的？是这样的：如果第三个参数values 为Null或者元素个数为0， Insert()方法必然要添加一条除了主键之外其它字段为Null值的记录，为了满足这条insert语句的语法， insert语句必须给定一个字段名，如：insert into person(name) values(NULL)，倘若不给定字段名 ， insert语句就成了这样： insert into person() values()，显然这不满足标准SQL的语法。对于字段名，建议使用主键之外的字段，如果使用了INTEGER类型的主键字段，执行类似insert into person(personid) values(NULL)的insert语句后，该主键字段值也不会为NULL。如果第三个参数values 不为Null并且元素的个数大于0 ，可以把第二个参数设置为null

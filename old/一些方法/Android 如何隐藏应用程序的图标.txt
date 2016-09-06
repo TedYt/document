@@ -1,0 +1,11 @@
+
+
+1，有源码的话
+AndroidManifest.xml文件中在入口Activity的intent-filter里去掉<category android:name=”android.intent.category.LAUNCHER” />，或者将LAUNCHER改为DEFAULT
+ 
+2，没有源码的话
+在程序中加入下面的代码
+PackageManager p = getPackageManager(); 
+p.setComponentEnabledSetting(getComponentName(), 
+                         PackageManager.COMPONENT_ENABLED_STATE_DISABLED, 
+                         PackageManager.DONT_KILL_APP);

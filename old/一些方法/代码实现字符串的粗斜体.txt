@@ -1,0 +1,25 @@
+
+
+	String str = getResources().getString(R.string.hello);
+	SpannableStringBuilder style = new SpannableStringBuilder();
+	style.append(str);
+
+	ForegroundColorSpan foreColor = new ForegroundColorSpan(Color.BLUE);//前景色(字体颜色)
+	BackgroundColorSpan backColor = new BackgroundColorSpan(Color.RED); //背景色
+	CharacterStyle bold = new StyleSpan(android.graphics.Typeface.BOLD); //粗体
+	CharacterStyle italic = new StyleSpan(android.graphics.Typeface.ITALIC);//斜体
+	CharacterStyle underline = new UnderLineSpan(); //下划线
+	AbsoluteSizeSpan size = new AbsoluteSizeSpan(fontsize); //字体大小
+
+	//设置SpannableStringBuilder对象
+	style.setSpan(foreColor, 0, str.length(),Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+	style.setSpan(backColor, 0, str.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+	style.setSpan(bold, 0, 11, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+	style.setSpan(italic, 11, 17, Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+	style.setSpan(under, 17, str.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+	//显示 
+	textView.setText(style);
+
+
+	除了SpannableStringBuilder 外, 还可以用SpannableString 和 ImageSpan等

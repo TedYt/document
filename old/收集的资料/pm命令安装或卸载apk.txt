@@ -1,0 +1,29 @@
+pm install [-l] [-r] [-t] [-i INSTALLER_PACKAGE_NAME] [-s] [-f] PATH
+pm uninstall [-k] PACKAGE
+pm命令可以通过adb在shell中执行，同样，我们可以通过代码来执行。
+ 
+01	public static void execCommand(String... command) {
+02	    Process process = null;
+03	    try {
+04	        process = new ProcessBuilder().command(command).start();
+05	        //对于命令的执行结果我们可以通过流来读取
+06	        // InputStream in = process.getInputStream();
+07	        // OutputStream out = process.getOutputStream();
+08	        // InputStream err = process.getErrorStream();
+09	    } catch (IOException e) {
+10	        e.printStackTrace();
+11	    } finally {
+12	        if (process != null)
+13	            process.destroy();
+14	    }
+15	}
+ 
+1	execCommand("pm", "install", "-f", filePath);//安装apk，filePath为apk文件路径，如/mnt/sdcard/ApiDemos.apk
+2	execCommand("pm", "uninstall", packageName);//卸载apk，packageName为包名，如com.example.android.apis
+编译生成apk时，要在你的manifest文件下添加android:sharedUserId="android.uid.system"，编译完成之后还无法正常安装，会出现Installation error: INSTALL_FAILED_SHARED_USER_INCOMPATIBLE错误，此时，要为apk重新签名。
+
+在android源码\build\target\product\security中找platform.pk8和platform.x509.pem两个文件，在android 编绎目录out下找到 signapk.jar 这个包（源码目录\build\tools\signapk），并把编译好的apk（如PMDemo.apk）放在同一目录下，在重新签名之前，用rar文件打开apk文件，进入META-INF目录下，将CERT.SF和CERT.RSA这两个文件删除掉，然后在命令行中执行以下命令：
+java -jar signapk.jar platform.x509.pem platform.pk8 PMDemo.apk NewPMDemo.apk
+
+安装前先把旧的apk卸载，这样重新签名之后的apk就可以正常安装了。
+

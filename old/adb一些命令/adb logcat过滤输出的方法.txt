@@ -1,0 +1,40 @@
+
+我们在Android开发中总能看到程序的log日志内容充满了屏幕，而真正对开发者有意义的信息被淹没在洪流之中，让开发者无所适从，严重影响开发效率。本文就具体介绍几种在shell命令行中过滤adb logcat输出的方法。
+1、只显示需要的输出（白名单）
+最方便的当然是通过管道使用 grep 过滤了，这样可以使用 grep 强大的正则表达式匹配。简单的匹配一行当中的某个字符串，例如 MyApp：
+adb logcat | grep MyApp
+adb logcat | grep -i myapp #忽略大小写。
+adb logcat | grep --color=auto -i  myapp #设置匹配字符串颜色。更多设置请查看 grep 帮助。
+
+进阶一点可以使用 grep 的正则表达式匹配。例如上一个例子会匹配一行中任意位置的 MyApp，可以设置为仅匹配 tag。默认的 log 输出如下，如果修改过输出格式相应的表达式也要修改。
+I/CacheService(  665): Preparing DiskCache for all thumbnails.
+可以看出 tag 是一行开头的第三个字符开始，根据这点写出表达式：
+adb logcat | grep "^..MyApp"
+根据这个格式也可以设置只显示某个优先级的 log，再匹配行首第一个字符即可。例如仅显示 Error 级别 tag 为 MyApp 的输出：
+adb logcat | grep "^E.MyApp"
+当然也可以匹配多个，使用 | 分割多个匹配表达式，要加转义符。例如要匹配 tag 为 MyApp 和 MyActivity 的输出：
+adb logcat | grep "^..MyApp\|^..MyActivity"
+adb logcat | grep -E "^..MyApp|^..MyActivity"  #使用 egrep 无须转义符
+
+2、过滤不需要的输出（黑名单）
+还是使用 grep，用法也跟上面的一样，加一个 -v 即可。例如要过滤 tag 为 MyApp 和 MyActivity 的输出：
+adb logcat | grep -v "^..MyApp\|^..MyActivity"
+adb logcat | grep -vE "^..MyApp|^..MyActivity"  #使用 egrep 无须转义符
+
+3、显示同一个进程的所有输出
+有时一个程序里面的 tag 有多个，需要输出该程序（同一个 PID）的所有 tag；仅使用 tag 过滤有时也会漏掉一些错误信息，而一般错误信息也是和程序同一个 PID。还是通过 grep 实现，思路是先根据包名找到 pid 号，然后匹配 pid。写成 shell 脚本如下，参数是程序的 java 包名（如 com.android.media）。
+#!/bin/bash
+packageName=$1
+pid=`adb shell ps | grep $packageName | awk ‘{print $2}’`
+adb logcat | grep –color=auto $pid
+
+4、从当前开始显示
+logcat 有缓存，如果仅需要查看当前开始的 log，需要清空之前的。
+adb logcat -c && adb logcat
+
+5、过滤 log 文件
+有时需要分析 log 文件，过滤 log 文件还是使用 grep。例如 log 文件为 myapp.log，要匹配 tag 为 MyApp 和 MyActivity 的输出，然后输出到 newmyapp.log：
+cat myapp.log | grep "^..MyApp\|^..MyActivity" > newmyapp.log
+
+
+

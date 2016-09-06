@@ -1,0 +1,55 @@
+
+1. 关闭Wi-Fi
+
+	WifiManager wifi = (WifiManager) mContext.getSystemService(Context.WIFI_SERVICE);
+
+	if (wifi != null && wifi.isWifiEnabled()) {
+		wifi.setWifiEnabled(false);
+	}
+条件:
+    	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    	<uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+
+	import android.net.wifi.WifiManager;
+
+2 关闭蓝牙
+	BluetoothAdapter bt = BluetoothAdapter.getDefaultAdapter();
+	if (bt != null && bt.isEnabled()) {
+		bt.disable();
+	}
+
+条件:
+	<uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    	<uses-permission android:name="android.permission.BLUETOOTH" />
+
+	import android.bluetooth.BluetoothAdapter;
+
+3 关闭GPS
+	if (Settings.Secure.isLocationProviderEnabled(mContext.getContentResolver(), "gps")) {
+			Settings.Secure.setLocationProviderEnabled(mContext.getContentResolver(), "gps", false);
+		}
+
+条件:
+    	<uses-permission android:name="android.permission.WRITE_SETTINGS"/>
+    	<uses-permission android:name="android.permission.WRITE_SECURE_SETTINGS"/>
+
+	import android.provider.Settings;
+	import android.provider.Settings.Secure;
+
+4 关闭数据连接
+	long GprsValue = Settings.System.getLong(mContext.getContentResolver(),
+				Settings.System.GPRS_CONNECTION_SIM_SETTING,
+				Settings.System.GPRS_CONNECTION_SIM_SETTING_NEVER);
+	if (GprsValue != 0) {
+		Intent intent = new Intent(Intent.ACTION_DATA_DEFAULT_SIM_CHANGED);
+		intent.putExtra("simid", (long) 0); // 这里必须强制转换为long型,否则在处理广播端,获得getLongExtra会获取的默认值
+		mContext.sendBroadcast(intent);
+	}
+条件:
+	<uses-permission android:name="android.permission.WRITE_SETTINGS"/>
+    	<uses-permission android:name="android.permission.WRITE_SECURE_SETTINGS"/>
+
+	import android.provider.Settings;
+	import android.provider.Settings.System;
+	
+

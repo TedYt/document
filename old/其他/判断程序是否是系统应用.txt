@@ -1,0 +1,15 @@
+
+PackageManager pm = getPackageManager();
+int appFlags = pm.getPackageInfo(packageName, 0).applicationInfo.flags;
+
+private boolean isSystemApp(int appFlags){
+        return ((appFlags & android.content.pm.ApplicationInfo.FLAG_SYSTEM) != 0);
+}
+
+private boolean isSystemUpdateApp(int appFlags){
+        return ((appFlags & android.content.pm.ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0);
+}
+
+private boolean isUserApp(int appFlags){
+        return (!(isSystemApp(appFlags) || isSystemUpdateApp(appFlags)));
+}

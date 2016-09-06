@@ -1,0 +1,2 @@
+
+LOCAL_PROGUARD_FLAG_FILES := proguard.flags

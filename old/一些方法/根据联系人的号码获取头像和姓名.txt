@@ -1,0 +1,167 @@
+
+
+	
+来自MTK 的代码
+方法:
+
+1 相关数据设置
+	private static final Uri PHONES_URI = ContactsContract.Data.CONTENT_URI;
+	private static final Uri CANADDRESS_URI = Uri.parse("content://mms-sms/canonical-addresses");
+
+	final String CALLER_ID_SELECTION_EXACT_MATCH =  " Data._ID IN "
+            + " (SELECT DISTINCT lookup.data_id "
+            + " FROM "
+                + " (SELECT data_id, normalized_number, length(normalized_number) as len "
+                + " FROM phone_lookup "
+                + " WHERE normalized_number = ?) AS lookup "
+            + " WHERE "
+                + " (lookup.len <= ? AND "
+                    + " substr(?, ? - lookup.len + 1) = lookup.normalized_number))";
+	
+	final String CALLER_ID_SELECTION = " Data._ID IN "
+            + " (SELECT DISTINCT lookup.data_id "
+            + " FROM "
+                + " (SELECT data_id, normalized_number, length(normalized_number) as len "
+                + " FROM phone_lookup "
+                + " WHERE min_match = ?) AS lookup "
+                + ")";
+	
+	private static final int PHONE_ID_COLUMN = 0;
+	private static final int PHONE_NUMBER_COLUMN = 1;
+	private static final int PHONE_LABEL_COLUMN = 2;
+	private static final int CONTACT_NAME_COLUMN = 3;
+	private static final int CONTACT_ID_COLUMN = 4;
+	private static final int CONTACT_PRESENCE_COLUMN = 5;
+	private static final int CONTACT_STATUS_COLUMN = 6;
+	private static final int PHONE_NORMALIZED_NUMBER = 7;
+	private static final int SEND_TO_VOICEMAIL = 8;
+    
+	String[] CONTACTS_ID_PROJECTION = new String[] {
+            Phone._ID,                      // 0
+            Phone.NUMBER,                   // 1
+            Phone.LABEL,                    // 2
+            Phone.DISPLAY_NAME,             // 3
+            Phone.CONTACT_ID,               // 4
+            Phone.CONTACT_PRESENCE,         // 5
+            Phone.CONTACT_STATUS,           // 6
+            Phone.NORMALIZED_NUMBER,        // 7
+            Contacts.SEND_TO_VOICEMAIL      // 8
+    };
+
+2 获取号码(以短信为例)
+	Cursor cursor = c.getContentResolver().query(INBOXFOLDER_URI, null, null, null, null);
+	cursor.moveToPosition(mIndex);	
+	
+	//获取号码
+	String address = getAddress(context, cursor);
+	//根据号码获取名字
+	String name = getName(c, address);
+	//根据号码获取头像
+	getPhoto(c, address);
+
+3 上面3个函数的实现
+	private String getAddress(Context c, Cursor cursor){
+		
+		String address="";
+		
+		if (isMMS(cursor.getInt(MSG_M_TYPE))){ //判断是否是彩信
+			int thread_id = cursor.getInt(MSG_THREAD_ID);
+			Cursor curAdress = c.getContentResolver().query(CANADDRESS_URI,  null,"_id=" + thread_id, null, null);
+			if (curAdress != null && curAdress.getCount() > 0){
+				curAdress.moveToFirst();
+				address = curAdress.getString(curAdress.getColumnIndex("address"));
+			}
+		}else {
+			address = cursor.getString(MSG_ADDRESS);
+		}
+		
+		Log.d(TAG, "getAddress: address = " + address);
+		return address;
+	}
+
+	public String getName(Context c, String number){
+		String contact = number;
+		
+		Cursor cursor = getCursorbyNumber(c, number);//查询数据库,获取number对应的记录
+		if (cursor != null && cursor.getCount() > 0){
+			contact = cursor.getString(CONTACT_NAME_COLUMN);
+		}
+		
+		Log.d(TAG, "getName: contact =" + contact);
+		return contact;
+	}
+
+	private Bitmap getPhoto(Context c, String number, RemoteViews smsWidget) {
+		byte[] data = null;
+		Bitmap photo = null;
+
+		Cursor cursor = getCursorbyNumber(c, number);//查询数据库,获取number对应的记录
+		if (cursor != null && cursor.getCount() > 0) {
+			long persionID = cursor.getLong(CONTACT_ID_COLUMN);
+			Uri contactUri = ContentUris.withAppendedId(Contacts.CONTENT_URI,
+					persionID);
+			InputStream avatarDataStream = Contacts.openContactPhotoInputStream(c.getContentResolver(),
+							contactUri);
+			if (avatarDataStream != null) {
+				try {
+					data = new byte[avatarDataStream.available()];
+					avatarDataStream.read(data, 0, data.length);
+				} catch (IOException ex) {
+					Log.w(TAG, "loadAvatarData(): IOException!");
+				} finally {
+					try {
+						avatarDataStream.close();
+					} catch (IOException e) {
+					}
+				}
+
+				photo = BitmapFactory.decodeByteArray(data, 0, data.length);
+			}
+		}
+		return photo;
+	}
+
+
+4 getCursorbyNumber的实现, 该函数是整个功能的核心
+		private Cursor getCursorbyNumber(Context c, String number){
+		
+		Cursor cursor = null;
+		
+		boolean isValidNumber = MessageUtils.isWellFormedSmsAddress(number);
+		if (isValidNumber){
+			number = PhoneNumberUtils.stripSeparators(number);
+		}
+		
+		Log.d(TAG, "getName: isValidNumber = " + isValidNumber + ", number = " + number);
+		String normalizedNumber = PhoneNumberUtils.normalizeNumber(number);
+		String matchNumber = PhoneNumberUtils.toCallerIDMinMatch(normalizedNumber);
+		
+		if (!TextUtils.isEmpty(normalizedNumber) && !TextUtils.isEmpty(matchNumber)){
+			String numberLen = String.valueOf(normalizedNumber.length());
+			String[] args = new String[] {normalizedNumber, numberLen, normalizedNumber, numberLen};
+			
+			cursor = c.getContentResolver().query(PHONES_URI,CONTACTS_ID_PROJECTION, 
+						CALLER_ID_SELECTION_EXACT_MATCH, args, null);
+			
+			if (cursor == null || (cursor != null && cursor.getCount() == 0)) {
+                if (cursor != null) {
+                    cursor.close();
+                }
+                cursor = c.getContentResolver().query(PHONES_URI,
+                        CONTACTS_ID_PROJECTION, CALLER_ID_SELECTION, new String[] {matchNumber}, null);
+			}
+			
+			if (cursor != null && cursor.getCount() > 0){
+				cursor.moveToFirst();
+			}
+		}		
+		
+		return cursor;
+	}
+
+5 isMMS函数的实现
+		private boolean isMMS(int m_type){
+			return (m_type == 128 || m_type == 130 || m_type == 132) ? true : false;
+		}
+
+

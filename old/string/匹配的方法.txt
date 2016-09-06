@@ -1,0 +1,14 @@
+
+
+ava String.matches()讨论！！
+刚用java不久，发现String.matches(“xxx”)匹配是：String是否为xxx，
+而不是String中是否存在xxx,我的理解对吗？
+那么我要验证：String中是否存在xxx，应该怎么解决？？
+
+
+比如你想看有没有“abc”
+matches（".*abc.*"） 
+
+.* : 是正则表达式中的用法,  表示任意数量的不包含还行的字符
+
+

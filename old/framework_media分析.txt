@@ -1,0 +1,14 @@
+1. app层调用的MediaPlayer对应的jni代码路径是：
+    frameworks/base/media/jni/android_media_MediaPlayer.cpp
+    
+2. jni中用getMediaPlayer方法
+    static sp<MediaPlayer> getMediaPlayer(JNIEnv* env, jobject thiz)
+    {
+        Mutex::Autolock l(sLock);
+        MediaPlayer* const p = (MediaPlayer*)env->GetLongField(thiz, fields.context);
+        return sp<MediaPlayer>(p);
+    }
+    获取的MediaPlayer对像是frameworks/av/media/libmedia/mediaplayer.h
+    
+3. MediaPlayerService对应的代码路径是:frameworks/av/media/libmediaplayerservice/*
+    

@@ -1,0 +1,5 @@
+
+PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
+       
+boolean isScreenOn = powerManager.isScreenOn();
+

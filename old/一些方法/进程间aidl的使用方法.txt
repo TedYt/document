@@ -1,0 +1,47 @@
+假设
+服务端进程是 com.aidl.remote
+aidl所在在包也是com.aidl.remote
+
+客户端进程是 com.aidl.custom
+
+
+1
+现在客户端要使用服务端的aidl, 那么客户端就要有一个和服务端一样的路径(主要是包名要相同),来存放aidl文件,
+这是最关键的一点, 否则无法通信.
+
+
+2
+使用aidl:
+
+需要一个ServiceConnection对象, 一个指向实现aidl的service的intent, 用bindservice方法绑定即可. 例如:
+
+	private IMyAIDL mAIDL;
+	private ServiceConnection mConn = new ServiceConnection() {
+		
+		@Override
+		public void onServiceDisconnected(ComponentName name) {
+			mTime = null;
+		}
+		
+		@Override
+		public void onServiceConnected(ComponentName name, IBinder service) {
+			mAIDL = IMyAIDL.Stub.asInterface(service);
+		}
+	};
+
+	Intent service  = new Intent("powersaving.action.getchargtime");
+	mContext.bindService(service, mConn, Context.BIND_AUTO_CREATE);
+
+然后就可以用mAIDL访问aidl中的方法. 
+
+3
+注意事项:
+1) 如果 apk是通过Android.mk控制编译, 要在.mk中加上aidl文件的路径,才能编译这个文件, 例如:
+
+	LOCAL_SRC_FILES += /src/com/android/powersaving/IPowSavChargeTime.aidl
+
+2) 不同层次的aidl通信,可能会发生异常.比如,framework层要用到app层的aidl, 而framework层的代码一般比app层的启动的早, 所以在app层还没有启动时,
+使用app层的aidl就会出现异常, 所以要通过某种方法等app层的代码启动起来后,才让framework层的代码调用.
+
+
+

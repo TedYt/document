@@ -1,0 +1,3 @@
+下面的话来自log:
+
+Calling startActivity() from outside of an Activity  context requires the FLAG_ACTIVITY_NEW_TASK flag.

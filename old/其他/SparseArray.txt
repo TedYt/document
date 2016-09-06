@@ -1,0 +1,8 @@
+
+
+
+SparseArray是Android里为<Interger,Object>这样的Hashmap专门设计的class,
+
+目的是提高效率. 
+
+其核心是折半查找函数(binarySearch)

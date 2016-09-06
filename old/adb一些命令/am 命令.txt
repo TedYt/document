@@ -1,0 +1,100 @@
+用adb工具工作区里输入 am --help
+------------------------------------------------------------------------------------------------------------------
+bash-3.2# am --help
+usage: am [subcommand] [options]
+
+    start an Activity: am start [-D] [-W] <INTENT>
+        -D: enable debugging
+        -W: wait for launch to complete
+
+    start a Service: am startservice <INTENT>
+
+    send a broadcast Intent: am broadcast <INTENT>
+
+    start an Instrumentation: am instrument [flags] <COMPONENT>
+        -r: print raw results (otherwise decode REPORT_KEY_STREAMRESULT)
+        -e <NAME> <VALUE>: set argument <NAME> to <VALUE>
+        -p <FILE>: write profiling data to <FILE>
+        -w: wait for instrumentation to finish before returning
+
+    start profiling: am profile <PROCESS> start <FILE>
+    stop profiling: am profile <PROCESS> stop
+
+    start monitoring: am monitor [--gdb <port>]
+        --gdb: start gdbserv on the given port at crash/ANR
+
+    <INTENT> specifications include these flags:
+        [-a <ACTION>] [-d <DATA_URI>] [-t <MIME_TYPE>]
+        [-c <CATEGORY> [-c <CATEGORY>] ...]
+        [-e|--es <EXTRA_KEY> <EXTRA_STRING_VALUE> ...]
+        [--esn <EXTRA_KEY> ...]
+        [--ez <EXTRA_KEY> <EXTRA_BOOLEAN_VALUE> ...]
+        [-e|--ei <EXTRA_KEY> <EXTRA_INT_VALUE> ...]
+        [-n <COMPONENT>] [-f <FLAGS>]
+        [--grant-read-uri-permission] [--grant-write-uri-permission]
+        [--debug-log-resolution]
+        [--activity-brought-to-front] [--activity-clear-top]
+        [--activity-clear-when-task-reset] [--activity-exclude-from-recents]
+        [--activity-launched-from-history] [--activity-multiple-task]
+        [--activity-no-animation] [--activity-no-history]
+        [--activity-no-user-action] [--activity-previous-is-top]
+        [--activity-reorder-to-front] [--activity-reset-task-if-needed]
+        [--activity-single-top]
+        [--receiver-registered-only] [--receiver-replace-pending]
+        [<URI>]
+------------------------------------------------------------------------------------------------------------------
+启动的方法为
+# am start -n 包(package)名/包名.活动(activity)名称
+启动的方法可以从每个应用的AndroidManifest.xml的文件中得到
+
+#Music 和 Video（音乐和视频）的启动方法为：
+ am start -n com.android.music/com.android.music.MusicBrowserActivity
+ am start -n com.android.music/com.android.music.VideoBrowserActivity
+ am start -n com.android.music/com.android.music.MediaPlaybackActivity
+
+#Camera（照相机）的启动方法为：
+ am start -n com.android.camera/com.android.camera.Camera
+
+#Browser（浏览器）的启动方法为：
+ am start -n com.android.browser/com.android.browser.BrowserActivity
+
+启动浏览器 :
+am start -a android.intent.action.VIEW -d  http://www.google.cn/
+ 
+拨打电话 :
+am start -a android.intent.action.CALL -d tel:10086
+ 
+启动 google map 直接定位到上海 :
+am start -a android.intent.action.VIEW geo:0,0?q=shanghai
+ 
+ 
+ 
+1. 拨打一个电话：
+ 
+    am start -a android.intent.action.CALL -d tel:10086
+ 
+    这里-a表示动作，-d表述传入的数据，还有-t表示传入的类型。
+ 
+2. 打开一个网页：
+ 
+    am start -a android.intent.action.VIEW -d  http://www.baidu.com （这里-d表示传入的data）
+ 
+3. 打开音乐播放器：
+ 
+    am start -a android.intent.action.MUSIC_PLAYER 或者
+    am start -n com.android.music/om.android.music.MusicBrowserActivity
+ 
+4. 启动一个服务：
+ 
+    am startservice <服务名称>
+ 
+    例如：am startservice -n com.android.music/com.android.music.MediaPlaybackService (这里-n表示组件)
+    或者   am startservice -a com.smz.myservice (这里-a表示动作，就是你在Androidmanifest里定义的) 
+ 
+5. 发送一个广播：
+ 
+    am broadcast -a <广播动作>
+ 
+    例如： am broadcast -a com.smz.mybroadcast
+ 
+

@@ -1,0 +1,38 @@
+
+
+android如何调用显示和隐藏系统默认的输入法  
+
+1.调用显示系统默认的输入法
+
+方法一、
+
+InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+
+imm.showSoftInput(m_receiverView(接受软键盘输入的视图(View)),InputMethodManager.SHOW_FORCED(提供当前操作的标记，SHOW_FORCED表示强制显示));
+
+方法二、
+
+InputMethodManager imm=(InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS); (这个方法可以实现输入法在窗口上切换显示，如果输入法在窗口上已经显示，则隐藏，如果隐藏，则显示输入法到窗口上)
+
+2.调用隐藏系统默认的输入法
+
+((InputMethodManager)getSystemService(INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(MyActivity.this.getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);  
+
+(WidgetSearchActivity是当前的Activity)
+
+3.获取输入法打开的状态
+
+InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+boolean isOpen=imm.isActive();
+isOpen若返回true，则表示输入法打开
+
+
+----其中有些view也可以设置输入法的显隐
+dialog中EditText获取焦点时,显示输入法:
+
+AlertDialog dialog = new Builder(this).create();
+dialog.getWindow().setSoftInputMode(
+	WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+
+
