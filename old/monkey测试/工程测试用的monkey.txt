@@ -1,0 +1,1 @@
+monkey --throttle 1000 -s 1 --ignore-security-exceptions --ignore-crashes --ignore-timeouts --ignore-native-crashes -v 200000000 > /mnt/sdcard/Monkey.txt
