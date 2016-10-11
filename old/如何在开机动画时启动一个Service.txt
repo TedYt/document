@@ -1,0 +1,120 @@
+
+1. 某些特殊的功能需要在开机时完成一些动作，这个动作会引起用户极易察觉的变化，对用户来说这是不能被接受的。
+    这样就不能等BOOT_COMPLETE这个广播，这个广播延迟比较大，这时产生的变化，用户是很容易看到的，会以为是bug。
+    
+    这样我们就需要把变化提前，比如开机动画的时候。这是产生的某些变化，用户不宜发现。
+    
+    我们的目的就是在开机动画时启动一个service。
+    
+
+2. 在以下文件中启动调用service的方法：
+    frameworks/base/services/java/com/android/serve/SystemServer.java 
+    在private void startOtherServices() 方法的
+    mActivityManagerService.systemReady(new Runnable() { .... })
+    这个Runnable里都是启用一些系统的服务，例如startSystemUi(context)，找到合适的地方添加自己的代码，例如：
+     
+    QdcmUtil.startService(context);//yutao 我自己的代码
+                
+    try {
+        startSystemUi(context);
+    } catch (Throwable e) {
+        reportWtf("starting System UI", e);
+    }
+    
+
+3. 这个QdcmUtil类是写在目录
+    vendor/qcom/proprietary/display/qdcm_mobile/service/src/com/qdcm/util/QdcmUtil.java
+    这个文件很简单，就是启动目标service
+    public class QdcmUtil {
+	
+	static public void startService(Context context){
+		
+		try {
+			    Intent i = new Intent();
+			    i.setClassName("com.qti.snapdragon.qdcm_mobile", "com.qti.snapdragon.qdcm_mobile.QdcmMobileService");
+			    context.startService(i);
+		    } catch (Exception e) {
+			    Log.d("tui", e.getMessage());
+		    }
+	    }
+    }
+    
+    处理主要业务的service，就是自己业务逻辑的事情了
+   
+4. 到这里，这个功能是实现不了，因为framework和vendor下的app是不同的namespace，必须通过配置文件配置起来，下面就是怎么配置能让服务起来
+   
+   1）从QdcmUtil类的路径来看，在frameworks/base/services/java/com/android/serve/SystemServer.java 这文件中导入这个类：
+        import com.qti.snapdragon.qdcm_mobile.service.QdcmUtil
+        
+   2）在目录vendor/qcom/proprietary/display/qdcm_mobile/service中添加3个mk文件：
+        >>>Android.mk
+LOCAL_PATH:= $(call my-dir)
+include $(CLEAR_VARS)
+LOCAL_SRC_FILES := $(call all-java-files-under, src)
+
+LOCAL_CERTIFICATE := platform
+LOCAL_PROGUARD_FLAG_FILES := proguard.flags
+LOCAL_PROGUARD_ENABLED:= disabled
+
+LOCAL_MODULE := qdcm_util
+
+include $(BUILD_STATIC_JAVA_LIBRARY)
+include $(call all-makefiles-under,$(LOCAL_PATH))
+        
+        
+        
+        >>>common_jar.mk
+MY_DIR := $(call my-dir)
+MY_SRC_FILES := 
+
+$(info ---LOCAL_PATH---$(LOCAL_PATH))
+
+ifeq ($(strip $(LOCAL_PATH)),frameworks/base/packages/Keyguard)
+    ADD_PREFIX := ../../../../
+    MY_SRC_FILES := $(addprefix $(ADD_PREFIX), $(shell find $(MY_DIR)/src_keyguard/ -name *.java) )
+
+else ifeq ($(strip $(LOCAL_PATH)),frameworks/base/packages/SystemUI)
+    ADD_PREFIX := ../../../../
+    MY_SRC_FILES := $(addprefix $(ADD_PREFIX), $(shell find $(MY_DIR)/src_systemui/ -name *.java) )
+
+else ifeq ($(strip $(LOCAL_PATH)),frameworks/base/packages/SystemUI/tests)
+    ADD_PREFIX := ../../../../../
+    MY_SRC_FILES := $(addprefix $(ADD_PREFIX), $(shell find $(MY_DIR)/src_systemui/ -name *.java) )
+else ifeq ($(strip $(LOCAL_PATH)),frameworks/base/services/core)
+
+else ifeq ($(strip $(LOCAL_PATH)),frameworks/base/services)
+
+else ifeq ($(strip $(LOCAL_PATH)),packages/apps/Settings)
+
+endif
+
+ifneq ($(strip $(MY_SRC_FILES)),)
+    LOCAL_SRC_FILES += $(MY_SRC_FILES)
+    $(info ---MY_SRC_FILES---$(MY_SRC_FILES))
+endif
+
+#$(error yutao test 2 common_jar)
+LOCAL_STATIC_JAVA_LIBRARIES += qdcm_util #这个名字必须和上面Android.mk里的对应
+
+    >>>config.mk
+#$(error yutao test 1 config)
+BUILD_QDCM_UTIL_JAR := frameworks/../vendor/qcom/proprietary/display/qdcm_mobile/service/common_jar.mk #路径是上面一个mk文件的路径
+
+最后我们要用的是config.mk文件里的BUILD_QDCM_UTIL_JAR
+
+5. 首先我们要让系统知道我们定义了BUILD_QDCM_UTIL_JAR，
+    在android/vendor/tinno/p7201/trunk/config.mk文件中增加代码：
+    $(call inherit-product-if-exists, $(LOCAL_PATH)/../../../qcom/proprietary/display/qdcm_mobile/service/config.mk) #指向我们自定义的config.mk文件
+    
+    然后在frameworks/base/services/Android.mk中使用：
+    include $(BUILD_QDCM_UTIL_JAR) #这是我们自己加的
+
+    include $(BUILD_JAVA_LIBRARY) #这是原来有的
+    
+    上面两行最好不要掉换位置，没有测试调换位置会怎么样
+    
+
+
+到这我们的配置也完成了。然后编译，我们的service就可以在开机动画时启动起来了。
+
+
