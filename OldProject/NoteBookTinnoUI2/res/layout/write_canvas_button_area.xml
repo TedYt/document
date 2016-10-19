@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/button_area"
+    android:orientation="horizontal"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content">
+
+    <Button
+        android:id="@+id/wc_btn_collapse"
+        android:text="@string/canvas_collapse"
+        style="@style/CanvasButtonStyle"/>
+
+    <Button
+        android:id="@+id/wc_btn_sd"
+        android:text="@string/canvas_double"
+        style="@style/CanvasButtonStyle"/>
+
+    <Button
+        android:id="@+id/wc_btn_space"
+        android:text="@string/canvas_space"
+        style="@style/CanvasButtonStyle"/>
+
+    <Button
+        android:id="@+id/wc_btn_enter"
+        android:text="@string/canvas_enter"
+        style="@style/CanvasButtonStyle"/>
+
+    <Button
+        android:id="@+id/wc_btn_bold"
+        android:text="@string/canvas_bold"
+        style="@style/CanvasButtonStyle"/>
+
+    <Button
+        android:id="@+id/wc_btn_delete"
+        android:text="@string/canvas_delete"
+        style="@style/CanvasButtonStyle"/>
+</LinearLayout>

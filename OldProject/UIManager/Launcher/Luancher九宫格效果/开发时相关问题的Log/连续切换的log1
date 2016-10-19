@@ -1,0 +1,35 @@
+一次down事件算是一次切换的开始
+up事件算是一次切换的结束
+
+这个log是两次切换之间的时间间隔较长
+
+D/tui     (25596): ACTION_DOWN
+D/tui     (25596): onLongClick
+D/tui     (25596): ANIM_LONG_CLICK end
+D/tui     (25596): addDragViewToWM: location x=2, location y=477
+D/tui     (25596): 
+D/tui     (25596): Entry exchangeToLeft from = 3, to = 0
+D/tui     (25596): ToLeft from = 3, to = 2
+D/tui     (25596): ToLeft from = 2, to = 1
+D/tui     (25596): ToLeft from = 1, to = 0
+D/tui     (25596): Exit exchangeToLeft
+D/tui     (25596): 
+D/tui     (25596): ToLeft --- AnimationEnd
+D/tui     (25596): ToKLeft --- obAnim2 AnimationEnd
+D/tui     (25596): ToLeft --- AnimationEnd
+D/tui     (25596): ToLeft --- AnimationEnd
+D/tui     (25596): 
+D/tui     (25596): Entry updateViewGroup
+D/tui     (25596): from = 3,from_left = 2, from_top = 84
+D/tui     (25596): to = 0,to_left = 244, to_top = 84
+D/tui     (25596): Exit updateViewGroup
+D/tui     (25596): 
+D/tui     (25596): ACTION_UP
+D/tui     (25596): 
+D/tui     (25596): Entry restroeNailToNormal
+D/tui     (25596): TuiSwapWorkSpace -- screen_a= 2, screen_b= 3
+D/tui     (25596): TuiSwapWorkSpace -- screen_a= 1, screen_b= 2
+D/tui     (25596): TuiSwapWorkSpace -- screen_a= 0, screen_b= 1
+D/tui     (25596): Exit restroeNailToNormal
+D/tui     (25596):
+

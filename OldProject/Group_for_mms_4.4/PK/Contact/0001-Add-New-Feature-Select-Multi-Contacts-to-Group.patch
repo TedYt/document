@@ -1,0 +1,448 @@
+From ecfd6c9a740e9154334ad0395f512cc5b387220b Mon Sep 17 00:00:00 2001
+From: "weifang.wu" <weifang.wu@tinno.com>
+Date: Fri, 19 Sep 2014 09:08:54 +0800
+Subject: [PATCH] Add New Feature:Select Multi Contacts to Group
+
+---
+ res/layout-land/group_editor_view.xml              |  23 +-
+ res/layout/group_editor_autocomplete_view.xml      |   4 +-
+ res/layout/group_editor_view.xml                   |  19 +-
+ .../contacts/group/GroupEditorFragment.java        | 286 ++++++++++++++++++++-
+ 4 files changed, 323 insertions(+), 9 deletions(-)
+
+diff --git a/res/layout-land/group_editor_view.xml b/res/layout-land/group_editor_view.xml
+index dded4c3..ec14558 100644
+--- a/res/layout-land/group_editor_view.xml
++++ b/res/layout-land/group_editor_view.xml
+@@ -52,9 +52,26 @@
+             android:paddingStart="8dip"
+             android:orientation="vertical"
+             >
+-            <include
+-                layout="@layout/group_editor_autocomplete_view"
+-                android:id="@+id/add_member_field"/>
++     <LinearLayout
++                android:layout_width="match_parent"
++                android:layout_height="wrap_content"
++                android:orientation="horizontal"
++                android:paddingRight="0dip" >
++
++                <include
++                    android:id="@+id/add_member_field"
++                    layout="@layout/group_editor_autocomplete_view" />
++
++                <ImageButton
++                    android:id="@+id/member_picker"
++                    android:layout_width="50dip"
++                    android:layout_height="fill_parent"
++                    android:layout_toRightOf="@id/add_member_field"
++                    android:layout_weight="0"
++                    android:background="#00000000"
++                    android:paddingRight="8dip"
++                    android:src="@drawable/ic_add_contact_holo_light" />
++            </LinearLayout>
+             <include
+                 layout="@layout/group_editor_existing_member_list"
+                 android:id="@android:id/list"/>
+diff --git a/res/layout/group_editor_autocomplete_view.xml b/res/layout/group_editor_autocomplete_view.xml
+index c8e716a..9735c89 100644
+--- a/res/layout/group_editor_autocomplete_view.xml
++++ b/res/layout/group_editor_autocomplete_view.xml
+@@ -18,7 +18,7 @@
+ 
+ <AutoCompleteTextView
+     xmlns:android="http://schemas.android.com/apk/res/android"
+-    android:layout_width="match_parent"
++    android:layout_width="300dip"
+     android:layout_height="wrap_content"
+     android:textAppearance="?android:attr/textAppearanceMedium"
+     android:textColor="?android:attr/textColorPrimary"
+@@ -26,4 +26,4 @@
+     android:hint="@string/enter_contact_name"
+     android:minHeight="48dip"
+     android:paddingLeft="@dimen/group_editor_autocomplete_left_padding"
+-    android:paddingStart="@dimen/group_editor_autocomplete_left_padding"/>
+\ No newline at end of file
++    android:paddingStart="@dimen/group_editor_autocomplete_left_padding"/>
+diff --git a/res/layout/group_editor_view.xml b/res/layout/group_editor_view.xml
+index d94853d..4396174 100644
+--- a/res/layout/group_editor_view.xml
++++ b/res/layout/group_editor_view.xml
+@@ -44,10 +44,27 @@
+             android:paddingLeft="8dip"
+             android:paddingStart="8dip"/>
+ 
+-        <include
++ 
++    <LinearLayout
++                android:layout_width="match_parent"
++                android:layout_height="wrap_content"
++                android:orientation="horizontal"
++                android:paddingRight="0dip" >
++
++            <include
+             layout="@layout/group_editor_autocomplete_view"
+             android:id="@+id/add_member_field"/>
+ 
++                <ImageButton
++                    android:id="@+id/member_picker"
++                    android:layout_width="50dip"
++                    android:layout_height="fill_parent"
++                    android:layout_toRightOf="@id/add_member_field"
++                    android:layout_weight="0"
++                    android:background="#00000000"
++                    android:paddingRight="8dip"
++                    android:src="@drawable/ic_add_contact_holo_light" />
++            </LinearLayout>
+         <include
+             layout="@layout/group_editor_existing_member_list"
+             android:id="@android:id/list"/>
+diff --git a/src/com/android/contacts/group/GroupEditorFragment.java b/src/com/android/contacts/group/GroupEditorFragment.java
+index acc99f4..fbf7b17 100644
+--- a/src/com/android/contacts/group/GroupEditorFragment.java
++++ b/src/com/android/contacts/group/GroupEditorFragment.java
+@@ -63,6 +63,7 @@ import com.android.contacts.GroupMemberLoader.GroupEditorQuery;
+ import com.android.contacts.GroupMetaDataLoader;
+ import com.android.contacts.R;
+ import com.android.contacts.activities.GroupEditorActivity;
++import com.android.contacts.activities.ContactsMultiSelectActivity;
+ import com.android.contacts.common.ContactPhotoManager;
+ import com.android.contacts.common.model.account.AccountType;
+ import com.android.contacts.common.model.account.AccountWithDataSet;
+@@ -75,7 +76,14 @@ import com.google.common.base.Objects;
+ 
+ import java.util.ArrayList;
+ import java.util.List;
+-
++import android.widget.ImageButton;
++import com.android.contacts.common.list.MultiSelectAdapter;
++import android.os.AsyncTask;
++import android.provider.ContactsContract.RawContacts;
++import android.provider.ContactsContract.RawContactsEntity;
++import android.os.Handler;
++import android.os.Message;
++import java.util.HashMap;
+ public class GroupEditorFragment extends Fragment implements SelectAccountDialogFragment.Listener {
+     private static final String TAG = "GroupEditorFragment";
+ 
+@@ -95,6 +103,8 @@ public class GroupEditorFragment extends Fragment implements SelectAccountDialog
+     private static final String KEY_MEMBERS_TO_DISPLAY = "membersToDisplay";
+ 
+     private static final String CURRENT_EDITOR_TAG = "currentEditorForAccount";
++    
++    private static final int GROUP_MULTI_MEMBER_PICK=1;//"group.multi.member.pick";
+ 
+     public static interface Listener {
+         /**
+@@ -181,6 +191,7 @@ public class GroupEditorFragment extends Fragment implements SelectAccountDialog
+ 
+     private TextView mGroupNameView;
+     private AutoCompleteTextView mAutoCompleteTextView;
++    private ImageButton mMemberPicker;
+ 
+     private String mAccountName;
+     private String mAccountType;
+@@ -199,7 +210,8 @@ public class GroupEditorFragment extends Fragment implements SelectAccountDialog
+     private ArrayList<Member> mListMembersToAdd = new ArrayList<Member>();
+     private ArrayList<Member> mListMembersToRemove = new ArrayList<Member>();
+     private ArrayList<Member> mListToDisplay = new ArrayList<Member>();
+-
++    private static StaticHandler sHandler;
++    private ContactsMultiAddGroupTask mContactsMultiAddGroupTask;
+     public GroupEditorFragment() {
+     }
+ 
+@@ -208,6 +220,10 @@ public class GroupEditorFragment extends Fragment implements SelectAccountDialog
+         setHasOptionsMenu(true);
+         mLayoutInflater = inflater;
+         mRootView = (ViewGroup) inflater.inflate(R.layout.group_editor_fragment, container, false);
++         if (sHandler!=null) {
++            Log.w(TAG, "[onCreateView] there might be some memory leakage");
++        }
++        sHandler = new StaticHandler(this);
+         return mRootView;
+     }
+ 
+@@ -452,7 +468,13 @@ public class GroupEditorFragment extends Fragment implements SelectAccountDialog
+             // state.)
+             mAutoCompleteAdapter.updateExistingMembersList(mListToDisplay);
+         }
+-
++        mMemberPicker = (ImageButton) editorView.findViewById(R.id.member_picker);
++            mMemberPicker.setOnClickListener(new OnClickListener() {
++                @Override
++                public void onClick(View v) {
++                    addMultiContactsToGroup();
++                }
++            });
+         // If the group name is ready only, don't let the user focus on the field.
+         mGroupNameView.setFocusable(!mGroupNameIsReadOnly);
+         if(isNewEditor) {
+@@ -460,6 +482,264 @@ public class GroupEditorFragment extends Fragment implements SelectAccountDialog
+         }
+         mStatus = Status.EDITING;
+     }
++    
++    public void addMultiContactsToGroup(){
++            Intent intent = new Intent(this.getActivity(), ContactsMultiSelectActivity.class);
++            intent.setAction(MultiSelectAdapter.INTENT);
++           //Intent intent = new Intent(MultiSelectAdapter.INTENT);
++                intent.putExtra(MultiSelectAdapter.INT_TYPE, MultiSelectAdapter.TYPE_ACCOUNT_CONTACT);
++               // intent.putExtra("AddToGroup",1);
++                  intent.putExtra("account_type", mAccountType);
++                 intent.putExtra("account_name", mAccountName);
++                  intent.putExtra("account_dataset",mDataSet);
++                startActivityForResult(intent, GROUP_MULTI_MEMBER_PICK);
++                //return true;
++    }
++
++  @Override
++    public void onActivityResult(int requestCode, int resultCode, Intent data) {
++        //LogUtils.d(TAG, "onActivityResult(),requestCode:" + requestCode + ",resultCode:" + resultCode + ",data:" + data);
++        super.onActivityResult(requestCode, resultCode, data);
++         if(requestCode==GROUP_MULTI_MEMBER_PICK&&data!=null){
++           android.util.Log.d("wwf","m...........");  
++         long[] contactIds = data.getLongArrayExtra(MultiSelectAdapter.RESULT);
++             ArrayList<Object> params = new ArrayList<Object>();
++            params.add(contactIds);
++            params.add(this);
++ mContactsMultiAddGroupTask=new ContactsMultiAddGroupTask().createNewTask();
++       mContactsMultiAddGroupTask.execute(params);
++         }
++
++   }
++ 
++    private static class ContactsMultiAddGroupTask extends AsyncTask<ArrayList, Void, ArrayList> {
++       // final int BATCH = 100;
++         private ArrayList<Member> mResult;
++         private static ContactsMultiAddGroupTask mInstance = null;
++         private GroupEditorFragment mFragment;
++          public void abort() {
++            if (mInstance != null) {
++                //LogUtils.d(TAG, "mInstance.cancel(true)");
++                mInstance.cancel(true);
++                mInstance = null;
++            }
++        }
++
++        public static ContactsMultiAddGroupTask createNewTask() {
++            if (mInstance != null) {
++               // Log.d(TAG, "cancel existing task instance");
++                mInstance.abort();
++            }
++            mInstance = new ContactsMultiAddGroupTask();
++            return mInstance;
++        }
++
++        public static ContactsMultiAddGroupTask getExistTask() {
++            return mInstance;
++        }
++
++         public ArrayList<Member> getResult() {
++            return mResult;
++        }
++        @Override
++        protected ArrayList<Member> doInBackground(ArrayList... params) {
++            
++             ArrayList<Object> list = params[0];
++            long[] contactIds = (long[]) list.get(0);
++           mFragment = (GroupEditorFragment) list.get(1);
++          final StringBuilder rawContactIdSelectionBuilder = new StringBuilder();
++            rawContactIdSelectionBuilder.append(RawContacts.CONTACT_ID + " IN (");
++            if (contactIds.length > 0) {
++                rawContactIdSelectionBuilder.append(contactIds[0]);
++            }
++            for (int i = 1; i < contactIds.length; i++) {
++                rawContactIdSelectionBuilder.append("," + contactIds[i]);
++            }
++            rawContactIdSelectionBuilder.append(")");
++          android.util.Log.d("wwf", "rawContactIdSelectionBuilder==" + rawContactIdSelectionBuilder);
++           Cursor cursor = mFragment.mContentResolver.query(RawContactsEntity.CONTENT_URI,
++                    new String[] {
++                            RawContacts.CONTACT_ID, RawContacts._ID
++                    }, rawContactIdSelectionBuilder.toString(), null, null);
++ 
++            ArrayList<Long> contactIdss = new ArrayList<Long>();
++            ArrayList<Long> rawContactIds = new ArrayList<Long>();
++            try {
++                if (!cursor.moveToFirst()) {
++                    return null;
++                }
++                long contactId = 0;
++                long rawContactId = 0;
++                do {
++                    contactId = cursor.getLong(0);
++                    rawContactId = cursor.getLong(1);
++                  android.util.Log.d("wwf","contactId:"+contactId+",rawContactId:"+rawContactId);
++                    if (!contactIdss.contains(contactId)) {
++                        contactIdss.add(contactId);
++                        rawContactIds.add(rawContactId);
++                    }
++                } while (cursor.moveToNext());
++            } finally {
++                cursor.close();
++            }
++///////////
++        StringBuilder selectionBuilder = new StringBuilder(Contacts._ID + " IN (");
++            if (contactIdss.size() > 0) {
++                selectionBuilder.append(contactIdss.get(0));
++            }
++            for (int i = 1; i < contactIdss.size(); i++) {
++                selectionBuilder.append(",").append(contactIdss.get(i));
++            }
++            selectionBuilder.append(")");
++            String selection = selectionBuilder.toString();
++            android.util.Log.d("wwf", "Contacts selection=" + selection);
++            Cursor ContactsCursor = mFragment.mContentResolver.query(Contacts.CONTENT_URI,
++                    PROJECTION_CONTACT, selection, null, null);
++            ArrayList<Member> memberList = new ArrayList<Member>();
++            try {
++                if (rawContactIds != null && rawContactIds.size() > 0 && ContactsCursor != null) {
++                    if (!ContactsCursor.moveToFirst()) {
++                        android.util.Log.d("wwf", "fail to moveToFirst");
++                        return null;
++                    }
++                    int i = -1;
++                    long contactId = 0;
++                    String displayName = null;
++                    String lookupKey = null;
++                    String photoUri = null;
++                    int k;
++                    do {
++                        contactId = ContactsCursor.getLong(CONTACT_ID_COLUMN_INDEX);
++                        displayName = ContactsCursor.getString(CONTACT_DISPLAY_NAME_PRIMARY_COLUMN_INDEX);
++                        lookupKey = ContactsCursor.getString(CONTACT_LOOKUP_KEY_COLUMN_INDEX);
++                        photoUri = ContactsCursor.getString(CONTACT_PHOTO_URI_COLUMN_INDEX);
++                        i = -1;
++                        HashMap contacts = new HashMap<Long, Long>();
++                        // FIXME: walk all rawContactsIds, create member for the
++                        // one with current contactId
++                        // This code should be refactor
++                        for (k = 0; k < rawContactIds.size(); k++) {
++                            if (!contacts.containsKey(rawContactIds.get(k)) && contactId == contactIdss.get(k)) {
++                                contacts.put(rawContactIds.get(k), contactIdss.get(k));
++                                Member member = new Member(rawContactIds.get(k),
++                                        lookupKey, contactId, displayName, photoUri);
++                                boolean isDisplay =mFragment.addMembersToAdd(member);
++                                if (!isDisplay) {
++                                    memberList.add(member);
++                                    break;
++                                }
++                            }
++                        }
++                        contacts.clear();
++                        if (isCancelled()) {
++                          //  LogUtils.w(TAG, "task canceled");
++                            return null;
++                        }
++                        // M: each time record a contactId
++                    } while (ContactsCursor.moveToNext());
++                }
++            } finally {
++                ContactsCursor.close();
++            }
++          return memberList;
++//////////////
++        }
++
++   @Override
++        protected void onPostExecute(ArrayList result) {
++            android.util.Log.d("wwf", "task finished, the result size is: " + (result == null ? "none" : result.size()));
++           // mTaskStatus = TaskStatus.FINISHED;
++            mResult = result;
++            if (sHandler != null) {
++                android.util.Log.d("wwf",  "notifyAddMemberFinished");
++                sHandler.notifyAddMemberFinished();
++            } else {
++               // LogUtils.w("wwf", "UI is abcent now, abort UI updating");
++            }
++            super.onPostExecute(result);
++        }
++}
++
++   /* This reference is to reduce the risk of leakage.
++     */
++    
++    /**
++     * M: update UI should be act in handler, instead of Call back directly.
++     */
++    private static class StaticHandler extends Handler {
++
++       // public static final int ACCOUNT_CHOSEN = 0;
++       // public static final int ACCOUNT_CHOOSE_CANCEL = 1;
++        private static final int ADD_MEMBERS_FINISHED = 2;
++        private GroupEditorFragment mFragment;
++        public StaticHandler(GroupEditorFragment fragment) {
++            mFragment = fragment;
++        }
++
++        public void notifyAddMemberFinished() {
++            sendEmptyMessage(ADD_MEMBERS_FINISHED);
++        }
++
++        @Override
++        public void handleMessage(Message msg) {
++            switch (msg.what) {
++           /* case ACCOUNT_CHOSEN:
++                mFragment.onAccountChosenInternal((AccountWithDataSet) msg.obj);
++                break;
++            case ACCOUNT_CHOOSE_CANCEL:
++                mFragment.onAccountSelectorCancelledInternal();
++                break;
++            */
++                //M: add a new case to notify UI update
++            case ADD_MEMBERS_FINISHED:
++                mFragment.onAddMembersFinished();
++                break;
++            default:
++                Log.w(TAG, "[handleMessage] invalid msg: " + msg.what);
++                break;
++            }
++        }
++    }
++
++   private void onAddMembersFinished() {
++        Log.d("wwf", "get the MemberTask running result, and setup UI");
++        //if (mTask == null) {
++         //   LogUtils.e(TAG, "Error: mTask should not be null, do nothing");
++         //   return;
++        //}
++        
++        ArrayList<Member> newlyAddedMembers=null;
++       if(mContactsMultiAddGroupTask!=null)
++           newlyAddedMembers =mContactsMultiAddGroupTask.getResult();
++        if (newlyAddedMembers == null) {
++           android.util.Log.d("wwf", "Some error happened, the task result is null");
++        } else {
++            addMembersToDisplay(newlyAddedMembers);
++        }
++       // mTask.abort();
++       // mTask = null;
++        // The following lines are provided and maintained by Mediatek Inc.
++       // mProgressHandler.dismissDialog(getFragmentManager());
++        //sIsSavingToGroup = false;
++        // The previous lines are provided and maintained by Mediatek Inc.
++    }
++  private boolean addMembersToAdd(Member member) {
++        boolean isDisplay = true; // If the member in the mListToDisplay; if true,in ,so ignore it.
++        if (!mListMembersToAdd.contains(member) && !mListToDisplay.contains(member)) {
++            mListMembersToAdd.add(member);
++            isDisplay = false;
++        }
++        // Update the auto-complete adapter so the contact doesn't get suggested again
++        mAutoCompleteAdapter.addNewMember(member.getContactId());
++        return isDisplay;
++    }
++
++    private void addMembersToDisplay(ArrayList result) {
++        mListToDisplay.addAll(result);
++        mMemberListAdapter.notifyDataSetChanged();
++    }
++
++
+ 
+     public void load(String action, Uri groupUri, Bundle intentExtras) {
+         mAction = action;
+-- 
+1.8.3.2
+

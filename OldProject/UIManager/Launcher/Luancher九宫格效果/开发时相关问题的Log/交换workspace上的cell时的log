@@ -1,0 +1,16 @@
+
+桌面管理界面位置调整完后，要将workspace的几个桌面做对应的位置交换
+
+//将4移到1的log
+//先3 4 交换，再2 3 交换， 再 1 2交换
+//注意screen_a是TuiSwapWorkSpace方法的地一个参数，screen_b是第二个参数
+D/tui     (21653): TuiSwapWorkSpace -- screen_a= 3, screen_b= 4
+D/tui     (21653): TuiSwapWorkSpace -- screen_a= 2, screen_b= 3
+D/tui     (21653): TuiSwapWorkSpace -- screen_a= 1, screen_b= 2
+
+//将0移到3的log
+//先1 0 交换，再 2 1交换， 再 3 2交换
+D/tui     (21653): TuiSwapWorkSpace -- screen_a= 1, screen_b= 0
+D/tui     (21653): TuiSwapWorkSpace -- screen_a= 2, screen_b= 1
+D/tui     (21653): TuiSwapWorkSpace -- screen_a= 3, screen_b= 2
+

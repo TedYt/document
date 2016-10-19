@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/background">
+
+    <LinearLayout
+        android:id="@+id/settopordel"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/settop_or_del"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:gravity="center_vertical"
+            android:layout_gravity="center_vertical"
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+
+            <Button
+                android:id="@+id/settop"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/menu_set_settop"
+                android:textSize="13sp"
+                android:textColor="#FFFFFFFF"
+                android:layout_weight="1.0"
+                android:paddingTop="12.0dip"
+                android:paddingBottom="3.0dip"
+                android:clickable="true"
+                android:drawableTop="@drawable/note_settop"
+                android:background="@drawable/selector_noteitem_set_top_btn" />
+
+            <Button
+                android:id="@+id/delete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/menu_delete_button"
+                android:textSize="13sp"
+                android:textColor="#FFFFFFFF"
+                android:clickable="true"
+                android:layout_weight="1.0"
+                android:paddingTop="12.0dip"
+                android:paddingBottom="3.0dip"
+                android:drawableTop="@drawable/note_delete"
+                android:background="@drawable/selector_noteitem_delete_btn" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!--android:id="@id/android:list"   android:id="@id/android:empty"   -->
+    <LinearLayout
+        android:id="@+id/listview1"
+        android:layout_above="@id/settopordel"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical">
+
+        <ListView
+            android:layout_height="wrap_content"
+            android:id="@android:id/list"
+            android:cacheColorHint="@null"
+            android:fadingEdge="@null"
+            android:listSelector="@drawable/listitemsel"
+            android:divider="@null"
+            android:layout_width="fill_parent"></ListView>
+
+        <TextView
+            android:id="@android:id/empty"
+            android:layout_height="fill_parent"
+            android:layout_width="fill_parent"
+            android:textSize="18dip"
+            android:text="@string/no_note"
+            android:gravity="center"></TextView>
+    </LinearLayout>
+
+</RelativeLayout> 

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/notegraffiti"
+
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+    
+    <LinearLayout
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:id="@+id/bottom_menu"
+
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
+
+        <LinearLayout
+            android:gravity="center_vertical"
+            android:layout_gravity="center_vertical"
+            android:orientation="horizontal"
+            android:id="@+id/menu_bar"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/btn_undo"
+                android:text="@string/menu_undo"
+		style="@style/GraffitiButton"/>
+
+            <Button
+                android:id="@+id/btn_color"
+                android:text="@string/menu_color"
+                style="@style/GraffitiButton"
+                android:layout_marginLeft="@dimen/graffiti_button_marginLeft"/>
+
+            <Button
+                android:id="@+id/btn_thickness"
+                android:text="@string/menu_thickness"
+                style="@style/GraffitiButton"
+                android:layout_marginLeft="@dimen/graffiti_button_marginLeft"/>
+
+            <Button
+                android:id="@+id/btn_paint_eraser"
+                android:text="@string/menu_eraser"
+                style="@style/GraffitiButton"
+                android:layout_marginLeft="@dimen/graffiti_button_marginLeft"/>
+
+            <Button
+                android:id="@+id/btn_clear"
+                android:text="@string/menu_clear"
+                style="@style/GraffitiButton"
+                android:layout_marginLeft="@dimen/graffiti_button_marginLeft"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/graffiti_frame"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_above="@id/bottom_menu">
+        
+        <com.sugar.note.handing.GraffitiCanvas
+                android:background="@null"
+                android:id="@+id/note_graffiti_canvas"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent">
+        </com.sugar.note.handing.GraffitiCanvas>
+
+        <ImageView
+                android:id="@+id/graffiti_circle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|left"
+                android:visibility="invisible"
+                android:src="@drawable/graffiti_circle" />
+    </FrameLayout>
+
+        
+    
+
+</RelativeLayout>

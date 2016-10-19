@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--  This is our one standard application action (creating a new note). -->
+<!--
+    <item android:id="@+id/menu_add"
+          android:icon="@drawable/ic_menu_compose"
+          android:title="@string/menu_add_button"
+          android:showAsAction="always" />-->
+    <!--begin <yangkui><2014.3.25><remove some menus>     -->
+   <!--
+    <item android:id="@+id/menu_sort_by_modify"
+          android:title="@string/menu_sort_by_modify"
+          />
+    <item android:id="@+id/menu_sort_by_tab"
+          android:title="@string/menu_sort_by_tab"
+          />
+    <item android:id="@+id/menu_muti_export"
+          
+          android:title="@string/menu_export"
+          />
+      -->
+   <!--end <yangkui><2014.3.25><remove some menus>     -->
+    <item android:id="@+id/menu_muti_search"
+          
+          android:title="@string/menu_search"
+          />
+</menu>

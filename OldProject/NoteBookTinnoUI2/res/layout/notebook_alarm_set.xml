@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<com.sugar.note.NoteAlarmSetView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_gravity="center"
+    android:layout_width="330dp"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@drawable/dialog_top">
+
+        <TextView
+            android:id="@+id/notebook_alarm_set"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="@string/notebook_alarm_set"
+            android:textSize="22sp"
+            android:textColor="@android:color/black"
+            android:gravity="center"
+            android:layout_marginLeft="0dip"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+    </LinearLayout>
+
+    <!-- android:background="#4cb1d0" android:background="#00000000" android:background="@drawable/linerlayout_date" -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:background="@drawable/notebook_alarm_set_main_bg_mid">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <LinearLayout
+                android:id="@+id/linerlayout_time"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/id_set_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:text="@string/str_hour_minute"
+                    android:textColor="@android:color/black"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linerlayout_date"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/id_set_year_moth_day"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:text="@string/str_year_moth_day"
+                    android:textColor="@android:color/black"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+        <RelativeLayout
+            android:layout_height="210dp"
+            android:layout_width="match_parent"
+            android:layout_marginTop="10dp"
+            android:orientation="vertical">
+
+            <com.sugar.note.TinnoTimePicker
+                android:id="@+id/time_picker"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center" />
+
+            <com.sugar.note.TinnoDatePicker
+                android:id="@+id/date_picker"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="invisible"
+                android:gravity="center"/>
+        </RelativeLayout>
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="65dp"
+        android:layout_marginTop="0dp"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:background="@drawable/dialog_bottom">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/id_button_cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_pressed_left"
+                android:textColor="#ff000000"
+                android:textSize="22sp"
+                android:text="@string/str_cancel" />
+
+            <ImageView
+                android:layout_width="1dp"
+                android:layout_height="wrap_content"
+                android:src="@drawable/button_gap"
+                android:layout_marginTop="2dp" />
+
+            <Button
+                android:id="@+id/id_button_send"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_pressed_right"
+                android:textColor="#ffc0c0c0"
+                android:textSize="22sp"
+                android:text="@string/str_send" />
+        </LinearLayout>
+    </LinearLayout>
+</com.sugar.note.NoteAlarmSetView>
+
+    
+
+
+

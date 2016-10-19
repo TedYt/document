@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+**
+** Copyright 2007, The Android Open Source Project
+**
+** Licensed under the Apache License, Version 2.0 (the "License");
+** you may not use this file except in compliance with the License.
+** You may obtain a copy of the License at
+**
+**     http://www.apache.org/licenses/LICENSE-2.0
+**
+** Unless required by applicable law or agreed to in writing, software
+** distributed under the License is distributed on an "AS IS" BASIS,
+** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+** See the License for the specific language governing permissions and
+** limitations under the License.
+*/
+        android:background="@drawable/date_picker_bkg_big_up" 
+-->
+
+<!-- Layout of time picker-->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:sugarnote="http://schemas.android.com/apk/res/com.sugar.note"
+    android:id="@+id/parent"
+    android:layout_width="256dip"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal|center"
+    android:paddingLeft="15dip"
+    android:paddingRight="15dip"
+    android:layout_marginTop="3dip"
+    android:layout_marginBottom="3dip"
+    android:background="@drawable/tinno_number_left">
+
+    <!-- hour -->
+    <LinearLayout
+        android:id="@+id/hourLayout"
+        android:layout_width="match_parent"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:background="@drawable/tinno_number_middle"
+        android:orientation="horizontal">
+
+        <!-- sugarnote:markText="@string/hour"   -->
+        <com.sugar.note.TinnoNumberPicker
+            android:id="@+id/hour"
+            android:layout_width="0dip"
+            android:layout_height="174dip"
+            android:layout_weight="3"
+            android:layout_marginLeft="10dip" />
+
+        <TextView
+            android:id="@+id/hourText"
+            android:text="@string/hour"
+            style="@style/alarmTimeDateTextStyle"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="2"
+            android:paddingLeft="0dip" />
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="2dp"
+        android:layout_height="wrap_content"
+        android:src="@drawable/wheel_gap" />
+
+    <!-- minute -->
+    <LinearLayout
+        android:id="@+id/MinLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:background="@drawable/tinno_number_middle"
+        android:orientation="horizontal">
+
+        <!-- sugarnote:markText="@string/minute"   -->
+        <com.sugar.note.TinnoNumberPicker
+            android:id="@+id/minute"
+            android:layout_width="0dip"
+            android:layout_height="174dip"
+            android:layout_marginLeft="10dip"
+            android:layout_weight="3" />
+
+        <TextView
+            android:id="@+id/MinText"
+            android:text="@string/minute"
+            style="@style/alarmTimeDateTextStyle"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="2" />
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="2dp"
+        android:layout_height="wrap_content"
+        android:src="@drawable/wheel_gap" />
+
+    <!-- date format -->
+    <LinearLayout
+        android:id="@+id/AmPmLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1.1"
+        android:orientation="vertical"
+        android:background="@drawable/tinno_number_middle">
+        <!--TextView
+            android:id="@+id/AmPmText"
+            android:text="@string/ampm"
+            android:textSize="13sp"
+        android:textColor="#FF888888"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+        /-->
+        <com.sugar.note.TinnoNumberPicker
+            android:id="@+id/date_format"
+            android:layout_width="match_parent"
+            android:layout_height="174dip"
+            android:layout_marginLeft="0dip"
+            sugarnote:markText="@string/ampm" />
+    </LinearLayout>
+
+</LinearLayout>
+

@@ -1,0 +1,21 @@
+6-11
+智能接听：
+	来电时，先用手挡住Psensor一次。后面再来电只要挡住Psensor就可以接听
+
+问题原因：
+	Gsensor在Psensor之后就不工作了，而Gsensor设置的标志位会一直有效，所以之后只要Psensor被挡住，
+	就能满足接听的条件。
+
+修改方法：
+	不使用Gsensor，只用Osensor 和 Psensor，Osensor提供两个标志位。
+
+
+
+
+6-14
+
+Psensor被挡住后，Osensor就不工作了，得到的数值一直不变
+导致的问题：
+	先挡住Psensor，再来电，智能接听就不起作用了
+
+	智能黑屏导致的

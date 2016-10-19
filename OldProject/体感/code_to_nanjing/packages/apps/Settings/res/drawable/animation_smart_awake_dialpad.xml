@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<animation-list android:oneshot="false"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+	<item android:duration="800" android:drawable="@drawable/animation_smart_awake_dialpad_1"/>
+	<item android:duration="800" android:drawable="@drawable/animation_smart_awake_dialpad_2"/>
+	<item android:duration="800" android:drawable="@drawable/animation_smart_awake_dialpad_3"/>
+</animation-list>

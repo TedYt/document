@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+编辑状态切换时，下方控件消失的动画
+-->
+
+<set xmlns:android="http://schemas.android.com/apk/res/android">
+    <translate
+        android:fromYDelta="0%"
+        android:toYDelta="100%"
+        android:duration="@integer/anim_time_duration_short"
+        android:fillAfter="false"
+        />
+</set>

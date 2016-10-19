@@ -1,0 +1,64 @@
+
+
+bug : SNTZOTINNOUI-182 
+
+2013.4.25
+解决 "某些界面会出现，第一次打开menu的时候，是适应屏幕宽度的，但再次打开menu后，就不是了"
+
+alps/frameworks/base/policy/src/com/android/internal/policy/impl/PhoneWindow.java 下的
+        
+        private void openPanel 方法
+        
+        中的如下语句
+        int width = WRAP_CONTENT;
+        
+        修改为
+        int width = MATCH_PARENT;
+
+----------------------------------------------------------------------------------
+2013.4.9
+修改的文件:
+frameworks/base/core/java/com/android/internal/view/menu/ListMenuPresenter.java
+getView函数修改如下
+ public View getView(int position, View convertView, ViewGroup parent) {
+        
+            if (convertView == null) {
+                convertView = mInflater.inflate(mItemLayoutRes, parent, false);
+            }
+
+            MenuView.ItemView itemView = (MenuView.ItemView) convertView;
+            itemView.initialize(getItem(position), 0); //initialize这个函数会初始化菜单是否可用的状态,所以将字体颜色设置放在最后
+
+            //Begin yutao for 9201 TinnoUI new menu 2013.4.9
+            TextView title = (TextView)convertView.findViewById(com.android.internal.R.id.title);     
+            if (!convertView.isEnabled()){
+                title.setTextColor(0xffaaaaaa);
+            }else {
+                title.setTextColor(0xff000000);
+            }
+            //End yutao for 9201 TinnoUI new menu 2013.3.9
+
+            return convertView;
+        }
+
+
+----------------------------------------------------------------------------------
+2013.3.28
+
+修改的文件有:
+frameworks/base/core/java/com/android/internal/view/menu/ListMenuPresenter.java
+frameworks/base/core/res/res/layout/expanded_menu_layout.xml
+
+更换的图片有:
+frameworks/base/core/res/res/drawable-xhdpi/menu_background.9.png
+frameworks/base/core/res/res/drawable-xhdpi/menu_background_fill_parent_width.9.png
+frameworks/base/core/res/res/drawable-xhdpi/menu_dropdown_panel_holo_dark.9.png
+frameworks/base/core/res/res/drawable-xhdpi/menu_hardkey_panel_holo_dark.9.png
+
+对应的git ID是: 954a0460fa8a3840f3f227d75032569dbb47a317
+
+这个修改,会有以下问题:
+1 某些不可用的menu也是显示黑色字体
+2 某些有输入法界面的菜单, 会使menu不能占满整个屏幕的宽度, 以短信界面比较突出
+
+

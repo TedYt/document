@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.sugar.note.ImageEditor xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/thumb_image"
+        android:layout_marginBottom="6dip"
+        android:layout_width="@dimen/noteview_image_view_width"
+        android:layout_height="@dimen/noteview_image_view_height"
+        android:adjustViewBounds="true"
+        android:scaleType="centerCrop"
+        android:layout_alignParentTop="true"
+        android:layout_centerInParent="true" />
+
+    <ImageView
+        android:id="@+id/btn_delete"
+        android:paddingTop="0dip"
+        android:paddingRight="0dip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/btn_delete_normal"
+        android:layout_alignParentTop="true"
+        android:layout_alignRight="@id/thumb_image"
+        android:visibility="invisible" />
+
+    <TextView
+        android:id="@+id/image_hint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/picture_storage_used"
+        android:layout_alignParentBottom="true"
+        android:visibility="invisible"
+        android:textSize="18sp"
+        android:paddingBottom="15dp"
+        android:layout_centerHorizontal="true"/>
+
+</com.sugar.note.ImageEditor>

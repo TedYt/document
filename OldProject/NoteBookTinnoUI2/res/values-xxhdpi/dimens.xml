@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="write_canvas_area_height">250dip</dimen>
+    <dimen name="paint_bold_area_height">33dip</dimen>
+    <dimen name="paint_color_area_height">33dip</dimen>
+
+    <dimen name="noteview_image_view_height">188dip</dimen>
+    <dimen name="noteview_image_view_width">328dip</dimen>
+
+    <dimen name="write_canvas_area_margin_tb">5dip</dimen>
+    <dimen name="write_canvas_area_margin_rl">10dip</dimen>
+
+    <dimen name="write_double_canvas_area_height">180dip</dimen>
+    <dimen name="write_double_canvas_area_margin">5dip</dimen>
+
+    <dimen name="writen_word_child_layout_height">34dip</dimen>
+</resources>

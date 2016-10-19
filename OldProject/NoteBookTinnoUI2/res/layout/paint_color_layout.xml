@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <HorizontalScrollView 
+        android:id="@+id/color_area_scroll" 
+        android:fadingEdge="none" 
+        android:fadingEdgeLength="0.0dip" 
+        android:layout_width="fill_parent" 
+        android:layout_height="fill_parent">
+
+        <LinearLayout
+            android:orientation="horizontal" 
+            android:id="@+id/color_area" 
+            android:paddingTop="2dip" 
+            android:layout_width="wrap_content" 
+            android:layout_height="fill_parent">
+            
+	    <View
+	        android:id="@+id/color1"
+	        style="@style/PaintColorAreaButtonStyle"/>
+
+	    <View
+	        android:id="@+id/color2"
+	        style="@style/PaintColorAreaButtonStyle"/>
+
+	    <View
+	        android:id="@+id/color3"
+	        style="@style/PaintColorAreaButtonStyle"/>
+
+	    <View
+	        android:id="@+id/color4"
+	        style="@style/PaintColorAreaButtonStyle"/>
+
+	    <View
+	        android:id="@+id/color5"
+	        style="@style/PaintColorAreaButtonStyle"/>
+
+	    <View
+	        android:id="@+id/color6"
+	        style="@style/PaintColorAreaButtonStyle"/>
+
+	    <View
+	        android:id="@+id/color7"
+	        style="@style/PaintColorAreaButtonStyle"/>
+	        
+        </LinearLayout>
+    </HorizontalScrollView>
+</LinearLayout>

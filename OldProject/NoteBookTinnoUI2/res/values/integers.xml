@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="max_text">5000</integer>
+    <integer name="progress_max">100</integer>
+
+    <dimen name="noteview_image_view_height">100dip</dimen>
+    <dimen name="noteview_image_view_width">100dip</dimen>
+
+    <dimen name="note_update_alarm_btn_area_width">306dp</dimen>
+    <dimen name="note_update_alarm_btn_area_height">73dp</dimen>
+
+    <integer name="anim_time_duration_short">150</integer>
+    <integer name="anim_time_duration_long">300</integer>
+
+    <dimen name="graffiti_button_marginLeft">8dip</dimen>
+
+    <dimen name="write_canvas_area_height">250dip</dimen>
+    <dimen name="paint_bold_area_height">33dip</dimen>
+    <dimen name="paint_color_area_height">33dip</dimen>
+
+    <dimen name="write_canvas_area_margin_tb">5dip</dimen>
+    <dimen name="write_canvas_area_margin_rl">10dip</dimen>
+
+    <dimen name="write_double_canvas_area_height">180dip</dimen>
+    <dimen name="write_double_canvas_area_margin">5dip</dimen>
+</resources>

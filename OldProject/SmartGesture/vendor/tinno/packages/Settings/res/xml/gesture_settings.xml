@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) 2009 The Android Open Source Project
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:settings="http://schemas.android.com/apk/res/com.android.settings"
+        android:title="@string/accessibility_gesture_setttings_preference_title">
+
+    <PreferenceCategory
+            android:key="system_category"
+            android:title="@string/accessibility_gesture_setttings_preference_title"
+            android:layout="@layout/preference_header_category_item">
+
+<!-- 	<CheckBoxPreference android:key="toggle_promixy_unlock" -->
+<!-- 		android:title="@string/gesture_setttings_promixy_unlock" -->
+<!-- 		android:persistent="false" -->
+<!-- 		android:layout="@layout/preference_checkbox_head" /> -->
+
+	<CheckBoxPreference android:key="toggle_upset_silent"
+		android:title="@string/gesture_setttings_upset_silent"
+		android:persistent="false"
+		android:layout="@layout/preference_checkbox_middle" />
+
+	<CheckBoxPreference android:key="toggle_settings_upset_speaker"
+		android:title="@string/gesture_setttings_upset_speaker"
+		android:persistent="false" 
+		android:layout="@layout/preference_checkbox_middle"/>
+		
+	<CheckBoxPreference android:key="toggle_promixy_answer_phone"
+		android:title="@string/gesture_setttings_promixy_answer_phone"
+		android:persistent="false"
+		android:layout="@layout/preference_checkbox_middle" />
+
+	<CheckBoxPreference android:key="toggle_promixy_dial_phone"
+		android:title="@string/gesture_setttings_promixy_dial_phone"
+		android:persistent="false"
+		android:layout="@layout/preference_checkbox_middle" />
+		
+	<CheckBoxPreference android:key="toggle_promixy_incoming_call"
+		android:title="@string/gesture_setttings_promixy_incoming_call"
+		android:persistent="false" 
+		android:layout="@layout/preference_checkbox_middle"/>
+		
+	<CheckBoxPreference android:key="toggle_promixy_camera_snap"
+		android:title="@string/gesture_setttings_promixy_camera_snap"
+		android:persistent="false" 
+		android:layout="@layout/preference_checkbox_middle"/>
+		
+	<CheckBoxPreference android:key="toggle_promixy_browse_gallery"
+		android:title="@string/gesture_setttings_promixy_browse_gallery"
+		android:persistent="false" 
+		android:layout="@layout/preference_checkbox_foot"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="tutorial_category"
+        android:title="@string/gesture_tutorial_setttings_preference_title"
+        android:layout="@layout/preference_header_category_item">
+        <!-- 
+        <ListPreference
+            android:key="sensitive_degree"
+            android:title="@string/sensitive_degree_title"
+            android:persistent="false"
+            android:entries="@array/sensitive_degree_entries"
+            android:entryValues="@array/sensitive_degree_values"/>
+             -->
+        <PreferenceScreen
+	        android:fragment="com.android.settings.GestureTutorialSettingsPreferenceFragment"
+	        android:key="gesture_tutorial_settings_preference_screen"
+	        android:title="@string/gesture_tutorial_setttings_preference"
+	        android:layout="@layout/preference_indicator_whole"/>
+    </PreferenceCategory>
+
+</PreferenceScreen>

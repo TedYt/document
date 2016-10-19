@@ -1,0 +1,21 @@
+
+文件 mediatek/custom/tinnoes73_s9041/kernel/battery/battery/cust_battery.h
+#define USB_CHARGER_CURRENT					Cust_CC_450MA
+#define AC_CHARGER_CURRENT					Cust_CC_650MA
+
+
+/* Battery Voltage and Percentage Mapping Table */
+VBAT_TO_PERCENT Batt_VoltToPercent_Table[] = {
+	/*BattVolt,BattPercent*/
+	{3400,0},
+	{3641,10},
+	{3708,20},
+	{3741,30},
+	{3765,40},
+	{3793,50},
+	{3836,60},
+	{3891,70},
+	{3960,80},
+	{4044,90},
+	{4183,100},
+};

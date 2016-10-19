@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_gravity="center"
+    android:layout_width="330dp"
+    android:layout_height="wrap_content">
+
+    <LinearLayout 
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:orientation="horizontal"  
+	android:background="@drawable/dialog_top">
+
+        <TextView android:id="@+id/note_alarm_dialog_title"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_gravity="center_vertical"
+	        android:text="@string/note_alarm_title"
+	        android:textSize="11pt"
+	        android:textColor="@android:color/black"
+	        android:gravity = "center"
+	        android:layout_marginLeft ="0dip"
+	        android:textAppearance="?android:attr/textAppearanceLarge" />
+    </LinearLayout>
+
+    <LinearLayout 
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:layout_gravity="center"
+	android:orientation="vertical"  
+	android:background="@drawable/notebook_alarm_set_main_bg_mid">
+    		
+	<TextView
+	    android:id="@+id/note_alarm_dialog_text"
+	    android:layout_width="match_parent"
+	    android:layout_height="150dp"
+	    android:gravity="center"
+	    android:textSize="20sp"
+	    android:text="@string/default_note_text"
+	    android:textColor="@android:color/black">
+       </TextView>     			
+    </LinearLayout>
+
+    
+    <LinearLayout 
+	android:layout_width="match_parent"
+	android:layout_height="65dp"
+	android:layout_marginTop="0dp"
+	android:layout_gravity="center"
+	android:orientation="vertical"  
+	android:background="@drawable/dialog_bottom">
+	     <LinearLayout
+	          android:layout_width="wrap_content"
+	          android:layout_height="wrap_content"
+	          android:layout_gravity="center"
+	          android:orientation="horizontal">
+			<Button 
+			  android:id="@+id/id_button_ok"
+			  android:layout_width="wrap_content"
+			  android:layout_height="wrap_content"
+			  android:background="@drawable/button_pressed_left"
+			  android:textColor="#ff000000"
+			  android:textSize="22sp"
+			  android:text="@string/notealert_ok"/>
+			<ImageView 
+			  android:layout_width="1dp"
+			  android:layout_height="wrap_content"
+			  android:src="@drawable/button_gap"
+			  android:layout_marginTop="2dp"/>
+			<Button 
+			  android:id="@+id/id_button_enter"
+			  android:layout_width="wrap_content"
+			  android:layout_height="wrap_content"
+			  android:background="@drawable/button_pressed_right"
+			  android:textColor="#ff000000"
+			  android:textSize="22sp"
+			  android:text="@string/notealert_enter"/>
+	   </LinearLayout>	
+     </LinearLayout>
+ </LinearLayout>
+
+    
+
+
+

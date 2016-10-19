@@ -1,0 +1,14 @@
+<set xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shareInterpolator="false" >
+<!-- pivotX 与 pivotY 设置了相对于控件自身的缩放的起始位置,比如都是50%的话,则从控件中间想四周缩放,
+如果x是0, y是50%,那么就是从控件的左边向四周缩放, 而左边的边界不进行缩放 -->
+    <scale
+        android:duration="100"
+        android:fromXScale="1.0"
+        android:fromYScale="1.0"
+        android:pivotX="50%"
+        android:pivotY="50%"
+        android:toXScale="1.05"
+        android:toYScale="1.05"/>
+
+</set>

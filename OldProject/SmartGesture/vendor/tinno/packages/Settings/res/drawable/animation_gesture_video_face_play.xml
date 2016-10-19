@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<animation-list android:oneshot="false"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+	<item android:duration="1600" android:drawable="@drawable/animation_gesture_video_face_play_1"/>
+	<item android:duration="400" android:drawable="@drawable/animation_gesture_video_face_play_2"/>
+	<item android:duration="2500" android:drawable="@drawable/animation_gesture_video_face_play_3"/>
+	<item android:duration="400" android:drawable="@drawable/animation_gesture_video_face_play_4"/>
+</animation-list>

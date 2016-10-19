@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+**
+** Copyright 2007, The Android Open Source Project
+**
+** Licensed under the Apache License, Version 2.0 (the "License");
+** you may not use this file except in compliance with the License.
+** You may obtain a copy of the License at
+**
+**     http://www.apache.org/licenses/LICENSE-2.0
+**
+** Unless required by applicable law or agreed to in writing, software
+** distributed under the License is distributed on an "AS IS" BASIS,
+** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+** See the License for the specific language governing permissions and
+** limitations under the License.
+*/
+    android:background="@drawable/date_picker_frame_bkg"
+
+--><!-- Layout of date picker-->
+
+<!-- Warning: everything within the parent is removed and re-ordered depending
+     on the date format selected by the user. -->
+
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:sugarnote="http://schemas.android.com/apk/res/com.sugar.note"
+    android:id="@+id/parent"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal|center"
+    android:paddingLeft="15dip"
+    android:paddingRight="15dip"
+    android:layout_marginTop="3dip"
+    android:layout_marginBottom="3dip"
+    android:background="@drawable/tinno_number_left"
+    android:orientation="horizontal">
+
+    <!-- Month -->
+    <LinearLayout
+        android:id="@+id/MonthLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/tinno_number_middle"
+        android:orientation="horizontal">
+
+        <!-- sugarnote:markText="@string/monthtext"   -->
+        <com.sugar.note.TinnoNumberPicker
+            android:id="@+id/month"
+            android:layout_width="40dip"
+            android:layout_height="174dip"
+            android:layout_marginLeft="10dip" />
+
+        <TextView
+            android:id="@+id/MonthText"
+            style="@style/alarmTimeDateTextStyle"
+            android:text="@string/monthtext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dip"
+            android:layout_gravity="center_vertical" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/img_gap1"
+        android:layout_width="2dp"
+        android:layout_height="wrap_content"
+        android:src="@drawable/wheel_gap" />
+
+    <!-- Day -->
+    <LinearLayout
+        android:id="@+id/DayLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/tinno_number_middle"
+        android:orientation="horizontal">
+
+        <!-- sugarnote:markText="@string/tinnoday"   -->
+        <com.sugar.note.TinnoNumberPicker
+            android:id="@+id/day"
+            android:layout_width="40dip"
+            android:layout_height="174dip"
+            android:layout_marginLeft="10dip" />
+
+        <TextView
+            android:id="@+id/DayText"
+            android:text="@string/day"
+            style="@style/alarmTimeDateTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dip"
+            android:layout_gravity="center_vertical" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/img_gap2"
+        android:layout_width="2dp"
+        android:layout_height="wrap_content"
+        android:src="@drawable/wheel_gap" />
+
+    <!-- Year -->
+    <LinearLayout
+        android:id="@+id/YearLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/tinno_number_middle"
+        android:orientation="horizontal">
+
+        <!-- sugarnote:markText="@string/year"   -->
+        <com.sugar.note.TinnoNumberPicker
+            android:id="@+id/year"
+            android:layout_width="80dip"
+            android:layout_height="174dip"
+            android:layout_marginLeft="10dip" />
+
+        <TextView
+            android:id="@+id/YearText"
+            android:text="@string/year"
+            style="@style/alarmTimeDateTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="0dip"
+            android:layout_marginRight="10dip"
+            android:layout_gravity="center_vertical" />
+    </LinearLayout>
+
+    <!-- calendar view -->
+    <CalendarView
+        android:id="@+id/calendar_view"
+        android:layout_width="245dip"
+        android:layout_height="280dip"
+        android:layout_marginLeft="44dip"
+        android:layout_weight="1"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:visibility="gone" />
+
+</LinearLayout> 

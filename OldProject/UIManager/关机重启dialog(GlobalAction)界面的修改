@@ -1,0 +1,15 @@
+
+修改的文件:
+frameworks/base/core/res/res/layout/global_actions_item.xml
+frameworks/base/core/res/res/layout/global_actions_silent_mode.xml
+
+修改方法:
+给布局加了一个背景
+这个背景是一个drawable,定义为tinno_global_action_item_background这个文件
+
+这个文件的定义是:
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_focused="true" android:state_pressed="true" android:drawable="@drawable/list_pressed_holo_light" />
+    <item android:state_focused="false" android:state_pressed="true" android:drawable="@drawable/list_pressed_holo_light" />
+    <item android:drawable="@drawable/tinno_dialog_middle_holo_light" />
+</selector>

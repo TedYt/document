@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="hello">欢迎使用YT专门为丹丹量身定做的图片备份工具。
+        		\n1. 使用说明：点击“一键备份”按钮，然后工具会将所有图片复制到一个特定的目录中。备份完成后，将在“执行结果”一栏，显示图片备份的路径
+        		\n2. 温馨提醒：为保证能备份所有的图片，请使用该工具前，重启一次手机</string>
+    <string name="app_name">YD图片备份工具</string>
+    
+    <string name="btn_text">一键备份</string>
+    <string name="tv_text_hint">执行结果</string>
+	<string name="storage_phone">图片被保存在：手机存储</string>
+	
+	<string name="ce_first_hint"><b>恭喜你！</b> 
+	    		\n发现了秘密的彩蛋.</string>
+	    		
+	<string name="ce_second_hint">还记得我们之前聊过你的一些小怪癖，然后我说我最喜欢老友记里的也有很多小怪癖的莫妮卡嘛？那时我没有明确的说出来,
+	    				我是担心我们以后不能那么自然的聊天了。
+	    				\n后来我看到林夕的一句歌词：
+	    				\n<b>因为太珍惜一些人，而小心翼翼维持一段安全的距离。保住了淡如水长流，享受不到入蜜之亲密，牺牲了许多深度交流，为避免火药而错过火花。</b>
+	    				\n现在，我想说：丹丹，我喜欢你。我喜欢不划线就读不下书的你，我喜欢爱指出朋友圈错别字的你，我喜欢包的一手漂亮饺子的你，我喜欢真实的你。丹丹，你愿意跟我交往嘛？</string>
+</resources>

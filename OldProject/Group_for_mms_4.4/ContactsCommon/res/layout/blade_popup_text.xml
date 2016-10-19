@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--TAO.JIANG, DATE20130402, s9201b, change minHeight, maxHeight, minWidth, maxWidth to 100dip, DATE20130402-3 START-->
+<com.android.contacts.common.list.AntialiasedTextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:textSize="40sp"
+    android:minHeight="100dip"
+    android:maxHeight="100dip"
+    android:minWidth="100dip"
+    android:maxWidth="100dip"	
+    android:includeFontPadding="false"
+    android:gravity="center"
+/>
+<!--TAO.JIANG, DATE20130402-3 END-->

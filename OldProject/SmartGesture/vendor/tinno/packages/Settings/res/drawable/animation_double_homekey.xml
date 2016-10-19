@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<animation-list android:oneshot="false"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+	<item android:duration="400" android:drawable="@drawable/animation_double_homekey_1"/>
+	<item android:duration="200" android:drawable="@drawable/animation_double_homekey_2"/>
+	<item android:duration="200" android:drawable="@drawable/animation_double_homekey_3"/>
+	<item android:duration="200" android:drawable="@drawable/animation_double_homekey_4"/>
+	<item android:duration="200" android:drawable="@drawable/animation_double_homekey_5"/>
+	<item android:duration="3000" android:drawable="@drawable/animation_double_homekey_6"/>
+</animation-list>

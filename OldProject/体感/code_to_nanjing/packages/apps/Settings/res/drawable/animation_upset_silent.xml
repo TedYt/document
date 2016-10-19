@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<animation-list android:oneshot="false"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+	<item android:duration="400" android:drawable="@drawable/animation_upset_silent_1"/>
+	<item android:duration="400" android:drawable="@drawable/animation_upset_silent_2"/>
+	<item android:duration="400" android:drawable="@drawable/animation_upset_silent_3"/>
+    <item android:duration="1800" android:drawable="@drawable/animation_upset_silent_4"/>
+</animation-list>

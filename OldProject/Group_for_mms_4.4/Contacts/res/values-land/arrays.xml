@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+    <integer-array name="blade_section_baselines">
+        <item>18</item>
+        <item>39</item>
+        <item>60</item>
+        <item>81</item>
+        <item>102</item>
+        <item>123</item>
+        <item>144</item>
+        <item>165</item>
+        <item>186</item>
+        <item>207</item>
+        <item>228</item>
+        <item>249</item>
+        <item>270</item>
+        <item>291</item>
+        <item>312</item>
+        <item>333</item>
+        <item>354</item>
+        <item>375</item>
+        <item>396</item>
+        <item>417</item>
+        <item>438</item>
+        <item>459</item>
+        <item>480</item>
+        <item>501</item>
+        <item>522</item>
+        <item>543</item>
+        <item>564</item>
+    </integer-array>
+
+    <integer-array name="blade_indicator_tops">
+        <item>1</item>
+        <item>22</item>
+        <item>43</item>
+        <item>64</item>
+        <item>85</item>
+        <item>106</item>
+        <item>127</item>
+        <item>148</item>
+        <item>169</item>
+        <item>190</item>
+        <item>211</item>
+        <item>232</item>
+        <item>253</item>
+        <item>274</item>
+        <item>295</item>
+        <item>316</item>
+        <item>337</item>
+        <item>358</item>
+        <item>379</item>
+        <item>400</item>
+        <item>421</item>
+        <item>442</item>
+        <item>463</item>
+        <item>484</item>
+        <item>505</item>
+        <item>526</item>
+        <item>547</item>
+    </integer-array>
+</resources>

@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.sugar.note"
+    android:versionCode="1107"
+    android:versionName="1.1.07">
+
+    <permission android:name="android.permission.READ_NOTEBOOK" />
+    <permission android:name="android.permission.WRITE_NOTEBOOK" />
+
+    <uses-sdk
+        android:minSdkVersion="14"
+        android:targetSdkVersion="14" />
+
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_NOTEBOOK" />
+    <uses-permission android:name="android.permission.READ_NOTEBOOK" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+
+    <application
+        android:icon="@drawable/app_notes"
+        android:label="@string/app_name">
+        <provider
+            android:name="NotePadProvider"
+            android:authorities="com.sugar.note.NotePad;com.sugar.note.NotePadProvider">
+            <grant-uri-permission android:pathPattern=".*" />
+        </provider>
+
+        <activity
+            android:name="NotesList"
+            android:label="@string/title_notes_list"
+            android:theme="@android:style/Theme.Holo.Light.NoActionBar"
+            android:windowSoftInputMode="adjustPan"
+            android:screenOrientation="portrait"
+            android:uiOptions="splitActionBarWhenNarrow">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.EDIT" />
+                <action android:name="android.intent.action.PICK" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="vnd.android.cursor.dir/vnd.google.note" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.GET_CONTENT" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="vnd.android.cursor.item/vnd.google.note" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name="NoteDelete"
+            android:theme="@style/Theme.NotesListDelete"
+            android:label="@string/selectednumber"
+            android:icon="@drawable/ic_title_bar_done"
+            android:configChanges="orientation|keyboardHidden|navigation"
+            android:uiOptions="splitActionBarWhenNarrow"/>
+
+        <activity
+            android:name="NoteView"
+            android:label="@string/title_notes_edit"
+            android:theme="@android:style/Theme.Holo.Light.NoActionBar"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden|navigation"
+            android:windowSoftInputMode="adjustResize"/>
+
+        <activity
+            android:name="NoteReading"
+            android:label="@string/title_notes_view"
+            android:configChanges="orientation|keyboardHidden|navigation"
+            android:theme="@android:style/Theme.Holo.Light"
+            android:uiOptions="splitActionBarWhenNarrow"/>
+
+        <activity
+            android:name="NotesSearch"
+            android:theme="@android:style/Theme.Holo.Light"
+            android:label="@string/selectednumber"
+            android:icon="@drawable/ic_title_bar_done"
+            android:configChanges="orientation|keyboardHidden|navigation"
+            android:uiOptions="splitActionBarWhenNarrow"/>
+
+
+        <receiver android:name=".NoteAlarmInitReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.ACTION_SHUTDOWN"/>
+                <action android:name="android.intent.action.REBOOT"/>
+            </intent-filter>
+        </receiver>
+
+
+        <activity
+            android:name="com.sugar.note.NoteAlarmSetActivity"
+            android:label="@string/notebook_alarm_set"
+            android:screenOrientation="portrait"
+            android:theme="@style/activity_translucent">
+            <intent-filter>
+                <action android:name="com.sugar.note.NoteAlarmSetActivity" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <receiver android:name="com.sugar.note.AlarmReceiver"/>
+
+        <activity
+            android:name="com.sugar.note.AlarmAlertActivity"
+            android:label="@string/app_name"
+            android:theme="@style/activity_translucent"/>
+
+
+        <activity
+            android:name="com.sugar.note.NoteAlarmUpdate"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/activity_translucent">
+            <intent-filter>
+                <action android:name="com.sugar.note.NoteAlarmUpdate" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name="com.sugar.note.NoteImageView"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTask"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
+            <intent-filter>
+                <action android:name="com.sugar.note.NoteImageView" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".picture.PictureSelectActivity"
+            android:theme="@android:style/Theme.Holo.Light"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".picture.PictureFolderActivity"
+            android:theme="@android:style/Theme.Holo.Light"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity android:name=".handing.PaintCanvasActivity" />
+
+        <activity
+            android:name="com.sugar.note.handing.NoteGraffiti"
+            android:theme="@android:style/Theme.Holo.Light"
+            android:screenOrientation="portrait" />
+
+    </application>
+
+</manifest>

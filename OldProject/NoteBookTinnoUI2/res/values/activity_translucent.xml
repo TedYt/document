@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<!-- TUI_MSG johnlee2898 modified -->
+<resources>
+
+    <style name="activity_translucent">
+        <item name="android:windowBackground">@color/transparent</item>   
+        <item name="android:windowIsTranslucent">true</item>   
+        <item name="android:textColor">@color/black</item>
+        <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+    
+</resources>
+
+<!-- 
+android:theme="@style/activity_translucent"
+-->

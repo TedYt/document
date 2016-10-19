@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/start_hint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/hello" 
+        android:textSize="15sp"
+        android:lineSpacingMultiplier="1.5"
+        android:padding="10dip"
+        android:visibility="invisible"/>
+    
+	<View 
+	    android:layout_width="fill_parent"
+	    android:layout_height="70dip"
+	    android:clickable="false"
+	    android:focusable="false"/>
+	
+    <Button 
+        android:id="@+id/btn_backup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:paddingTop="15dip"
+        android:paddingBottom="15dip"
+        android:paddingLeft="25dip"
+        android:paddingRight="25dip"
+        android:visibility="invisible"
+        android:text="@string/btn_text"/>
+    
+    <View 
+	    android:layout_width="fill_parent"
+	    android:layout_height="40dip"
+	    android:clickable="false"
+	    android:focusable="false"/>
+    
+    <TextView 
+        android:id="@+id/tv_hint"
+        android:background="#FFaaaaaa"
+        android:textSize="16sp"
+        android:gravity="center"
+        android:layout_width="fill_parent"
+        android:layout_height="35dip"
+        android:layout_gravity="center_horizontal"
+        android:padding="5dip"
+        android:visibility="invisible"
+        android:text="@string/tv_text_hint"/>
+</LinearLayout>

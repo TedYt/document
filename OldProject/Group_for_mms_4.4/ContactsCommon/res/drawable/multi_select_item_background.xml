@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:drawable="@drawable/multi_select_background_pressed" android:state_pressed="true"/> <!-- Holo very light#80ceeb -->
+    <item android:drawable="@drawable/multi_select_background_activited" android:state_activated="true"/> <!-- Holo #33b5e5 -->
+    <item android:drawable="@drawable/multi_select_background_normal"/> <!-- not selected -->
+
+</selector>

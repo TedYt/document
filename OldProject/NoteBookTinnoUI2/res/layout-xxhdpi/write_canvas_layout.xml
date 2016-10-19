@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/write_canvas_layout"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content">
+
+    <include layout="@layout/write_canvas_button_area"/>
+
+    <com.sugar.note.handing.WriteCanvas
+        android:id="@+id/write_single_area"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/write_canvas_area_height"
+        android:layout_marginRight="@dimen/write_canvas_area_margin_rl"
+        android:layout_marginLeft="@dimen/write_canvas_area_margin_rl"
+        android:layout_marginTop="@dimen/write_canvas_area_margin_tb"
+        android:layout_marginBottom="@dimen/write_canvas_area_margin_tb"/>
+
+    <LinearLayout
+        android:visibility="gone"
+        android:id="@+id/write_double_area"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <com.sugar.note.handing.WriteCanvas
+            android:id="@+id/write_double_area_write1"
+            android:layout_width="0dip"
+            android:layout_height="@dimen/write_double_canvas_area_height"
+            android:layout_weight="1"
+            android:layout_margin="@dimen/write_double_canvas_area_margin"/>
+
+        <com.sugar.note.handing.WriteCanvas
+            android:id="@+id/write_double_area_write2"
+            android:layout_width="0dip"
+            android:layout_height="@dimen/write_double_canvas_area_height"
+            android:layout_weight="1"
+            android:layout_margin="@dimen/write_double_canvas_area_margin"/>
+    </LinearLayout>
+</LinearLayout>

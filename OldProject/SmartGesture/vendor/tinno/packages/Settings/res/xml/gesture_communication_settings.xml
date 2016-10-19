@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:settings="http://schemas.android.com/apk/res/com.android.settings"
+        android:persistent = "false"
+        android:orderingFromXml = "true"
+>
+
+        <com.android.settings.GestureCommunicationProfilePreference
+            android:key = "tutorial_upset_silent"
+            android:title = "@string/gesture_setttings_upset_silent"
+            android:summary = "@string/gesture_tutorial_upset_silent"/>
+        <com.android.settings.GestureCommunicationProfilePreference
+            android:key = "tutorial_promixy_answer_phone"
+            android:title = "@string/gesture_setttings_promixy_answer_phone"
+            android:summary = "@string/gesture_tutorial_promixy_answer_phone"/>
+        <com.android.settings.GestureCommunicationProfilePreference
+            android:key = "tutorial_promixy_dial_phone"
+            android:title = "@string/gesture_setttings_promixy_dial_phone"
+            android:summary = "@string/gesture_tutorial_promixy_dial_phone"/>
+        <com.android.settings.GestureCommunicationProfilePreference
+            android:key = "tutorial_promixy_speaker"
+            android:title = "@string/gesture_setttings_promixy_speaker"
+            android:summary = "@string/gesture_tutorial_promixy_speaker"/>
+        <com.android.settings.GestureCommunicationProfilePreference
+            android:key = "tutorial_promixy_incoming_call"
+            android:title = "@string/gesture_setttings_promixy_incoming_call"
+            android:summary = "@string/gesture_tutorial_promixy_incoming_call"/>
+
+    <!--<com.android.settings.GestureCommunicationProfilePreference
+        android:key="tutorial_quick_camera"
+        android:title="@string/gesture_settings_quick_camera"
+        android:summary="@string/gesture_tutorial_quick_camera"/>-->
+</PreferenceScreen>

@@ -1,0 +1,37 @@
+
+由于动画时间上的延迟，可能会出现这样的情况：
+上一次的 exchangeToRight 的动画还没有执行完，就有执行了exchangeToRight方法，从而出现了错乱
+
+
+D/tui     ( 3750): ACTION_DOWN
+D/tui     ( 3750): onLongClick
+D/tui     ( 3750): ANIM_LONG_CLICK end
+D/tui     ( 3750): addDragViewToWM: location x=2, location y=134
+D/tui     ( 3750): 
+D/tui     ( 3750): Entry exchangeToRight from = 0, to = 3
+D/tui     ( 3750): exchangeToRight from = 0, to = 1
+D/tui     ( 3750): ToRight --- AnimationStart
+D/tui     ( 3750): exchangeToRight from = 1, to = 2
+D/tui     ( 3750): ToRight --- AnimationStart
+D/tui     ( 3750): exchangeToRight from = 2, to = 3
+D/tui     ( 3750): ToRight --- AnimationStart
+D/tui     ( 3750): Exit exchangeToRight
+D/tui     ( 3750): 
+D/tui     ( 3750): Entry exchangeToRight from = 3, to = 4//连续两次执行Right
+D/tui     ( 3750): exchangeToRight from = 3, to = 4
+D/tui     ( 3750): ToRight --- AnimationStart
+D/tui     ( 3750): Exit exchangeToRight
+D/tui     ( 3750): ToRight --- AnimationEnd
+D/tui     ( 3750): ToRight --- obAnim2 AnimationEnd //这个log有异常
+D/tui     ( 3750): ToRight --- AnimationEnd
+D/tui     ( 3750): ToRight --- AnimationEnd
+D/tui     ( 3750): ToRight --- AnimationEnd
+D/tui     ( 3750): Entry updateViewGroup
+D/tui     ( 3750): from = 3,from_left = 244, from_top = 427
+D/tui     ( 3750): to = 4,to_left = 2, to_top = 427
+D/tui     ( 3750): Exit updateViewGroup
+D/tui     ( 3750): ToRight --- obAnim2 AnimationEnd
+D/tui     ( 3750): ACTION_UP
+
+解决方法：
+用lock限制 exchangeToRight中的动画没有结束的话，不能进行下一次的交换，即不让exchangeToRight执行

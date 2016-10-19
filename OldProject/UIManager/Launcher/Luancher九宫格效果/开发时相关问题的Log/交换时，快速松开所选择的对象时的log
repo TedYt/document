@@ -1,0 +1,49 @@
+
+现象描述：
+比如将4移到3的位置，当手指达到了3的位置时，立即松开手指，就会出现异常
+
+//正常情况下的log
+D/tui     (24681): ACTION_DOWN
+D/tui     (24681): onLongClick
+D/tui     (24681): ANIM_LONG_CLICK end
+D/tui     (24681): addDragViewToWM: location x=244, location y=477
+D/tui     (24681): 
+D/tui     (24681): Entry exchangeToLeft from = 4, to = 3
+D/tui     (24681): ToLeft from = 4, to = 3
+D/tui     (24681): Exit exchangeToLeft
+D/tui     (24681): ToLeft --- AnimationEnd
+D/tui     (24681): Entry updateViewGroup
+D/tui     (24681): from = 4,from_left = 2, from_top = 427
+D/tui     (24681): to = 3,to_left = 244, to_top = 427
+D/tui     (24681): Exit updateViewGroup
+D/tui     (24681): ToKLeft --- obAnim2 AnimationEnd
+D/tui     (24681): ACTION_UP
+D/tui     (24681): Entry restroeNailToNormal
+D/tui     (24681): TuiSwapWorkSpace -- screen_a= 3, screen_b= 4
+D/tui     (24681): Exit restroeNailToNormal
+
+
+//不正常情况下的log
+D/tui     (24681): ACTION_DOWN
+D/tui     (24681): onLongClick
+D/tui     (24681): ANIM_LONG_CLICK end
+D/tui     (24681): addDragViewToWM: location x=244, location y=477
+D/tui     (24681): 
+D/tui     (24681): Entry exchangeToLeft from = 4, to = 3
+D/tui     (24681): ToLeft from = 4, to = 3
+D/tui     (24681): Exit exchangeToLeft
+D/tui     (24681): ACTION_UP
+D/tui     (24681): Entry restroeNailToNormal //restroeNailToNormal在updateViewGroup之前运行 会出现异常
+D/tui     (24681): TuiSwapWorkSpace -- screen_a= 3, screen_b= 4
+D/tui     (24681): Exit restroeNailToNormal
+D/tui     (24681): ToLeft --- AnimationEnd
+D/tui     (24681): Entry updateViewGroup
+D/tui     (24681): from = 4,from_left = 2, from_top = 427
+D/tui     (24681): to = 3,to_left = 244, to_top = 427
+D/tui     (24681): Exit updateViewGroup
+D/tui     (24681): ToKLeft --- obAnim2 AnimationEnd
+
+
+解决方法是确保updateViewGroup 执行完后，再执行restroeNailToNormal这个方法
+
+

@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+    <string-array name="blade_full_sections">
+        <item>#</item>
+        <item>A</item>
+        <item>B</item>
+        <item>C</item>
+        <item>D</item>
+        <item>E</item>
+        <item>F</item>
+        <item>G</item>
+        <item>H</item>
+        <item>I</item>
+        <item>J</item>
+        <item>K</item>
+        <item>L</item>
+        <item>M</item>
+        <item>N</item>
+        <item>O</item>
+        <item>P</item>
+        <item>Q</item>
+        <item>R</item>
+        <item>S</item>
+        <item>T</item>
+        <item>U</item>
+        <item>V</item>
+        <item>W</item>
+        <item>X</item>
+        <item>Y</item>
+        <item>Z</item>		
+    </string-array>
+
+    <string-array name="blade_replaced_sections">
+        <item>#</item>
+        <item>A</item>
+        <item>-</item>
+        <item>C</item>
+        <item>-</item>
+        <item>E</item>
+        <item>-</item>
+        <item>G</item>
+        <item>-</item>
+        <item>I</item>
+        <item>-</item>
+        <item>K</item>
+        <item>-</item>
+        <item>M</item>
+        <item>-</item>
+        <item>O</item>
+        <item>-</item>
+        <item>Q</item>
+        <item>-</item>
+        <item>S</item>
+        <item>-</item>
+        <item>U</item>
+        <item>-</item>
+        <item>W</item>
+        <item>-</item>
+        <item>Y</item>
+        <item>-</item>		
+    </string-array>
+	
+    <integer-array name="blade_section_baselines">
+        <item>27</item>
+        <item>65</item>
+        <item>102</item>
+        <item>140</item>
+        <item>178</item>
+        <item>216</item>
+        <item>254</item>
+        <item>292</item>
+        <item>330</item>
+        <item>368</item>
+        <item>406</item>
+        <item>444</item>
+        <item>482</item>
+        <item>520</item>
+        <item>558</item>
+        <item>596</item>
+        <item>634</item>
+        <item>672</item>
+        <item>710</item>
+        <item>748</item>
+        <item>786</item>
+        <item>824</item>
+        <item>862</item>
+        <item>900</item>
+        <item>938</item>
+        <item>976</item>
+        <item>1014</item>
+    </integer-array>
+
+    <integer-array name="blade_indicator_tops">
+        <item>5</item>
+        <item>43</item>
+        <item>81</item>
+        <item>119</item>
+        <item>157</item>
+        <item>195</item>
+        <item>233</item>
+        <item>271</item>
+        <item>309</item>
+        <item>347</item>
+        <item>385</item>
+        <item>423</item>
+        <item>461</item>
+        <item>499</item>
+        <item>537</item>
+        <item>575</item>
+        <item>613</item>
+        <item>651</item>
+        <item>689</item>
+        <item>727</item>
+        <item>765</item>
+        <item>803</item>
+        <item>841</item>
+        <item>879</item>
+        <item>917</item>
+        <item>955</item>
+        <item>993</item>
+    </integer-array>
+</resources>

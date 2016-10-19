@@ -1,0 +1,9 @@
+用orientationSensor 判断手机上是否是竖直状态，会有延迟，非常明显的延迟。
+	float ax = event.values[SensorManager.DATA_X];
+
+解决延迟的方法：
+	在Osensor中增加和Psensor中同样的条件判断，Osensor会一直监听，条件满足后就会在Osensor中触发接听
+	测试得到延时不超过1秒
+
+用Accelerometer 比较及时
+	float az = event.values[SensorManager.DATA_Z];

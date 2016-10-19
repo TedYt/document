@@ -1,0 +1,330 @@
+--修改wifi 热点的名字
+frameworks/base/core/res/res/values/strings.xml:    （注意overlay）
+    <string name="wifi_tether_configure_ssid_default" translatable="false">p7701</string>
+
+--Linux 命令中，表示上一个命令返回值的符合
+$_
+
+
+--默认铃声：
+build/target/product/full_base.mk
+
+PRODUCT_PROPERTY_OVERRIDES := \
+         ro.com.android.dateformat=MM-dd-yyyy \
+         ro.config.ringtone=Ring_Synth_04.ogg \
+         ro.config.notification_sound=pixiedust.ogg
+         
+
+--user版 转debug的方法
+adb shell setprop persist.tinno.debug 1
+
+
+
+--Monkey 测试导致手机重启（是一个乌龙）
+原因可能是Monkey测试把手机data区的空间给填满了，
+可以用adb shell df > data.txt 确认，会有如下的类似结果
+Filesystem Size Used Free Blksize
+/dev 970.0M 84.0K 969.9M 4096
+/sys/fs/cgroup 970.0M 12.0K 970.0M 4096
+/mnt 970.0M 0.0K 970.0M 4096
+/system 2.5G 2.0G 516.5M 4096
+/data 11.2G 11.2G 16.0M 4096
+/cache 387.4M 408.0K 387.0M 4096
+/protect_f 5.8M 60.0K 5.8M 4096
+/protect_s 5.8M 56.0K 5.8M 4096
+/nvdata 27.5M 2.2M 25.3M 4096
+/storage 970.0M 0.0K 970.0M 4096
+
+
+FileRom 再次问软件测试,说确实在跑monkey之前有安装这个测试工具,会把内存填充!哎~^~ 
+
+
+
+--修改Storage的容量显示
+apps/Settings/src/com/android/settings/deviceinfo/PrivateVolumeSettings.java
+                    mSummary.setTitle(TextUtils.expandTemplate(getText(R.string.storage_size_large),
+                            result.value, result.units));
+-                   mSummary.setSummary(getString(R.string.storage_volume_used,
+-                           Formatter.formatFileSize(context, totalBytes)));
++                   if(android.os.SystemProperties.is_lax_tel_mx()){//yuta Lanix CR
++                       mSummary.setSummary(getString(R.string.storage_volume_used, "64GB"));
++                   }else{
++                       mSummary.setSummary(getString(R.string.storage_volume_used,
++                           Formatter.formatFileSize(context, totalBytes)));
++                   }
++
+                    mSummary.setPercent((int) ((usedBytes * 100) / totalBytes));
+
+
+apps/Settings/src/com/android/settings/deviceinfo/StorageSettings.java
+         final BytesResult result = Formatter.formatBytes(getResources(), privateUsedBytes, 0);
+         mInternalSummary.setTitle(TextUtils.expandTemplate(getText(R.string.storage_size_large),
+                 result.value, result.units));
+-        mInternalSummary.setSummary(getString(R.string.storage_volume_used,
+-                Formatter.formatFileSize(context, privateTotalBytes)));
++        if(android.os.SystemProperties.is_lax_tel_mx()){//yuta Lanix CR
++            mInternalSummary.setSummary(getString(R.string.storage_volume_used, "64GB"));
++        }else{
++            mInternalSummary.setSummary(getString(R.string.storage_volume_used,
++                    Formatter.formatFileSize(context, privateTotalBytes)));
++        }                
+ 
+         if (mInternalCategory.getPreferenceCount() > 0) {
+             getPreferenceScreen().addPreference(mInternalCategory);
+
+
+apps/Settings/src/com/android/settings/deviceinfo/StorageVolumePreference.java
+             final String used = Formatter.formatFileSize(context, usedBytes);
+-            final String total = Formatter.formatFileSize(context, totalBytes);
++            String total = Formatter.formatFileSize(context, totalBytes);
++            if(android.os.SystemProperties.is_lax_tel_mx()){//yuta Lanix CR
++                if ("/data".equals(path.toString())){
++                    total = "64GB";
++                }else{
++                    total = updatExtralStoragSize(totalBytes);
++                }
++            }
+ 
+                final String free = Formatter.formatFileSize(context, freeBytes);
+                final String pkUsed = Formatter.formatFileSize(context, totalBytes - path.getFreeSpace());
+@@ -148,6 +155,38 @@ public class StorageVolumePreference extends Preference {
+         }
+     }
+ 
++    //Begin yutao Lanix CR
++    public static String updatExtralStoragSize(long totalBytes){
++        long size = totalBytes / 1024 / 1024;
++        if (size < 256){ 
++            return "256MB";
++        }else if (size < 512){ 
++            return "512MB";
++        }
++        
++        size = size / 1024;
++        if (size < 1){
++            return "1GB";
++        }else if (size < 2){
++            return "2GB";
++        }else if (size < 4){
++            return "4GB";
++        }else if (size < 8){
++            return "8GB";
++        }else if (size < 16){
++            return "16GB";
++        }else if (size < 32){
++            return "32GB";
++        }else if (size < 64){
++            return "64GB";
++        }else if (size < 128){
++            return "128GB";
++        }
++        
++        return "8GB";
++    }
++    //End Lanix CR
++
+
+
+
+
+---第三方应用Snapchat.apk的菜单会和虚拟按键重叠，这个问题解决了
+把config_showNavigationBar的值改为true,之前默认是false就可以了
+
+
+--激活开发者模式后，abd调试默认打开
+persist.sys.usb.config=adb
+
+
+--动态修改手机里build.prop文件里的值
+adb shell "sed -i 's!ro.pt.setMTPdefault=true!ro.pt.setMTPdefault=false!g' system/build.prop" 
+ro.pt.setMTPdefault=true 这个是原来的值
+ro.pt.setMTPdefault=false 这个是要改变的值
+
+
+-- 7701 项目更改默认mtp
+路径：LINUX/android/vendor/myos/configs/p7701/<custom_project>/PlatformConfigs.xml
+<feature id = "CLF_PH_OPEN_PLATFORM_S0001" title="Default USB connection mode must be MTP" >      
+    <string name="ro.pt.setMTPdefault" value="true"></string>        
+</feature>
+
+
+
+7701订单请参考原型的修改，更新下开机动画里面的desc.txt文件
+
+
+---grep查询
+grep -rni --include=*.xml --exclude-dir=out   "Actual. del sistema"  ./packages/apps/Settings/
+
+
+---在Android.mk文件中定义为C文件使用的宏的方式
+LOCAL_CFLAGS += -DCAMERA_FEATURE_WNR_SW #"-D"是必须要加的
+可以借助项目的编译参数，控制订单和原型项目分开定义，例如：
+#PROJECT_NAME 即 编译时PROJECT_NAME=lax_tel_mx传进去的参数
+ifneq ($(PROJECT_NAME),) 
+    #这里是将参数全部转换为大写
+    name := $(shell echo $(PROJECT_NAME) | tr a-z A-Z) 
+    #定义宏
+	LOCAL_CFLAGS  += -D$(name) 
+endif
+
+
+---清除某个包的数据
+adb shell pm clear com.ape.launcher3
+
+
+---修改NV值
+1. 有ID的，按照ID索引，用QXDM
+2. 没有ID的，按照文件路径索引，用QPST
+刷fsg的方法：
+ sudo fastboot erase modemst1
+ sudo fastboot erase modemst2
+ sudo fastboot erase fsg
+ sudo fastboot erase fsc
+ sudo fastboot flash fsg {path}/fsg.img
+ sudo fastboot reboot
+ 
+3. 刷软件的时候会刷进新的fsg，但是不会激活fsg，通过上面的前4条命令可以激活新的fsg，不过这样，校准文件也会丢失
+4. 对于产线，由于板子的空的，刷进去的最新fsg能够自动激活使用。
+
+
+---DRM测试网站
+sqaap1.htc.com.tw/General-DRM.html
+
+
+
+---内存分析命令
+1.Meminfo抓取
+  adb shell dumpsys  meminfo > xxx.txt  列出整体内存情况
+  adb shell dumpsys  meminfo -a > xxx.txt 列出全部内存情况 ，包含整体内存情况
+2.CPU 
+  adb shell top -m 7 > xxx.txt  7代表CPU占比前七名的app
+  
+  
+---默认时区
+PRODUCT_PROPERTY_OVERRIDES += persist.sys.timezone=Asia/Karachi
+
+
+---紧急号码
+./base/telephony/java/android/telephony/PhoneNumberUtils.java
+isEmergencyNumberInternal(...)
+// liuzongbin add For Lanix Emergency Numbers 20160428
+if(android.os.SystemProperties.is_lax_tel_mx())
+{
+    emergencyNumbers = "112,911,060";
+}
+// liuzongbin end
+
+
+---7701 Lanix 支持的频段
+4G: 2/4/7/17 
+3G: 1/2/5 
+2G: 4频
+
+
+---7701 平台化框架下 设置默认MTP
+vendor/myos/configs/p7701/lax_tel_mx
+PlatformConfigs.xml
+设置
+<feature id = "LAX_TLE_MX_feature_001" title="Default USB connection mode must be MTP" >      
+    <string name="ro.pt.setMTPdefault" value="true"></string>        
+</feature> 
+
+
+
+---7201 屏幕色温调整
+1. 色温模式文件名为：qdcm_calib_data_nt35595_sharp_1080p_video.xml
+   名字跟屏幕用的料的相关，也就是说，会判断当前的用料跟文件名匹配与否，不匹配就不加载
+2. 模式文件保存路径：system/etc/
+3. 改变默认值后，会在data/misc/display/目录下生产一个新文件：disp_user_calib_data_nt35595_sharp_1080p_video.xml
+
+---抓kernel log
+adb shell cat /proc/kmsg
+adb shell dmesg > kk
+
+dmesg是查看kernel log的缓存，可以用dmesg -c 清楚之前的缓存
+
+---安全权限的解决方法 avc
+一般sys system root dev proc目录下的文件会设计到se权限的问题
+安全权限的log，如下：
+    [ 1365.032049] type=1400 audit(1451791172.270:6426): avc: denied { search } for pid=3814 comm="gon.qdcm_mobile" name="/" dev="mmcblk0p26" ino=2 scontext=u:r:platform_app:s0:c512,c768 tcontext=u:object_r:persist_file:s0 tclass=dir permissive=0
+复制avc 的 log到一个文件里，有关avc的全部log都要复制
+使用如下命令解析log文件：
+    audit2allow -i <avc_Log>
+会提示类似与下面的信息：
+    #============= platform_app ==============
+    allow platform_app persist_file:dir search;
+其中platform_app是文件名，值的是platform.app.te文件，在这个文件的最后加上allow那句话，然后remake工程即可
+
+--QXDM 抓log的默认配置文件的路径：
+C:\Users\Public\Documents\Qualcomm\QXDM\Config\Qualcomm DMC Library\Primary\Default.dmc
+安装了QXDM之后才有
+
+
+---USB 模式
+Settings/src/com/android/settings/deviceinfo/UsbModeChooserActivity.java
+    public static final int[] DEFAULT_MODES = {
+        UsbBackend.MODE_POWER_SINK | UsbBackend.MODE_DATA_NONE,
+        UsbBackend.MODE_POWER_SOURCE | UsbBackend.MODE_DATA_NONE,
+        UsbBackend.MODE_POWER_SINK | UsbBackend.MODE_DATA_MTP,
+        UsbBackend.MODE_POWER_SINK | UsbBackend.MODE_DATA_PTP,
+        UsbBackend.MODE_POWER_SINK | UsbBackend.MODE_DATA_MIDI,
+        UsbBackend.MODE_POWER_SINK | UsbBackend.MODE_DATA_MASS_STORAGE,
+        UsbBackend.MODE_POWER_SINK | UsbBackend.MODE_DATA_BICR
+    };
+    
+    
+    
+---android:sharedUserId="android.uid.system"
+这个属性要与mk中签名属性配合使用才能生效
+即LOCAL_CERTIFICATE 要设置为platform
+LOCAL_CERTIFICATE := platform
+platform 是系统级的签名，加上这个属性后，apk就有了和系统同样的签名
+
+---查看系统是多少位的
+$ adb shell getprop ro.product.cpu.abi 
+arm64-v8a
+
+
+---增加ro这样的属性
+PRODUCT_PROPERTY_OVERRIDES += ro.pt.lang_follow_SIM=true
+
+
+---用Adroid系统自带的签名文件，给apk签上系统签名
+文件位置：可以在platform/build/target/product/security/中找到platform.pk8 platform.x509.pem等签名文件，对应不同的权限。
+signapk.jar：由/platform/build/tools/signapk/编译产出,可以在/out/host/linux-x86/framework/中找到。
+
+签名：
+java -jar signapk.jar platform.x509.pem platform.pk8 MyDemo.apk MyDemo_signed.apk 得到具有对应权限的APK
+
+
+
+---主线程与子线程
+如果在Main Thread里声明了一个handler，这个handler所Post 的 Runnable（Thread）、以及处理的message都是在当前的mian线程里，非子线程。
+
+
+
+---Provider
+android M 必须加一个exported="true"才可被外部调用
+
+
+
+---python update_common_info.py（8909平台使用的） 或者 python build.py 如果没有出现以下结果
+	creating /home/android/Project/4901_360OS/2/common/build/bin/asic/sparse_images/userdata_26.img
+	creating /home/android/Project/4901_360OS/2/common/build/bin/asic/sparse_images/userdata_27.img
+	creating /home/android/Project/4901_360OS/2/common/build/bin/asic/sparse_images/userdata_28.img
+	creating /home/android/Project/4901_360OS/2/common/build/bin/asic/sparse_images/userdata_29.img
+	creating /home/android/Project/4901_360OS/2/common/build/bin/asic/sparse_images/userdata_30.img
+	creating /home/android/Project/4901_360OS/2/common/build/bin/asic/sparse_images/userdata_31.img
+	creating /home/android/Project/4901_360OS/2/common/build/bin/asic/sparse_images/userdata_32.img
+	creating /home/android/Project/4901_360OS/2/common/build/bin/asic/sparse_images/userdata_33.img
+	creating /home/android/Project/4901_360OS/2/common/build/bin/asic/sparse_images/userdata_34.img
+	creating /home/android/Project/4901_360OS/2/common/build/bin/asic/sparse_images/userdata_35.img
+	creating /home/android/Project/4901_360OS/2/common/build/bin/asic/sparse_images/userdata_36.img
+	creating /home/android/Project/4901_360OS/2/common/build/bin/asic/sparse_images/userdata_37.img
+	creating /home/android/Project/4901_360OS/2/common/build/bin/asic/sparse_images/userdata_38.img
+	creating /home/android/Project/4901_360OS/2/common/build/bin/asic/sparse_images/userdata_39.img
+
+请工程根目录检查文件：contents.xml
+请确认 LINUX/android/out/target/product/P4901/ 是指到你所编译的工程
+比如你编译的是4901 就指向4901，如果是3901 就应该是LINUX/android/out/target/product/P3901/
+

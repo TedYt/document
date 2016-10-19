@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="hello">Welcome to experience the Backup Picture Tool, which is specially made by Yutao for YDan.
+        	\n1. Instructions: Please click the button:<b>One Click, All Backup.</b>
+        	And then all pictures will be copied to a certain folder.
+        	When it is accomplished, the path of the folder will be showed in <b>Result-Line</b>.
+        	\n2. Warm prompt: In order to actually save all of pictures, please reboot the phone before using this tool.</string>
+    <string name="app_name">Ydan-Backup Picture Tool</string>
+    
+    <string name="btn_text">One Click, All Backup</string>
+    <string name="tv_text_hint">Result-Line</string>
+    <string name="text_hint_start">Pictures are save in:</string>
+	<string name="storage_phone">Pictures are saved in: Phone Storage</string>
+	
+    <string name="ce_first_hint"><b>恭喜你！</b> 
+    		\n发现了秘密的彩蛋.
+    		\n这个彩蛋是我的一些心里话，还请笑纳.</string>
+</resources>

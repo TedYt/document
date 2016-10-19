@@ -1,0 +1,33 @@
+packages/apps/Contacts/ ok
+packages/apps/DeskClock/ ok
+build/
+frameworks/base/ ok
+packages/apps/Dialer/ ok
+packages/apps/GesturePhone/ ok
+packages/apps/InCallUI/ ok
+packages/apps/Mms/ ok
+packages/apps/Settings/ ok
+packages/services/Telephony/ ok
+
+
+
+王旻君
+packages/apps/Contacts/
+packages/apps/Dialer/
+packages/apps/InCallUI/
+packages/services/Telephony/
+packages/apps/GesturePhone/
+frameworks/base/
+
+
+这两个是郑超的
+packages/apps/DeskClock/
+packages/apps/Settings/
+
+
+这个是李娟的
+packages/apps/Mms/
+
+
+
+

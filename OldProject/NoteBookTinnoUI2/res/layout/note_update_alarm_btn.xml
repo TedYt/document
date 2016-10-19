@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/alarm_btns"
+    android:orientation="horizontal"
+    android:layout_width="@dimen/note_update_alarm_btn_area_width"
+    android:layout_height="@dimen/note_update_alarm_btn_area_height"
+    android:layout_above="@id/alarm_bottom_menu"
+    android:background="@drawable/note_alarm_update_bg"
+    android:gravity="center_vertical"
+    android:paddingTop="10dip">
+
+    <Button
+        android:id="@+id/modify_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="3dip"
+        android:layout_marginRight="0dip"
+        android:background="@drawable/alarm_modify_btn_pressed"
+        android:text="@string/alarm_modify"
+        android:clickable="true"
+        android:textColor="#ff000000" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/button_gap"
+        android:layout_marginBottom="2dip" />
+
+    <Button
+        android:id="@+id/delete_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="0dip"
+        android:layout_marginRight="4dip"
+        android:background="@drawable/alarm_delete_btn_pressed"
+        android:text="@string/alarm_delete"
+        android:clickable="true"
+        android:textColor="#ff000000" />
+</LinearLayout>

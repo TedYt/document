@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<resources>
+	<setting type="system" name="volume_music" value="8"/>
+	<setting type="system" name="volume_ring" value="4"/>
+	<setting type="system" name="volume_system" value="7"/>
+	<setting type="system" name="volume_voice" value="4"/>
+	<setting type="system" name="volume_alarm" value="4"/>
+	<setting type="system" name="volume_notification" value="4"/>
+	<setting type="system" name="volume_bluetooth_sco" value="7"/>
+	<setting type="system" name="vibrate_on" value="5"/>
+	<setting type="system" name="mode_ringer_streams_affected" value="166"/>
+	<setting type="system" name="mute_streams_affected" value="3118"/>
+	<setting type="system" name="dim_screen" value="1"/>
+	<setting type="system" name="screen_off_timeout" value="60000"/>
+	<setting type="system" name="time_12_24" value="24"/>
+	<setting type="system" name="dtmf_tone_type" value="0"/>
+	<setting type="system" name="dtmf_tone" value="1"/>
+	<setting type="system" name="hearing_aid" value="0"/>
+	<setting type="system" name="tty_mode" value="0"/>
+	<setting type="system" name="screen_brightness" value="133"/>
+	<setting type="system" name="screen_brightness_mode" value="0"/>
+	<setting type="system" name="accelerometer_rotation" value="1"/>
+	<setting type="system" name="haptic_feedback_enabled" value="1"/>
+	<setting type="system" name="notification_light_pulse" value="1"/>
+	<setting type="system" name="default_font_scale" value="1.05"/>
+	<setting type="system" name="default_golauncer_on" value="1"/>
+	<setting type="system" name="lockscreen_sounds_enabled" value="1"/>
+	<setting type="system" name="vibrate_in_silent" value="0"/>
+	<setting type="system" name="mtk_audioprofile_active" value="mtk_audioprofile_general"/>
+	<setting type="system" name="dual_sim_mode_setting" value="3"/>
+	<setting type="system" name="boot_up_select_mode" value="0"/>
+	<setting type="system" name="enable_internet_call_value" value="0"/>
+	<setting type="system" name="roaming_reminder_mode_setting" value="2"/>
+	<setting type="system" name="roaming_indication_needed" value="0"/>
+	<setting type="system" name="ipo_setting" value="0"/>
+	<setting type="system" name="mtk_audioprofile_meeting_volume_ring" value="0"/>
+	<setting type="system" name="mtk_audioprofile_meeting_volume_notification" value="0"/>
+	<setting type="system" name="mtk_audioprofile_meeting_volume_alarm" value="0"/>
+	<setting type="system" name="mtk_audioprofile_meeting_dtmf_tone_enabled" value="false"/>
+	<setting type="system" name="mtk_audioprofile_meeting_vibrate_on" value="true"/>
+	<setting type="system" name="mtk_audioprofile_outdoor_vibrate_on" value="true"/>
+	<setting type="system" name="mtk_audioprofile_slient_vibrate_on" value="false"/>
+	<setting type="system" name="mtk_audioprofile_general_vibrate_on" value="true"/>
+	<setting type="system" name="mtk_audioprofile_general_volume_alarm" value="4"/>
+	<setting type="system" name="mtk_audioprofile_general_volume_ring" value="4"/>
+	<setting type="system" name="mtk_audioprofile_general_volume_notification" value="4"/>
+	<setting type="system" name="screen_brightness_eco_mode" value="0"/>
+     
+	<setting type="secure" name="location_providers_allowed" value=""/>
+	<setting type="secure" name="preferred_cdma_subscription" value="1"/>
+	<setting type="secure" name="mock_location" value="1"/>
+	<setting type="secure" name="backup_enabled" value="0"/>
+	<setting type="secure" name="backup_transport" value="android/com.android.internal.backup.LocalTransport"/>
+	<setting type="secure" name="mount_play_not_snd" value="1"/>
+	<setting type="secure" name="mount_ums_autostart" value="0"/>
+	<setting type="secure" name="mount_ums_prompt" value="1"/>
+	<setting type="secure" name="mount_ums_notify_enabled" value="1"/>
+	<!-- <setting type="secure" name="default_input_method" value="com.android.inputmethod.pinyin/.PinyinIME"/> -->
+	<setting type="secure" name="default_input_method" value="com.sohu.inputmethod.sogou/.SogouIME"/>
+	<setting type="secure" name="enabled_input_methods" value="com.android.inputmethod.latin/.LatinIME:com.sohu.inputmethod.sogou/.SogouIME"/>
+	<setting type="secure" name="wifip2p_device_name" value="Wireless client"/>
+	<!-- Shutdown if over height temperature -->
+	<setting type="secure" name="battery_set_height_temperature" value="720"/>
+	<!-- Set wifi the interval timer -->
+	<setting type="secure" name="poll_status_interval_msecs_bcm" value="30000"/>
+
+    <setting type="global" name="airplane_mode_on" value="0"/>
+    <setting type="global" name="airplane_mode_radios" value="cell,bluetooth,wifi"/>
+    <setting type="global" name="airplane_mode_toggleable_radios" value="bluetooth,wifi"/>
+    <setting type="global" name="assisted_gps_enabled" value="0"/>
+    <setting type="global" name="stay_on_while_plugged_in" value="0"/>
+    <setting type="global" name="mode_ringer" value="2"/>
+    <setting type="global" name="wifi_on" value="0"/>
+    <setting type="global" name="wifi_networks_available_notification_on" value="1"/>
+    <setting type="global" name="bluetooth_on" value="0"/>
+    <setting type="global" name="cdma_cell_broadcast_sms" value="1"/>
+    <setting type="global" name="data_roaming" value="0"/>
+    <setting type="global" name="data_roaming_2" value="0"/>
+    <setting type="global" name="network_preference" value="1"/>
+    <setting type="global" name="usb_mass_storage_enabled" value="1"/>
+    <setting type="global" name="lock_sound" value="/system/media/audio/ui/Lock.ogg"/>
+    <setting type="global" name="unlock_sound" value="/system/media/audio/ui/Unlock.ogg"/>
+    <setting type="global" name="power_sounds_enabled" value="1"/>
+    <setting type="global" name="low_battery_sound" value="/system/media/audio/ui/LowBattery.ogg"/>
+    <setting type="global" name="dock_sounds_enabled" value="0"/>
+    <setting type="global" name="desk_dock_sound" value="/system/media/audio/ui/Dock.ogg"/>
+    <setting type="global" name="desk_undock_sound" value="/system/media/audio/ui/Undock.ogg"/>
+    <setting type="global" name="car_dock_sound" value="/system/media/audio/ui/Dock.ogg"/>
+    <setting type="global" name="car_undock_sound" value="/system/media/audio/ui/Undock.ogg"/>
+    <setting type="global" name="set_install_location" value="0"/>
+    <setting type="global" name="default_install_location" value="0"/>
+    <setting type="global" name="emergency_tone" value="0"/>
+    <setting type="global" name="call_auto_retry" value="0"/>
+    <setting type="global" name="preferred_network_mode" value="9"/>
+    <setting type="global" name="auto_time" value="1"/>
+    <setting type="global" name="install_non_market_apps" value="1"/>
+
+	<setting type="global" name="window_animation_scale" value="0.5"/>
+	<setting type="global" name="transition_animation_scale" value="0.5"/>
+	<setting type="global" name="animator_duration_scale" value="0.5"/>
+
+	<setting type="global" name="enable_gesture_settings_enabled" value="1"/>
+	<setting type="secure" name="promixy_unlock_enabled" value="0"/>
+	<setting type="secure" name="upset_silent_enabled" value="0"/>
+	<setting type="secure" name="promixy_answer_phone_enabled" value="0"/>
+	<setting type="secure" name="promixy_dial_phone_enabled" value="0"/>
+	<setting type="secure" name="promixy_camera_snap_enabled" value="0"/>
+	
+	<setting type="secure" name="upset_snooze_alarm_enabled" value="0"/>
+	<setting type="secure" name="doubleclick_homekey_enabled" value="0"/>
+	<setting type="secure" name="promixy_powerkey_unlock_enabled" value="0"/>
+	<setting type="secure" name="promixy_speaker_enabled" value="0"/>
+	<setting type="secure" name="doubleclick_screen_enabled" value="0"/>		
+	<setting type="secure" name="gesture_quick_camera" value="0"/>		
+		
+</resources>

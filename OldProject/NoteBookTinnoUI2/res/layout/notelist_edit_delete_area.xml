@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/edit_delete_area"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    android:background="@drawable/settop_or_del"
+    android:orientation="horizontal">
+
+    <Button
+        android:id="@+id/settop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/menu_set_settop"
+        android:textSize="13sp"
+        android:textColor="#FFFFFFFF"
+        android:layout_weight="1.0"
+        android:paddingTop="12.0dip"
+        android:paddingBottom="3.0dip"
+        android:clickable="true"
+        android:drawableTop="@drawable/note_settop"
+        android:background="@drawable/selector_noteitem_set_top_btn" />
+
+    <Button
+        android:id="@+id/delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/menu_delete_button"
+        android:textSize="13sp"
+        android:textColor="#FFFFFFFF"
+        android:clickable="true"
+        android:layout_weight="1.0"
+        android:paddingTop="12.0dip"
+        android:paddingBottom="3.0dip"
+        android:drawableTop="@drawable/note_delete"
+        android:background="@drawable/selector_noteitem_delete_btn" />
+</LinearLayout>

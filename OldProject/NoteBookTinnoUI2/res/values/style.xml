@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+/*
+* Copyright (C) 2008 The Android Open Source Project
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*      http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+-->
+
+<resources>
+
+    <style name="Theme.NotesListDelete" parent="@android:style/Theme.Holo.Light">
+        <item name="android:actionBarStyle">@style/actionbar_def_style</item>
+    </style>
+    <!-- 自定义ActionBar样式，重设ActionBar背景，隐藏actionbar左侧的应用图标和标题 -->
+    <style name="actionbar_def_style" parent="@android:style/Widget.Holo.Light.ActionBar">
+        <!-- 在样式里面直接替换掉actionbar的背景，避免在有的窗口进入慢时导致进入时显示系统默认的actionbar -->
+        <item name="android:background">@drawable/action_bar_big_bkg</item>
+        <!-- 在样式里面去掉acionbar的应用图标和标题 -->
+        <item name="android:displayOptions">useLogo</item>
+    </style>
+
+    <style name="alarmTimeDateTextStyle">
+        <item name="android:textSize">17sp</item>
+        <item name="android:textColor">#FF888888</item>
+    </style>
+
+    <style name="Note_Dialog" parent="@android:style/Theme.Dialog">
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:background">#00000000</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
+
+    <style name="PopupWindowAnim">
+        <item name="android:windowEnterAnimation">@anim/alarm_btn_area_show</item>
+        <item name="android:windowExitAnimation">@anim/alarm_btn_area_disappear</item>
+    </style>
+
+    <style name="GraffitiButton">
+        <item name="android:textSize">16.0sp</item>
+        <item name="android:textColor">#FFFFFFFF</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@drawable/btn_selectall_cancle</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="ThicknessButton">
+        <item name="android:layout_marginLeft">30dip</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:background">@drawable/selector_btn_thickness</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="ColorButton">
+        <item name="android:layout_marginLeft">30dip</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:background">@drawable/selector_btn_thickness</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="NoteViewButtonStyle">
+        <item name="android:textSize">11sp</item>
+        <item name="android:gravity">bottom|center</item>
+        <item name="android:background">@null</item>
+        <item name="android:paddingTop">1dip</item>
+        <item name="android:paddingBottom">10dip</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">fill_parent</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:drawablePadding">-5dip</item>
+        <item name="android:layout_weight">1</item>
+    </style>
+
+    <style name="CanvasButtonStyle">
+        <item name="android:layout_width">0dip</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:textSize">15sp</item>
+    </style>
+
+    <style name="PaintBoldAreaButtonStyle">
+        <item name="android:layout_width">0dip</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:background">#ffaaaaaa</item>
+        <item name="android:layout_marginLeft">2dip</item>
+        <item name="android:layout_marginRight">2dip</item>
+        <item name="android:clickable">true</item>
+    </style>
+
+    <style name="PaintColorAreaButtonStyle">
+        <item name="android:layout_width">55dip</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">#ffcccccc</item>
+        <item name="android:layout_marginLeft">2dip</item>
+        <item name="android:layout_marginRight">2dip</item>
+        <item name="android:clickable">true</item>
+    </style>
+
+    <style name="ProgressDialogStyle" parent="@android:style/Theme.Holo.Light">
+
+    </style>
+</resources>

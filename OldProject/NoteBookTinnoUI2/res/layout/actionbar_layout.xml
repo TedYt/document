@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/title"
+    android:gravity="center_vertical"
+    android:layout_width="fill_parent"
+    android:layout_alignParentTop="true"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/action_bar_big_bkg">
+
+    <LinearLayout
+        android:gravity="center_vertical"
+        android:layout_gravity="center_vertical"
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+        <Button
+            android:id="@+id/cancle"
+            android:textSize="13.0sp"
+            android:clickable="true"
+            android:layout_width="64dip"
+            android:layout_height="32dip"
+            android:textColor="#FFFFFFFF"
+            android:layout_marginLeft="10.0dip"
+            android:text="@string/menu_cancle_button"
+            android:background="@drawable/btn_selectall_cancle" />
+
+        <TextView
+            android:id="@+id/title_hint"
+            android:layout_width="wrap_content"
+            android:textColor="#FFFFFFFF"
+            android:textSize="18.0sp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/menu_edit_button"
+            android:layout_weight="2.0" />
+
+        <Button
+            android:id="@+id/selectall"
+            android:textSize="13.0sp"
+            android:clickable="true"
+            android:layout_width="64dip"
+            android:textColor="#FFFFFFFF"
+            android:layout_height="32dip"
+            android:layout_marginRight="10.0dip"
+            android:text="@string/menu_select_all_button"
+            android:background="@drawable/btn_selectall_cancle" />
+    </LinearLayout>
+</LinearLayout>

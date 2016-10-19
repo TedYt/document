@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">便签</string>
+    <string name="live_folder_name">便签</string>
+    <string name="no_note">无便签</string>
+    <string name="selectednumber">条选中</string>
+    <string name="delete_confirm">确定要删除选中的便签？</string>
+    <string name="delete_confirm_title">删除</string>
+    <string name="delete_file_success">成功删除文件</string>
+    <string name="delete_file_confirm">确定要删除选定的文件吗？</string>
+    <string name="delete_file_confirm_title">删除文件？</string>
+    <string name="delete_confirm_cancel">取消</string>
+    <string name="delete_confirm_ok">确定</string>
+    <string name="title_bar_selected">条选中</string>
+    <string name="editor_full">已达到最大长度1500个字</string>
+    <string name="file_full">已达到最大长度10000个字</string>
+    <string name="sdcard_full" product="tablet">设备储存已满，请释放部分空间</string>
+    <string name="sdcard_full" product="default">手机储存已满，请释放部分空间</string>    
+    <string name="save_none">便签内容为空，无记事创建</string>
+    <string name="empty_note">便签内容为空</string>
+    <string name="empty_file">文件内容为空</string>
+    <string name="large_file">文件过大</string>
+    <string name="delete_progress">正在删除</string>
+     
+    <string name="title_notes_list">便签</string>
+    <string name="title_notes_view">本条便签</string>
+    <string name="title_notes_edit">完成</string>
+    <string name="menu_delete">删除便签</string>
+    <string name="menu_search">搜索</string>
+    <string name="menu_export">导出文本</string>
+    <string name="title_loading">正在加载...</string>
+
+    <string name="button_ok">确定</string>
+    <string name="note_saved">便签已保存</string>
+    <string name="file_saved">文件已保存</string>
+    <string name="no_selected">没有选中的便签</string>
+
+    <string name="resolve_edit">TXT阅读器</string>
+
+    <string name="menu_sort_by_modify">按修改时间排序</string>
+    <string name="menu_sort_by_tab">按类别排序</string>
+    <string name="menu_work">工作事项</string>
+    <string name="menu_personal">个人事项</string>
+    <string name="menu_family">家庭事项</string>
+    <string name="menu_study">学习事项</string>
+    <string name="menu_none">未分类</string>
+    
+    <string name="menu_work_ui">工作事项</string>
+    <string name="menu_personal_ui">个人事项</string>
+    <string name="menu_family_ui">家庭事项</string>
+    <string name="menu_study_ui">学习事项</string>
+  <!-- add [begin] by yangkui at 2014.04.11 for notebook settop -->
+    <string name="menu_set_settop">置顶</string>
+    <string name="menu_cancle_button">取消</string>
+  <!-- add [end] by yangkui at 2014.04.11 for notebook settop -->
+    <string name="menu_add_button">新建</string>
+    <string name="menu_edit_button">编辑</string>
+    <string name="menu_delete_button">删除</string>
+    <string name="menu_deselect_all_button">取消全选</string>
+    <string name="menu_select_all_button">全选</string>
+    
+    <string name="month">月</string>
+    <string name="day">日</string>
+    
+    <string name="photoPickerNotFoundText">"手机上没有照片。"</string>
+    <string name="setTime_string">"请设置提醒时间"</string>
+    <string name="take_photo_string">"拍照"</string>
+    <string name="pick_photo_string">"照片"</string>
+    <string name="take_audio_string">"录音"</string>
+    <string name="pick_audio_string">"音频"</string>
+
+  <!-- add [begin] by liumoujun at 2014.04.01 for notebook alarm -->
+    <string name="notebook_alarm_set">设定提醒时间</string>
+    <string name="str_year_moth_day">2012年10月24日</string>
+    <string name="str_hour_minute">12:00</string>
+    <string name="str_year">年</string>
+    <string name="str_month">月</string>
+    <string name="str_day">日</string>
+    <string name="str_send">确定</string>
+    <string name="str_cancel">取消</string>
+    <string name="notelist_string_info">...</string>
+    <string name="notealert_ok">知道了</string>
+    <string name="notealert_enter">进入便签</string>
+    <string name="alarm_modify">修改</string>
+    <string name="alarm_delete">删除</string>
+  <!-- add [end] by liumoujun at 2014.04.01 for notebook alarm -->
+  <!--add [begin] by yangkui at 20140421 for notebook time-->
+    <string name="str_tomorrow">明天</string>
+    <string name="str_yesterday">昨天</string>
+ <!--add [begin] by yangkui at 20140421 for notebook time-->
+
+    <string name="delete_note_confirm">确定删除该便签？</string>
+    <string name="menu_cancel_settop">取消置顶</string>
+    <string name="note_alerted">已提醒</string>
+
+    <string name="monthtext">月</string>
+    <string name="tinnoday">日</string>
+    <string name="year">年</string>
+    <string name="hour">时</string>
+    <string name="minute">分</string>
+    <string name="default_note_text">您有一条便签提醒！</string>
+    <string name="note_alarm_title">便签闹钟</string>
+    <string name="note_search">搜索</string>
+
+    <string name="picture_select_select">选择</string>
+    <string name="picture_select_title_hint">选择图片</string>
+    <string name="picture_select_num">已选 %d 项</string>
+    <string name="picture_select_gallery">相册</string>
+    <string name="picture_select_recent">最近照片</string>
+    <string name="picture_select_max_num">最多选择20张</string>
+    <string name="picture_storage_used">存储设备正在使用</string>
+    <string name="picture_no_picture">没有图片</string>
+    <string name="picture_load_image_done">加载完成</string>
+    <string name="picture_loading">正在加载, 请稍候…</string>
+    <string name="picture_is_error_picture">当前图片无效，无法加载</string>
+    <string name="picture_save">保存</string>
+    <string name="picture_saving">正在保存…</string>
+    <string name="picture_save_done">已保存至相册</string>
+    <string name="picture_save_failed">保存失败</string>
+    <string name="picture_save_exist">图片已保存</string>
+    <string name="picture_share">分享</string>
+
+    <string name="menu_undo">撤销</string>
+    <string name="menu_color">颜色</string>
+    <string name="menu_thickness">粗细</string>
+    <string name="menu_eraser">橡皮擦</string>
+    <string name="menu_clear">清除</string>
+    <string name="menu_paint">画笔</string>
+
+    <string name="canvas_collapse">收起</string>
+    <string name="canvas_single">单</string>
+    <string name="canvas_double">双</string>
+    <string name="canvas_space">空格</string>
+    <string name="canvas_enter">回车</string>
+    <string name="canvas_bold">粗细</string>
+    <string name="canvas_delete">删除</string>
+
+    <string name="noteview_menu_share">分享</string>
+    <string name="noteview_menu_delete">删除</string>
+</resources>

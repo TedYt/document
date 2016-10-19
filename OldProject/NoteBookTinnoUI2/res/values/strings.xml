@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) 2007 The Android Open Source Project
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+  
+          http://www.apache.org/licenses/LICENSE-2.0
+  
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+
+<resources>
+    <string name="app_name">NotePad</string>
+    <string name="no_note">No Note</string>
+    <string name="selectednumber">Selected</string>
+    <string name="delete_confirm">Are you sure to delete the selected note(s)?</string>
+    <string name="delete_confirm_title">Delete note(s)?</string>
+    <string name="delete_file_success">Delete file successfully</string>
+    <string name="delete_file_confirm">Are you sure to delete the selected file?</string>
+    <string name="delete_file_confirm_title">Delete file?</string>
+    <string name="delete_confirm_cancel">Cancel</string>
+    <string name="delete_confirm_ok">OK</string>
+    <string name="title_bar_selected">Selected</string>
+    <string name="editor_full">You can input the max 1500 characters</string>
+    <string name="file_full">You can input the max 10000 characters</string>
+    <string name="sdcard_full" product="tablet">The device storage does not have enough space. Please release some storage.</string>
+    <string name="sdcard_full" product="default">The phone storage does not have enough space. Please release some storage.</string>
+    <string name="save_none">Empty note is not created</string>
+    <string name="empty_note">Empty note</string>
+    <string name="empty_file">Empty file</string>
+    <string name="large_file">The file is too large</string>
+    <string name="delete_progress">Deleting</string>
+   
+    <string name="title_notes_list">NoteBook</string>
+    <string name="title_notes_view">Reading</string>
+    <string name="title_notes_edit">Done</string>
+    <string name="title_loading">Loading...</string>
+
+    <string name="menu_save">Save</string>
+    <string name="menu_delete">Delete note(s)</string>
+    <string name="menu_search">Search</string>
+    <string name="menu_export">Export</string>
+    <string name="menu_open">Open</string>
+    <string name="menu_revert">Revert changes</string>
+    <string name="menu_copy">Copy</string>
+    <string name="menu_paste">Paste</string>
+
+    <string name="button_ok">OK</string>
+    <string name="note_saved">Note saved</string>
+    <string name="file_saved">File saved</string>
+    <string name="no_selected">No note selected</string>
+
+    <string name="resolve_edit">TxtReader</string>
+
+    <string name="menu_sort_by_modify">Sort by modified time</string>
+    <string name="menu_sort_by_tab">Sort by tabs</string>
+    <string name="menu_work">Work</string>
+    <string name="menu_personal">Personal</string>
+    <string name="menu_family">Family affair</string>
+    <string name="menu_study">Study</string>
+    <string name="menu_none">Uncategorized</string>
+    
+    <string name="menu_work_ui">WORK</string>
+    <string name="menu_personal_ui">PERSONAL</string>
+    <string name="menu_family_ui">FAMILY AFFAIR</string>
+    <string name="menu_study_ui">STUDY</string>
+  <!-- add [begin] by yangkui at 2014.04.11 for notebook settop -->
+    <string name="menu_set_settop">Top</string>
+    <string name="menu_cancle_button">Cancle</string>
+  <!-- add [end] by yangkui at 2014.04.11 for notebook settop -->
+    <string name="menu_add_button">Add</string>
+    <string name="menu_delete_button">Delete</string>
+    <string name="menu_edit_button">Edit</string>
+    <string name="menu_deselect_all_button">Unselect All</string>
+    <string name="menu_select_all_button">Select All</string>
+
+    <string name="month">M</string>
+    <string name="day">d</string>
+    
+    <string name="photoPickerNotFoundText">No pictures are available on the phone.</string>
+    <string name="setTime_string">"Please set time"</string>
+    <string name="take_photo_string">"Camera"</string>
+    <string name="pick_photo_string">"Photo"</string>
+    <string name="take_audio_string">"Record"</string>
+    <string name="pick_audio_string">"Audio"</string>
+
+  <!-- add [begin] by liumoujun at 2014.04.01 for notebook alarm -->
+    <string name="notebook_alarm_set">Notebook alarm set</string>
+    <string name="str_year_moth_day">2012.10.24</string>
+    <string name="str_hour_minute">12:00</string>
+    <string name="str_year">.</string>
+    <string name="str_month">.</string>
+    <string name="str_day">.</string>
+    <string name="str_send">Ok</string>
+    <string name="str_cancel">Cancel</string>
+    <string name="notelist_string_info">...</string>
+    <string name="notealert_ok">Got it</string>
+    <string name="notealert_enter">Enter note</string>
+    <string name="alarm_modify">Modify</string>
+    <string name="alarm_delete">Delete</string>
+  <!-- add [end] by liumoujun at 2014.04.01 for notebook alarm -->
+
+  <!--add [begin] by yangkui at 20140421 for notebook time-->
+    <string name="str_tomorrow">tomorrow</string>
+    <string name="str_yesterday">yesterday</string>
+ <!--add [begin] by yangkui at 20140421 for notebook time-->
+    <string name="delete_note_confirm">Do you delete the note?</string>
+    <string name="menu_cancel_settop">Cancel Top</string>
+    <string name="note_alerted">Alerted</string>
+
+    <string name="monthtext">m</string>
+    <string name="tinnoday">day</string>
+    <string name="year">y</string>
+    <string name="hour">h</string>
+    <string name="minute">m</string>
+    <string name="ampm">Am/Pm</string>
+    <string name="default_note_text">You have a note to remind!</string>
+    <string name="note_alarm_title">Note alarm</string>
+    <string name="note_search">search</string>
+
+    <string name="picture_select_select">Select</string>
+    <string name="picture_select_title_hint">Choose Picture</string>
+    <string name="picture_select_num"> %d Selected</string>
+    <string name="picture_select_gallery">Gallery</string>
+    <string name="picture_select_recent">Recent Pictures</string>
+    <string name="picture_select_max_num">Selected up to 20</string>
+    <string name="picture_storage_used">Storage is used</string>
+    <string name="picture_no_picture">No pictures</string>
+    <string name="picture_load_image_done">Loading complete</string>
+    <string name="picture_loading">Task is busy, please wait…</string>
+    <string name="picture_is_error_picture">Current picture is invalid, can\'t loading</string>
+    <string name="picture_save">Save</string>
+    <string name="picture_saving">Saving…</string>
+    <string name="picture_save_done">Saved to gallery</string>
+    <string name="picture_save_failed">Saved failed</string>
+    <string name="picture_save_exist">Picture has been saved</string>
+    <string name="picture_share">Share</string>
+
+    <string name="menu_undo">undo</string>
+    <string name="menu_color">color</string>
+    <string name="menu_thickness">thickness</string>
+    <string name="menu_eraser">eraser</string>
+    <string name="menu_clear">clear</string>
+    <string name="menu_paint">paint</string>
+
+    <string name="canvas_collapse">Collapse</string>
+    <string name="canvas_single">Single</string>
+    <string name="canvas_double">Double</string>
+    <string name="canvas_space">Space</string>
+    <string name="canvas_enter">Enter</string>
+    <string name="canvas_bold">Bold</string>
+    <string name="canvas_delete">Delete</string>
+
+    <string name="noteview_menu_share">share</string>
+    <string name="noteview_menu_delete">delete</string>
+</resources>
